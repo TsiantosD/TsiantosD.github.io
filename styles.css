@@ -1,0 +1,64 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #1a1919;
+  font-family: "Titillium Web", sans-serif;
+}
+
+#navigation_bar {
+  height: 40px;
+  width: auto;
+  background-color: #464646;
+  text-align: right;
+  -webkit-box-shadow: red 5px 2px;
+          box-shadow: red 5px 2px;
+}
+
+#navigation_bar a {
+  text-decoration: none;
+  font-weight: bolder;
+}
+
+#content_title {
+  color: white;
+  text-align: center;
+}
+
+table {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table tr, table th, table td {
+  border: 1px solid white;
+  border-collapse: collapse;
+  text-align: center;
+  margin: 2px;
+  padding: 2px;
+}
+
+table th {
+  color: white;
+  font-weight: bolder;
+}
+
+table th .hours {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+table td {
+  color: white;
+  font-weight: bold;
+}
+
+table a {
+  color: red;
+}
+/*# sourceMappingURL=styles.css.map */

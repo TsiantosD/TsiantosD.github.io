@@ -1,0 +1,61 @@
+$fonts: 'Titillium Web', sans-serif;
+
+body{
+    padding: 0;
+    margin: 0;
+    background-color: rgb(26, 25, 25);
+    font-family: $fonts;
+}
+
+#navigation_bar{
+    height: 40px;
+    width: auto;
+    background-color: rgb(70, 70, 70);
+    text-align: right;
+    box-shadow: red 5px 2px;
+
+    a{
+        text-decoration: none;
+        font-weight: bolder;
+    }
+}
+
+#content_title{
+    color: white;
+    text-align: center;
+}
+
+table{
+    align-self: center;
+    align-content: center;
+    margin-left: auto;
+    margin-right: auto;
+
+    tr,th,td{
+        border: 1px solid white;
+        border-collapse: collapse;
+        text-align: center;
+        margin: 2px;
+        padding: 2px;
+    }
+
+    th{
+        color: white;
+        font-weight: bolder;
+
+        .hours{
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+    }
+
+    td{
+        color: white;
+        font-weight: bold;
+    }
+
+    a{
+        color: red;
+    }
+}
