@@ -12,11 +12,18 @@ body{
     width: auto;
     background-color: rgb(70, 70, 70);
     text-align: right;
+    padding: 10px;
     box-shadow: red 5px 2px;
 
     a{
         text-decoration: none;
         font-weight: bolder;
+        color: white;
+    }
+
+    a:hover{
+        background-color: grey;
+        color: rgb(231, 231, 231);
     }
 }
 

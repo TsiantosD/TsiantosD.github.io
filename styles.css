@@ -10,6 +10,7 @@ body {
   width: auto;
   background-color: #464646;
   text-align: right;
+  padding: 10px;
   -webkit-box-shadow: red 5px 2px;
           box-shadow: red 5px 2px;
 }
@@ -17,6 +18,12 @@ body {
 #navigation_bar a {
   text-decoration: none;
   font-weight: bolder;
+  color: white;
+}
+
+#navigation_bar a:hover {
+  background-color: grey;
+  color: #e7e7e7;
 }
 
 #content_title {
