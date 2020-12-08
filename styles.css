@@ -1,8 +1,59 @@
-body {
-  padding: 0;
+:root {
+  font-size: 16px;
   margin: 0;
+  padding: 0;
+}
+
+body {
   background-color: #1a1919;
   font-family: "Titillium Web", sans-serif;
+}
+
+body .main-content {
+  margin-top: 4rem;
+  /*rem = font-size x rem*/
+  padding: 1rem;
+}
+
+body .main-content .navbar {
+  background-color: #564d4f;
+  height: 4rem;
+  width: 100%;
+  /*100% relative to the viewport*/
+  position: fixed;
+  padding: 0;
+  margin: 0;
+}
+
+body .main-content .navbar .nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: left;
+      -ms-flex-align: left;
+          align-items: left;
+}
+
+@media only screen and (max-width: 600px) {
+  main {
+    margin-left: 5rem;
+    /*rem = font-size x rem*/
+    padding: 1rem;
+  }
+  .navbar {
+    height: 100vh;
+    width: 5rm;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -10,40 +61,19 @@ body {
 }
 
 ::-webkit-track {
-  background: #f1f1f1;
+  background: black;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #564d4f;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #231f20;
 }
 
-#navigation_bar {
-  height: 40px;
-  width: auto;
-  background-color: #464646;
-  text-align: right;
-  padding: 10px;
-  -webkit-box-shadow: red 5px 2px;
-          box-shadow: red 5px 2px;
-}
-
-#navigation_bar a {
-  text-decoration: none;
-  font-weight: bolder;
-  color: white;
-}
-
-#navigation_bar a:hover {
-  background-color: grey;
-  color: #e7e7e7;
-}
-
-.content_title {
-  color: white;
+.content-title {
+  color: #e7cfcd;
   text-align: center;
   margin: 12px;
   padding: 12px;
@@ -60,7 +90,7 @@ table {
 }
 
 table tr, table td {
-  border: 1px solid white;
+  border: 1px solid #231f20;
   border-collapse: collapse;
   text-align: center;
   margin: 2px;
@@ -68,22 +98,16 @@ table tr, table td {
 }
 
 table th {
-  color: white;
+  color: #564d4f;
   font-weight: bolder;
 }
 
-table th .hours {
-  margin: 0;
-  padding: 0;
-  background-color: white;
-}
-
 table td {
-  color: white;
+  color: #d7b0ac;
   font-weight: bold;
 }
 
 table a {
-  color: red;
+  color: #bb4430;
 }
 /*# sourceMappingURL=styles.css.map */

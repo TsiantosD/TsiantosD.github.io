@@ -1,47 +1,74 @@
 $fonts: 'Titillium Web', sans-serif;
+$white_bg: rgb(231, 207, 205);
+$white_accent: rgb(215, 176, 172);
+$black_bg: rgb(86,77,79);
+$black_accent: rgb(35,31,32);
+$red_bg: rgb(187,68,48);
+$red_accent: rgb(130,48,33);
+
+:root{
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
 
 body{
-    padding: 0;
-    margin: 0;
     background-color: rgb(26, 25, 25);
     font-family: $fonts;
+
+    .main-content{
+        margin-top: 4rem; /*rem = font-size x rem*/
+        padding: 1rem;
+
+        .navbar{
+            background-color: $black_bg;
+            height: 4rem;
+            width: 100%; /*100% relative to the viewport*/
+            position: fixed;
+            padding: 0;
+            margin: 0;
+        
+            .nav-list{
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: left;
+            }
+        }
+    }        
+}
+
+@media only screen and (max-width: 600px){
+    main{
+        margin-left: 5rem; /*rem = font-size x rem*/
+        padding: 1rem;
+    }
+    .navbar{
+        height: 100vh;
+        width: 5rm;
+        position: fixed;
+        margin: 0;
+        padding: 0;
+    }
 }
 
 ::-webkit-scrollbar{
     width: 10px;
 }
 ::-webkit-track{
-    background: #f1f1f1; 
+    background: black; 
 }
 ::-webkit-scrollbar-thumb{
-    background: #888; 
+    background: $black_bg; 
 }
 ::-webkit-scrollbar-thumb:hover{
-    background: #555;
+    background: $black_accent;
 } 
 
-#navigation_bar{
-    height: 40px;
-    width: auto;
-    background-color: rgb(70, 70, 70);
-    text-align: right;
-    padding: 10px;
-    box-shadow: red 5px 2px;
-
-    a{
-        text-decoration: none;
-        font-weight: bolder;
-        color: white;
-    }
-
-    a:hover{
-        background-color: grey;
-        color: rgb(231, 231, 231);
-    }
-}
-
-.content_title{
-    color: white;
+.content-title{
+    color: $white_bg;
     text-align: center;
     margin: 12px;
     padding: 12px;
@@ -54,7 +81,7 @@ table{
     margin-right: auto;
 
     tr,td{
-        border: 1px solid white;
+        border: 1px solid $black_accent;
         border-collapse: collapse;
         text-align: center;
         margin: 2px;
@@ -62,22 +89,16 @@ table{
     }
 
     th{
-        color: white;
+        color: $black_bg;
         font-weight: bolder;
-
-        .hours{
-            margin: 0;
-            padding: 0;
-            background-color: white;
-        }
     }
 
     td{
-        color: white;
+        color: $white_accent;
         font-weight: bold;
     }
 
     a{
-        color: red;
+        color: $red_bg;
     }
 }
