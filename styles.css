@@ -41,7 +41,7 @@ table {
   margin-right: auto;
 }
 
-table tr, table th, table td {
+table tr, table td {
   border: 1px solid white;
   border-collapse: collapse;
   text-align: center;
