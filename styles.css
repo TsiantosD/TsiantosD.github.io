@@ -65,6 +65,25 @@ table td {
 
 table a {
   color: #bb4430;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+table a:hover {
+  color: #231f20;
+}
+
+@media only screen and (max-width: 600px) {
+  .content-title {
+    font-size: 35px;
+    color: #bb4430;
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+  }
+  tr, td {
+    font-size: 10px;
+  }
 }
 
 ::-webkit-scrollbar {

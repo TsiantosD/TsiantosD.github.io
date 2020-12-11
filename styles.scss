@@ -48,6 +48,7 @@ table{
     align-content: center;
     margin-left: auto;
     margin-right: auto;
+
     tr,td{
         border: 1px solid $black_accent;
         border-collapse: collapse;
@@ -68,11 +69,27 @@ table{
 
     a{
         color: $red_bg;
+        transition: 300ms;
+    }
+
+    a:hover{
+        color: $black_accent;
     }
 }
 
 @media only screen and (max-width: 600px){
-    
+
+    .content-title{
+        font-size: 35px;
+        color: $red_bg;
+        text-align: center;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    tr,td{
+        font-size: 10px;
+    }
 }
 
 ::-webkit-scrollbar{
