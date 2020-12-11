@@ -26,6 +26,12 @@ body{
             background-color: $black_bg;
             padding: 5px;
             border-radius: 10px;
+            transition: 200ms;
+        }
+
+        .navbar-brand:hover{
+            background-color: blanchedalmond;
+
         }
     }
 }
@@ -66,7 +72,7 @@ table{
 }
 
 @media only screen and (max-width: 600px){
-
+    
 }
 
 ::-webkit-scrollbar{

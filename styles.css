@@ -20,6 +20,12 @@ body nav .navbar-brand {
   background-color: #564d4f;
   padding: 5px;
   border-radius: 10px;
+  -webkit-transition: 200ms;
+  transition: 200ms;
+}
+
+body nav .navbar-brand:hover {
+  background-color: blanchedalmond;
 }
 
 .content-title {
