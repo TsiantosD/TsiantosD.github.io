@@ -5,6 +5,7 @@ $black_bg: rgb(86,77,79);
 $black_accent: rgb(35,31,32);
 $red_bg: rgb(187,68,48);
 $red_accent: rgb(130,48,33);
+$red_gradient: linear-gradient(0deg, rgba(255, 0, 0, 1) 0%, rgb(185, 4, 4) 50%, rgba(0, 0, 0, 1) 100%);
 
 :root{
     font-size: 16px;
@@ -16,56 +17,18 @@ body{
     background-color: rgb(26, 25, 25);
     font-family: $fonts;
 
-    .main-content{
-        margin-top: 4rem; /*rem = font-size x rem*/
-        padding: 1rem;
+    nav{
+        width: 100%;
+        border: 2px solid $black_accent;
+        box-shadow: 0px 4px $red_bg;
 
-        .navbar{
+        .navbar-brand{
             background-color: $black_bg;
-            height: 4rem;
-            width: 100%; /*100% relative to the viewport*/
-            position: fixed;
-            padding: 0;
-            margin: 0;
-        
-            .nav-list{
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                flex-direction: row;
-                align-items: left;
-            }
+            padding: 5px;
+            border-radius: 10px;
         }
-    }        
-}
-
-@media only screen and (max-width: 600px){
-    main{
-        margin-left: 5rem; /*rem = font-size x rem*/
-        padding: 1rem;
-    }
-    .navbar{
-        height: 100vh;
-        width: 5rm;
-        position: fixed;
-        margin: 0;
-        padding: 0;
     }
 }
-
-::-webkit-scrollbar{
-    width: 10px;
-}
-::-webkit-track{
-    background: black; 
-}
-::-webkit-scrollbar-thumb{
-    background: $black_bg; 
-}
-::-webkit-scrollbar-thumb:hover{
-    background: $black_accent;
-} 
 
 .content-title{
     color: $white_bg;
@@ -79,7 +42,6 @@ table{
     align-content: center;
     margin-left: auto;
     margin-right: auto;
-
     tr,td{
         border: 1px solid $black_accent;
         border-collapse: collapse;
@@ -102,3 +64,20 @@ table{
         color: $red_bg;
     }
 }
+
+@media only screen and (max-width: 600px){
+
+}
+
+::-webkit-scrollbar{
+    width: 10px;
+}
+::-webkit-track{
+    background: black; 
+}
+::-webkit-scrollbar-thumb{
+    background: $black_bg; 
+}
+::-webkit-scrollbar-thumb:hover{
+    background: $black_accent;
+} 
