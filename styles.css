@@ -73,7 +73,7 @@ table a:hover {
   color: #231f20;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 720px) {
   .content-title {
     font-size: 35px;
     color: #bb4430;
