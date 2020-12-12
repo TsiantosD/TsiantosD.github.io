@@ -17,7 +17,7 @@ body nav {
 }
 
 body nav .navbar-brand {
-  background-color: #564d4f;
+  background-color: #7e7779;
   padding: 5px;
   border-radius: 10px;
   -webkit-transition: 200ms;
@@ -45,6 +45,10 @@ table {
   margin-right: auto;
 }
 
+table .hour {
+  color: #bb4430;
+}
+
 table tr, table td {
   border: 1px solid #231f20;
   border-collapse: collapse;
@@ -54,7 +58,7 @@ table tr, table td {
 }
 
 table th {
-  color: #564d4f;
+  color: #7e7779;
   font-weight: bolder;
 }
 
@@ -95,7 +99,7 @@ table a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #564d4f;
+  background: #7e7779;
 }
 
 ::-webkit-scrollbar-thumb:hover {
