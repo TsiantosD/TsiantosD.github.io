@@ -1,0 +1,108 @@
+:root {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #1a1919;
+  font-family: "Titillium Web", sans-serif;
+}
+
+body nav {
+  width: 100%;
+  border: 2px solid #231f20;
+  -webkit-box-shadow: 0px 4px #bb4430;
+          box-shadow: 0px 4px #bb4430;
+}
+
+body nav .navbar-brand {
+  background-color: #7e7779;
+  padding: 5px;
+  border-radius: 10px;
+  -webkit-transition: 200ms;
+  transition: 200ms;
+}
+
+body nav .navbar-brand:hover {
+  background-color: blanchedalmond;
+}
+
+.content-title {
+  color: #e7cfcd;
+  text-align: center;
+  margin: 12px;
+  padding: 12px;
+}
+
+table {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table .hour {
+  color: #bb4430;
+}
+
+table tr, table td {
+  border: 1px solid #231f20;
+  border-collapse: collapse;
+  text-align: center;
+  margin: 2px;
+  padding: 2px;
+}
+
+table th {
+  color: #7e7779;
+  font-weight: bolder;
+}
+
+table td {
+  color: #d7b0ac;
+  font-weight: bold;
+}
+
+table a {
+  color: #bb4430;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+table a:hover {
+  color: #231f20;
+}
+
+@media only screen and (max-width: 720px) {
+  .content-title {
+    font-size: 35px;
+    color: #bb4430;
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+  }
+  tr, td {
+    font-size: 10px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-track {
+  background: black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7e7779;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #231f20;
+}
+/*# sourceMappingURL=styles.css.map */
