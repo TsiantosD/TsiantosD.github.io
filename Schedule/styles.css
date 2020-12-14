@@ -4,19 +4,19 @@
   padding: 0;
 }
 
-body {
+.dark_theme {
   background-color: #1a1919;
   font-family: "Titillium Web", sans-serif;
 }
 
-body nav {
+.dark_theme nav {
   width: 100%;
   border: 2px solid #231f20;
   -webkit-box-shadow: 0px 4px #bb4430;
           box-shadow: 0px 4px #bb4430;
 }
 
-body nav .navbar-brand {
+.dark_theme nav .navbar-brand {
   background-color: #7e7779;
   padding: 5px;
   border-radius: 10px;
@@ -24,18 +24,22 @@ body nav .navbar-brand {
   transition: 200ms;
 }
 
-body nav .navbar-brand:hover {
+.dark_theme nav .navbar-brand:hover {
   background-color: blanchedalmond;
 }
 
-.content-title {
+.dark_theme nav #light_button:hover {
+  background-color: #00b7ff;
+}
+
+.dark_theme .content-title {
   color: #e7cfcd;
   text-align: center;
   margin: 12px;
   padding: 12px;
 }
 
-table {
+.dark_theme table {
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
@@ -45,11 +49,11 @@ table {
   margin-right: auto;
 }
 
-table .hour {
+.dark_theme table .hour {
   color: #bb4430;
 }
 
-table tr, table td {
+.dark_theme table tr, .dark_theme table td {
   border: 1px solid #231f20;
   border-collapse: collapse;
   text-align: center;
@@ -57,30 +61,102 @@ table tr, table td {
   padding: 2px;
 }
 
-table th {
+.dark_theme table th {
   color: #7e7779;
   font-weight: bolder;
 }
 
-table td {
+.dark_theme table td {
   color: #d7b0ac;
   font-weight: bold;
 }
 
-table a {
+.dark_theme table a {
   color: #bb4430;
   -webkit-transition: 300ms;
   transition: 300ms;
 }
 
-table a:hover {
+.dark_theme table a:hover {
   color: #231f20;
+}
+
+.light_theme {
+  background-color: #e7dede;
+  font-family: "Titillium Web", sans-serif;
+}
+
+.light_theme nav {
+  width: 100%;
+  border: 2px solid #c7c7c7;
+  -webkit-box-shadow: 0px 4px #0d589e;
+          box-shadow: 0px 4px #0d589e;
+}
+
+.light_theme nav .navbar-brand {
+  background-color: #c7c7c7;
+  padding: 5px;
+  border-radius: 10px;
+  -webkit-transition: 200ms;
+  transition: 200ms;
+}
+
+.light_theme nav .navbar-brand:hover {
+  background-color: #7e7779;
+}
+
+.light_theme .content-title {
+  color: #0d589e;
+  text-align: center;
+  margin: 12px;
+  padding: 12px;
+}
+
+.light_theme table {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.light_theme table .hour {
+  color: #00b7ff;
+}
+
+.light_theme table tr, .light_theme table td {
+  border: 1px solid #c7c7c7;
+  border-collapse: collapse;
+  text-align: center;
+  margin: 2px;
+  padding: 2px;
+}
+
+.light_theme table th {
+  color: #00b7ff;
+  font-weight: bolder;
+}
+
+.light_theme table td {
+  color: #7e7779;
+  font-weight: bold;
+}
+
+.light_theme table a {
+  color: #0d589e;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.light_theme table a:hover {
+  color: #c7c7c7;
 }
 
 @media only screen and (max-width: 720px) {
   .content-title {
     font-size: 35px;
-    color: #bb4430;
     text-align: center;
     margin: 10px;
     padding: 10px;

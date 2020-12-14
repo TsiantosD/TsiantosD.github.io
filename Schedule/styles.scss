@@ -1,11 +1,14 @@
 $fonts: 'Titillium Web', sans-serif;
-$white_bg: rgb(231, 207, 205);
-$white_accent: rgb(215, 176, 172);
+$white_bg: azure;
+$white_accent: rgb(199, 199, 199);
+$pink_bg: rgb(231, 207, 205);
+$pink_accent: rgb(215, 176, 172);
 $black_bg: rgb(126, 119, 121);
 $black_accent: rgb(35,31,32);
 $red_bg: rgb(187,68,48);
 $red_accent: rgb(130,48,33);
-$red_gradient: linear-gradient(0deg, rgba(255, 0, 0, 1) 0%, rgb(185, 4, 4) 50%, rgba(0, 0, 0, 1) 100%);
+$blue_bg: rgb(0, 183, 255);
+$blue_accent: rgb(13, 88, 158);
 
 :root{
     font-size: 16px;
@@ -13,7 +16,8 @@ $red_gradient: linear-gradient(0deg, rgba(255, 0, 0, 1) 0%, rgb(185, 4, 4) 50%, 
     padding: 0;
 }
 
-body{
+.dark_theme{
+
     background-color: rgb(26, 25, 25);
     font-family: $fonts;
 
@@ -31,61 +35,132 @@ body{
 
         .navbar-brand:hover{
             background-color: blanchedalmond;
+        }
+
+        #light_button:hover{
+            background-color: $blue_bg;
+        }
+    }
+
+    .content-title{
+        color: $pink_bg;
+        text-align: center;
+        margin: 12px;
+        padding: 12px;
+    }
+    
+    table{
+        align-self: center;
+        align-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    
+        .hour{
+            color: $red_bg;
+        }
+    
+        tr,td{
+            border: 1px solid $black_accent;
+            border-collapse: collapse;
+            text-align: center;
+            margin: 2px;
+            padding: 2px;
+        }
+    
+        th{
+            color: $black_bg;
+            font-weight: bolder;
+        }
+    
+        td{
+            color: $pink_accent;
+            font-weight: bold;
+        }
+    
+        a{
+            color: $red_bg;
+            transition: 300ms;
+        }
+    
+        a:hover{
+            color: $black_accent;
+        }
+    }    
+}
+
+.light_theme{
+
+    background-color: rgb(231, 222, 222);
+    font-family: $fonts;
+
+    nav{
+        width: 100%;
+        border: 2px solid $white_accent;
+        box-shadow: 0px 4px $blue_accent;
+
+        .navbar-brand{
+            background-color: $white_accent;
+            padding: 5px;
+            border-radius: 10px;
+            transition: 200ms;
+        }
+
+        .navbar-brand:hover{
+            background-color: $black_bg;
 
         }
     }
-}
 
-.content-title{
-    color: $white_bg;
-    text-align: center;
-    margin: 12px;
-    padding: 12px;
-}
-
-table{
-    align-self: center;
-    align-content: center;
-    margin-left: auto;
-    margin-right: auto;
-
-    .hour{
-        color: $red_bg;
-    }
-
-    tr,td{
-        border: 1px solid $black_accent;
-        border-collapse: collapse;
+    .content-title{
+        color: $blue_accent;
         text-align: center;
-        margin: 2px;
-        padding: 2px;
+        margin: 12px;
+        padding: 12px;
     }
-
-    th{
-        color: $black_bg;
-        font-weight: bolder;
-    }
-
-    td{
-        color: $white_accent;
-        font-weight: bold;
-    }
-
-    a{
-        color: $red_bg;
-        transition: 300ms;
-    }
-
-    a:hover{
-        color: $black_accent;
-    }
+    
+    table{
+        align-self: center;
+        align-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    
+        .hour{
+            color: $blue_bg;
+        }
+    
+        tr,td{
+            border: 1px solid $white_accent;
+            border-collapse: collapse;
+            text-align: center;
+            margin: 2px;
+            padding: 2px;
+        }
+    
+        th{
+            color: $blue_bg;
+            font-weight: bolder;
+        }
+    
+        td{
+            color: $black_bg;
+            font-weight: bold;
+        }
+    
+        a{
+            color: $blue_accent;
+            transition: 300ms;
+        }
+    
+        a:hover{
+            color: $white_accent;
+        }
+    }    
 }
 
 @media only screen and (max-width: 720px){
 
     .content-title{
         font-size: 35px;
-        color: $red_bg;
         text-align: center;
         margin: 10px;
         padding: 10px;
