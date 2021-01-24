@@ -10,55 +10,48 @@ $red_accent: rgb(130,48,33);
 $blue_bg: rgb(0, 183, 255);
 $blue_accent: rgb(13, 88, 158);
 
-:root{
+*{
     font-size: 16px;
     margin: 0;
     padding: 0;
 }
 
 .dark_theme{
-
-    background-color: rgb(26, 25, 25);
+    //background-color: rgb(26, 25, 25);
+    background-image: url("./wallpaper_dark.jpg");
     font-family: $fonts;
-
     nav{
         width: 100%;
         border: 2px solid $black_accent;
         box-shadow: 0px 4px $red_bg;
-
         .navbar-brand{
             background-color: $black_bg;
             padding: 5px;
             border-radius: 10px;
             transition: 200ms;
         }
-
         .navbar-brand:hover{
             background-color: blanchedalmond;
         }
-
         #light_button:hover{
             background-color: $blue_bg;
         }
     }
-
     .content-title{
         color: $pink_bg;
         text-align: center;
         margin: 12px;
         padding: 12px;
     }
-    
     table{
         align-self: center;
         align-content: center;
         margin-left: auto;
         margin-right: auto;
-    
+        opacity: 80%;
         .hour{
             color: $red_bg;
         }
-    
         tr,td{
             border: 1px solid $black_accent;
             border-collapse: collapse;
@@ -66,22 +59,18 @@ $blue_accent: rgb(13, 88, 158);
             margin: 2px;
             padding: 2px;
         }
-    
         th{
             color: $black_bg;
             font-weight: bolder;
         }
-    
         td{
             color: $pink_accent;
             font-weight: bold;
         }
-    
         a{
             color: $red_bg;
             transition: 300ms;
         }
-    
         a:hover{
             color: $black_accent;
         }
@@ -89,22 +78,19 @@ $blue_accent: rgb(13, 88, 158);
 }
 
 .light_theme{
-
+    background-image: url("./wallpaper_light.jpg");
     background-color: rgb(231, 222, 222);
     font-family: $fonts;
-
     nav{
         width: 100%;
         border: 2px solid $white_accent;
         box-shadow: 0px 4px $blue_accent;
-
         .navbar-brand{
             background-color: $white_accent;
             padding: 5px;
             border-radius: 10px;
             transition: 200ms;
         }
-
         .navbar-brand:hover{
             background-color: $black_bg;
 
@@ -123,11 +109,10 @@ $blue_accent: rgb(13, 88, 158);
         align-content: center;
         margin-left: auto;
         margin-right: auto;
-    
+        opacity: 80%;
         .hour{
             color: $blue_bg;
         }
-    
         tr,td{
             border: 1px solid $white_accent;
             border-collapse: collapse;
@@ -135,22 +120,18 @@ $blue_accent: rgb(13, 88, 158);
             margin: 2px;
             padding: 2px;
         }
-    
         th{
             color: $blue_bg;
             font-weight: bolder;
         }
-    
         td{
             color: $black_bg;
             font-weight: bold;
         }
-    
         a{
             color: $blue_accent;
             transition: 300ms;
         }
-    
         a:hover{
             color: $white_accent;
         }
