@@ -5,7 +5,7 @@ interface ContainerProps {
   className?: string;
 }
 
-export function Container({ children, className = "" }) {
+export function Container({ children, className = "" }: ContainerProps) {
   return (
     <div className={`mx-auto max-w-5xl px-4 ${className}`}>
       {children}
