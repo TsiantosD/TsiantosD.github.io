@@ -112,7 +112,7 @@ export function ProjectCard({ title, description, image, link, tags }: ProjectCa
         {tags && (
           <CardDescription className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
-              <Badge key={index} variant={index === 0 ? "default" : "outline"}>
+              <Badge key={index} variant="outline">
                 {tag}
               </Badge>
             ))}
@@ -132,7 +132,7 @@ export function ProjectCard({ title, description, image, link, tags }: ProjectCa
       <CardContent>
         <p className="mb-4 text-sm">{description}</p>
         {link && (
-          <a href={link} className="text-sm underline" target="_blank">
+          <a href={link} className="text-sm underline" target="_blank" rel="noopener noreferrer">
             View Project →
           </a>
         )}

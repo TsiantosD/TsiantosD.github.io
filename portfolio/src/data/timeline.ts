@@ -1,16 +1,16 @@
-const workaduLink = "<a href='https://www.workadu.com/' class='font-medium text-fg-brand underline hover:no-underline' target='_blank'>Workadu</a>";
+const workaduLink = "<a href='https://www.workadu.com/' class='font-medium text-fg-brand underline hover:no-underline' target='_blank' rel=\"noopener noreferrer\">Workadu</a>";
 const hackathonLink = "<a class='font-medium text-fg-brand underline hover:no-underline'" +
 "   href='https://www.nationalcoalition.gov.gr/article/1o-hackathon-tis-eyropaikis-evdomadas-program/'" +
-"   target='_blank'>" +
+"   target='_blank' rel=\"noopener noreferrer\">" +
 "Article" +
 "</a>"
-const eceLink = "<a href='https://www.e-ce.uth.gr/?lang=en' class='font-medium text-fg-brand underline hover:no-underline' target='_blank'>" +
+const eceLink = "<a href='https://www.e-ce.uth.gr/?lang=en' class='font-medium text-fg-brand underline hover:no-underline' target='_blank' rel=\"noopener noreferrer\">" +
   "Electrical and Computer Engineering" +
   "</a>";
-const uthLink = "<a href='https://www.uth.gr/en/' class='font-medium text-fg-brand underline hover:no-underline' target='_blank'>" +
+const uthLink = "<a href='https://www.uth.gr/en/' class='font-medium text-fg-brand underline hover:no-underline' target='_blank' rel=\"noopener noreferrer\">" +
   "University of Thessaly" +
   "</a>";
-const cs50wLink = "<a href='https://cs50.harvard.edu/web/2020/' class='font-medium text-fg-brand underline hover:no-underline' target='_blank'>" +
+const cs50wLink = "<a href='https://cs50.harvard.edu/web/2020/' class='font-medium text-fg-brand underline hover:no-underline' target='_blank' rel=\"noopener noreferrer\">" +
   "CS50 Web Programming with Python and JavaScript" +
   "</a>";
 

@@ -8,6 +8,9 @@ import {projects} from "../../data/projects.ts";
 import {ProjectCard} from "../project-card.tsx";
 import {TimelineItem} from "../timeline-item.tsx";
 import {timeline} from "../../data/timeline.ts";
+import {Button} from "../ui/button.tsx";
+import {ArrowUpRightIcon} from "lucide-react";
+import { BackgroundPaths } from "@/components/ui/shadcn-io/background-paths";
 
 export default function Home() {
   const [isReversed, setIsReversed] = useState(false);
@@ -16,7 +19,10 @@ export default function Home() {
 
   return (
     <>
-      <main id="home" className="py-20">
+      <section className="relative h-screen w-full">
+        <BackgroundPaths title="Tsiantos Dimitrios" />
+      </section>
+      <section id="about" className="py-20 w-full">
         <Container className="text-center">
           <Avatar className="w-64 h-64 mx-auto mb-6">
             <AvatarImage src="/me.jpg" alt="Me" />
@@ -28,8 +34,11 @@ export default function Home() {
             Electrical & Computer Engineering undergraduate, Software and DevOps Engineer from Greece. 🇬🇷️
           </p>
         </Container>
-      </main>
-      <main id="timeline" className="py-20">
+        {/*{displayedTimeline.map((item, i) => (*/}
+        {/*  <TimelineItem key={i} {...item} />*/}
+        {/*))}*/}
+      </section>
+      <section id="timeline" className="py-20 w-full">
         <Container>
           <div className="flex items-center justify-between">
             <SectionHeader
@@ -50,8 +59,8 @@ export default function Home() {
             ))}
           </div>
         </Container>
-      </main>
-      <main id="projects" className="py-20">
+      </section>
+      <section id="projects" className="py-20 w-full">
         <Container>
           <SectionHeader
             title="Projects"
@@ -63,7 +72,41 @@ export default function Home() {
             ))}
           </div>
         </Container>
-      </main>
+      </section>
+      <section id="contact" className="py-20 w-full">
+        <Container className="space-x-6">
+          <SectionHeader
+            title="Contact"
+            subtitle="Write me an email or DM me on LinkedIn!"
+          />
+          <Button
+            asChild
+            variant="outline"
+            size="default"
+          >
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSchD7dRpaz4QXcKSyzURG8qRyZv1erO9FMpEjBjJvo0ekzfGg/viewform?usp=dialog"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google Form <ArrowUpRightIcon />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="default"
+          >
+            <a
+              href="https://www.linkedin.com/in/tsiantosd/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn <ArrowUpRightIcon />
+            </a>
+          </Button>
+        </Container>
+      </section>
     </>
   );
 }
