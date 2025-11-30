@@ -2,7 +2,7 @@ export const projects = [
   {
     title: "High Performance Computing",
     description: "Five projects teaching the fundamentals of CUDA, x86 multi-core and single-core optimizations.",
-    tags: ["HPC", "CUDA", "C", "C++", "OpenMP", "Intel V-Tune", "Arithmetic Analysis"],
+    tags: ["HPC", "CUDA", "C", "C++", "OpenMP", "Intel V-Tune"],
     image: "/nvidia.jpeg",
     link: "https://github.com/TsiantosD/ECE415-High-Performance-Computing",
     people: 3,
