@@ -1,4 +1,10 @@
-export function TimelineItem({ year, title, description }) {
+interface TimelineItemProps {
+  year: string;
+  title: string;
+  description: string;
+}
+
+export function TimelineItem({ year, title, description }: TimelineItemProps) {
   return (
     <div className="border-l pl-6 relative pb-10">
       <div className="absolute left-0 top-1 -translate-x-1/2 h-3 w-3 rounded-full bg-primary" />

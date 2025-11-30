@@ -12,6 +12,7 @@ interface ProjectCardProps {
   image?: string
   link?: string
   tags?: string[]
+  people?: number
 }
 
 interface CardTransform {
@@ -120,16 +121,19 @@ export function ProjectCard({ title, description, image, link, tags, people }: P
             ))}
           </CardDescription>
         )}
-        <div
-          className="flex flex-wrap"
-          title={(people > 1)
-            ? `${people}` + ' people in the team'
-            : 'solo project'
-          }>
-            {[...Array(people)].map((_, i) => (
-              <FontAwesomeIcon icon={faUser} />
-            ))}
-        </div>
+        {people
+          ? (
+            <div
+              className="flex flex-wrap"
+              title={(people > 1)
+                ? `${people}` + ' people in the team'
+                : 'solo project'
+              }>
+              {[...Array(people)].map(() => (
+                <FontAwesomeIcon icon={faUser} />
+              ))}
+            </div>
+          ) : <></>}
       </CardHeader>
 
       {image && (

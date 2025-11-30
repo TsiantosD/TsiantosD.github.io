@@ -11,7 +11,7 @@ interface MenuItem {
 interface Footer2Props {
   logo?: {
     url: string;
-    src: string;
+    src: string | null | undefined;
     alt: string;
     title: string;
   };
@@ -70,12 +70,15 @@ const Footer2 = ({
             <div className="col-span-2 mb-8 lg:mb-0">
               <div className="flex items-center gap-2 lg:justify-start">
                 <Logo url="https://shadcnblocks.com">
-                  <LogoImage
-                    src={logo.src}
-                    alt={logo.alt}
-                    title={logo.title}
-                    className="h-10 dark:invert"
-                  />
+                  {logo?.src
+                    ? <LogoImage
+                      src={logo?.src}
+                      alt={logo.alt}
+                      title={logo.title}
+                      className="h-10 dark:invert"
+                    />
+                    : <></>
+                  }
                   <LogoText className="text-xl">{logo.title}</LogoText>
                 </Logo>
               </div>
