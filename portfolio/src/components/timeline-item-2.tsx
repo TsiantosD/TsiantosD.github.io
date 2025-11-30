@@ -1,7 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
-export function TimelineItem2({ index, year, title, description }) {
+interface TimelineItem2Props {
+  index: number;
+  year: string;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+export function TimelineItem2({ index, year, title, description }: TimelineItem2Props) {
   return (
     <div key={index} className="relative mb-10 pl-8">
       <div className="bg-foreground absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full" />

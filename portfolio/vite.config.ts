@@ -14,5 +14,5 @@ export default defineConfig({
   server: {
     host: true
   },
-  base: '/TsiantosD.github.io/'
+  base: '/'
 })
