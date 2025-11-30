@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useEffect, useRef } from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface ProjectCardProps {
   title: string
@@ -18,7 +20,7 @@ interface CardTransform {
   scale: number
 }
 
-export function ProjectCard({ title, description, image, link, tags }: ProjectCardProps) {
+export function ProjectCard({ title, description, image, link, tags, people }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
@@ -44,14 +46,14 @@ export function ProjectCard({ title, description, image, link, tags }: ProjectCa
       const relativeY = mouseY - centerY
 
       const cardTransform: CardTransform = {
-        rotateX: -relativeY * 0.035,
-        rotateY: relativeX * 0.035,
+        rotateX: -relativeY * 0.005,
+        rotateY: relativeX * 0.005,
         scale: 1.025
       }
 
       const imageTransform: CardTransform = {
-        rotateX: -relativeY * 0.025,
-        rotateY: relativeX * 0.025,
+        rotateX: -relativeY * 0.001,
+        rotateY: relativeX * 0.001,
         scale: 1.05
       }
 
@@ -118,6 +120,16 @@ export function ProjectCard({ title, description, image, link, tags }: ProjectCa
             ))}
           </CardDescription>
         )}
+        <div
+          className="flex flex-wrap"
+          title={(people > 1)
+            ? `${people}` + ' people in the team'
+            : 'solo project'
+          }>
+            {[...Array(people)].map((_, i) => (
+              <FontAwesomeIcon icon={faUser} />
+            ))}
+        </div>
       </CardHeader>
 
       {image && (
