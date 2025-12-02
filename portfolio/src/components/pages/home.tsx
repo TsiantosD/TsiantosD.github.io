@@ -11,11 +11,13 @@ import {timeline} from "../../data/timeline.ts";
 import {Button} from "../ui/button.tsx";
 import {ArrowUpRightIcon} from "lucide-react";
 import { BackgroundPaths } from "@/components/ui/shadcn-io/background-paths";
+import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee";
 
 export default function Home() {
   const [isReversed, setIsReversed] = useState(false);
   const toggleOrder = () => setIsReversed(!isReversed);
   const displayedTimeline = isReversed ? [...timeline].reverse() : timeline;
+  const skills = [...new Set(projects.flatMap(p => p.tags))];
 
   return (
     <>
@@ -34,18 +36,37 @@ export default function Home() {
             Electrical & Computer Engineering undergraduate, Software and DevOps Engineer from Greece. 🇬🇷️
           </p>
         </Container>
-        {/*{displayedTimeline.map((item, i) => (*/}
-        {/*  <TimelineItem key={i} {...item} />*/}
-        {/*))}*/}
+        <Container className="py-20">
+          <Marquee>
+            <MarqueeFade side="left" />
+            <MarqueeFade side="right" />
+            <MarqueeContent>
+              {skills.map((value, index) => (
+                <MarqueeItem className="p-5" key={index}>
+                  <span>{value}</span>
+                </MarqueeItem>
+              ))}
+            </MarqueeContent>
+          </Marquee>
+        </Container>
+        {/* <Container>
+          <SectionHeader
+            title="Philosoply"
+            subtitle=""
+          />
+          <h2 className="text-3xl font-bold mb-2">Correctness</h2>
+          <h2 className="text-3xl font-bold mb-2">Security</h2>
+          <h2 className="text-3xl font-bold mb-2">Verifiability</h2>
+          <h2 className="text-3xl font-bold mb-2">Cooperation</h2>
+          <h2 className="text-3xl font-bold mb-2">Scalability</h2>
+        </Container> */}
       </section>
       <section id="timeline" className="py-20 w-full">
         <Container>
-          <div className="flex items-center justify-between">
-            <SectionHeader
-              title="Timeline"
-              subtitle="A quick overview of my education and achievements."
-            />
-          </div>
+          <SectionHeader
+            title="Timeline"
+            subtitle="A quick overview of my education and achievements."
+          />
           <div
             onClick={toggleOrder}
             className="flex items-center cursor-pointer mt-4 text-fg-muted hover:text-fg-primary transition-colors w-max"
