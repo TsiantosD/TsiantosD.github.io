@@ -7,6 +7,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface ProjectCardProps {
+  slug: string;
   title: string
   description: string
   image?: string
