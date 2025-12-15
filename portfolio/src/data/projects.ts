@@ -28,7 +28,7 @@ export const projects = [
 
 [View report (PDF)](/hpc/project4/report-EN.pdf)
 
-In this project, we engineered a high-performance *GPU implementation* of the *Contrast Limited Adaptive Histogram Equalization (CLAHE)* algorithm using *CUDA C++*. The objective was to accelerate image contrast enhancement by migrating a sequential CPU workflow to a parallel architecture. We decomposed the workload by dividing images into tiles and computing local histograms using optimized shared memory and atomic operations to minimize global memory latency. The implementation featured a custom kernel for histogram clipping and redistribution, followed by bilinear interpolation to eliminate boundary artifacts. The final solution was optimized to avoid memory bank conflicts and maximize throughput (Mpixels/sec), demonstrating significant speedups over the reference CPU implementation.
+In this project, we engineered a high-performance **GPU implementation** of the **Contrast Limited Adaptive Histogram Equalization (CLAHE)** algorithm using **CUDA C++**. The objective was to accelerate image contrast enhancement by migrating a sequential CPU workflow to a parallel architecture. We decomposed the workload by dividing images into tiles and computing local histograms using optimized shared memory and atomic operations to minimize global memory latency. The implementation featured a custom kernel for histogram clipping and redistribution, followed by bilinear interpolation to eliminate boundary artifacts. The final solution was optimized to avoid memory bank conflicts and maximize throughput (Mpixels/sec), demonstrating significant speedups over the reference CPU implementation.
 
 ![Diagram of the first step of the algorithm](/hpc/project4/first_step.png#medium)
 ![Diagram of the second step of the algorithm](/hpc/project4/second_step.png#small)
@@ -51,7 +51,13 @@ ${contentSoon}
     image: "/fpga.jpg",
     link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
     people: 2,
-    content: contentSoon,
+    content: `
+### Project 3
+
+[View report (PDF)](/embedded/project3/report-EN.pdf)
+
+We designed and implemented a hardware accelerator for the **Smith-Waterman local sequence alignment algorithm** on an **FPGA** to address the high computational complexity of genomic data analysis. To establish a performance baseline, we first developed optimized software implementations on **x86** and **Arm** architectures, utilizing anti-diagonal data layouts and OpenMP for parallelization. For the FPGA design, we utilized **High-Level Synthesis (HLS)** to execute a series of critical optimizations: reducing space complexity by replacing the full dynamic programming matrix with anti-diagonal BRAM buffers, maximizing memory bandwidth through array partitioning, and flattening memory write operations to eliminate pipeline bottlenecks. By refining branching logic and implementing optimal array rotation, we achieved an Iteration Interval (II) of 1. The final hardware implementation demonstrated a 3.3x speedup compared to the x86 software version.
+`,
   },
   {
     slug: "operating-systems",
