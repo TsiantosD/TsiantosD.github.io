@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Navbar } from "./components/layout/navbar";
 import Home from "./components/pages/home.tsx";
+import Project from "./components/pages/project.tsx";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
   const [showTop, setShowTop] = useState(false);
@@ -19,10 +21,14 @@ export default function App() {
   };
 
   return (
-    <>
+    <BrowserRouter>
       <Navbar />
       <div className="justify-items-center">
-        <Home />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/project/:slug" element={<Project />} />
+        </Routes>
+
         <Footer2 />
         <button
           type="button"
@@ -39,6 +45,6 @@ export default function App() {
           <ChevronUpIcon className="w-5 h-5 text-black" />
         </button>
       </div>
-    </>
+    </BrowserRouter>
   );
 }

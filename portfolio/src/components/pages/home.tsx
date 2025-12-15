@@ -4,10 +4,10 @@ import {ChevronUpIcon} from "../ui/icons/lucide-chevron-up.tsx";
 import {ChevronDownIcon} from "../ui/icons/lucide-chevron-down.tsx";
 import {useState} from "react";
 import {SectionHeader} from "../section-header.tsx";
-import {projects} from "../../data/projects.ts";
+import {projects} from "@/data/projects.ts";
 import {ProjectCard} from "../project-card.tsx";
 import {TimelineItem} from "../timeline-item.tsx";
-import {timeline} from "../../data/timeline.ts";
+import {timeline} from "@/data/timeline.ts";
 import {Button} from "../ui/button.tsx";
 import {ArrowUpRightIcon} from "lucide-react";
 import { BackgroundPaths } from "@/components/ui/shadcn-io/background-paths";
@@ -88,8 +88,8 @@ export default function Home() {
             subtitle="Some of the things I've worked on."
           />
           <div className="grid gap-6 sm:grid-cols-2">
-            {projects.map((p, i) => (
-              <ProjectCard key={i} {...p} />
+            {projects.map((p) => (
+              <ProjectCard key={p.title} {...p} />
             ))}
           </div>
         </Container>

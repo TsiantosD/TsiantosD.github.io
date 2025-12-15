@@ -21,7 +21,7 @@ interface CardTransform {
   scale: number
 }
 
-export function ProjectCard({ title, description, image, link, tags, people }: ProjectCardProps) {
+export function ProjectCard({ slug, title, description, image, link, tags, people }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
@@ -114,8 +114,8 @@ export function ProjectCard({ title, description, image, link, tags, people }: P
         <CardTitle>{title}</CardTitle>
         {tags && (
           <CardDescription className="flex flex-wrap gap-2">
-            {tags.map((tag, index) => (
-              <Badge key={index} variant="outline">
+            {tags.map((tag) => (
+              <Badge key={tag} variant="outline">
                 {tag}
               </Badge>
             ))}
@@ -129,8 +129,8 @@ export function ProjectCard({ title, description, image, link, tags, people }: P
                 ? `${people}` + ' people in the team'
                 : 'solo project'
               }>
-              {[...Array(people)].map(() => (
-                <FontAwesomeIcon icon={faUser} />
+              {[...Array(people)].map((index) => (
+                <FontAwesomeIcon key={index} icon={faUser} />
               ))}
             </div>
           ) : <></>}
@@ -148,8 +148,8 @@ export function ProjectCard({ title, description, image, link, tags, people }: P
       <CardContent>
         <p className="mb-4 text-sm">{description}</p>
         {link && (
-          <a href={link} className="text-sm underline" target="_blank" rel="noopener noreferrer">
-            View Project →
+          <a href={`/project/${slug}`} className="text-sm underline">
+            Learn more →
           </a>
         )}
       </CardContent>
