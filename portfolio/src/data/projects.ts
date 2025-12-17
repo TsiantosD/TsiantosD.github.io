@@ -34,13 +34,31 @@ In this project, we engineered a high-performance **GPU implementation** of the 
 ![Diagram of the second step of the algorithm](/hpc/project4/second_step.png#small)
 
 ### Project 3
-${contentSoon}
+[View report (PDF)](/hpc/project3/report-EN.pdf)
+
+Implemented a 2D convolution on a GPU using the CUDA programming environment. Our initial implementation was constrained by using only a single thread block, which limited us to processing very small images (up to 32x32) because we quickly ran out of available threads per block. To overcome this, we redesigned the solution to use multiple thread blocks organized into a square grid, allowing us to process much larger high-resolution images, such as 16384x16384, until we reached the physical limits of the Tesla K80's global memory.
+
+A major challenge we addressed was "thread divergence," which occurred because our code used conditional if statements to check if the filter was sliding outside the image boundaries, causing threads to process data at different speeds. We optimized the algorithm by implementing image padding, which adds a temporary border around the source image so the filter logic remains uniform for every pixel. Additionally, we conducted a comparative analysis of computational accuracy and execution times using both floats and doubles, observing how higher precision significantly reduced rounding errors while impacting the speedup provided by the GPU.
+
+![Grid structure of blocks, each containing threads. Example of CUDA threads structure.](/hpc/project3/grid.png#small)
 
 ### Project 2
-${contentSoon}
+[View report (PDF)](/hpc/project2/report-EN.pdf)
+
+Parallelization of a sequential C implementation of the **k-means clustering algorithm**. Our objective was to leverage OpenMP to optimize the algorithm's execution on a multi-core Intel Xeon E5-2695 system. We began by profiling the application using Intel VTune Profiler to identify critical hotspots, specifically focusing on the object-to-cluster assignment loop and the centroid recalculation process.
+
+Our experimental results demonstrated that using atomic directives was 27% faster than critical sections because it bypassed heavy synchronization locks through direct hardware support. Furthermore, we optimized the Euclidean distance calculation by utilizing SIMD (AVX2) instructions, allowing for the simultaneous processing of eight floating-point operations.
+
+This project provided us with valuable experience in balancing synchronization overhead, vectorization, and thread distribution to achieve maximum speedup in shared-memory architectures.
 
 ### Project 1
-${contentSoon}
+[View report (PDF)](/hpc/project1/report-EN.pdf)
+
+Optimization of a **sequential C implementation** of the **Sobel Operator**, a discrete differentiation operator widely used in image processing for edge detection. Starting from a provided baseline, we iteratively applied code transformations to reduce execution time on the CPU while maintaining mathematical accuracy, verified through Peak Signal-to-Noise Ratio (PSNR) comparisons against a reference implementation. Our optimization strategy involved improving memory locality via **Loop Interchange**, reducing overhead through **Loop Unrolling** and **Function Inlining**, and enhancing instruction efficiency with **Loop Fusion**, **Loop Invariant Code Motion**, and **Common Subexpression Elimination**. We also performed **Strength Reduction**, replacing computationally expensive arithmetic with more efficient bitwise shifts and additions.
+
+To validate our improvements, we conducted an experimental analysis using the **Intel OneAPI Base Toolkit** (icx), comparing our results across both non-optimized (-O0) and highly-optimized (-fast) compiler environments. Our final report analyzed these performance gains through detailed statistical processing—reporting the mean and standard deviation of 12-run averages and comprehensive graphical diagrams to illustrate the impact of each transformation on the system's microarchitecture.
+
+![Plot of y = x+µ and y = log2(1+x), y = x+µ is used for the approximation of the fast square root.](/hpc/project1/logx.png#small)
 `,
   },
   {
