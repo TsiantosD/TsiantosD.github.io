@@ -99,12 +99,23 @@ export default function Project() {
 
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    // Check if the history stack has more than one entry
+    // Note: window.history.length includes the current page
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      // Fallback to the menu if no internal history exists
+      navigate('/', { replace: true });
+    }
+  };
+
   return (
     <>
       <section className="py-10 w-full">
         <Container>
           <div className="flex items-center justify-between mb-4 pb-8">
-            <button className="hover:cursor-pointer" onClick={() => navigate(-1)}>
+            <button className="hover:cursor-pointer" onClick={handleBack}>
               <FontAwesomeIcon icon={faArrowLeft} size="lg" />
             </button>
             {project?.link && (
