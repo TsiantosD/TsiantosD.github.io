@@ -88,7 +88,7 @@ We designed and implemented a hardware accelerator for the **Smith-Waterman loca
     link: "https://github.com/AcrispyCookie/ECE318/",
     people: 3,
     content: `
-### Project 3 - Filesystem
+### Project 3 - Compressed Filesystem
 
 [View report (PDF)](/os/project3/report-EN.pdf)
 
@@ -101,16 +101,6 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
 `,
   },
   {
-    slug: "algorithms",
-    title: "Algorithms",
-    description: "One project and three sets of problems regarding algorithms and data structures.",
-    tags: ["Algorithms", "Python", "Calculus I", "Calculus II"],
-    image: "/network.png",
-    link: "https://github.com/TsiantosD/ECE216-Algorithms/tree/main/coding-project",
-    people: 3,
-    content: contentSoon,
-  },
-  {
     slug: "computer-organization-and-design",
     title: "Computer Organization & Design",
     description: "Nine projects related to the MIPS CPU architecture, microarchitecture and one for the x86 microarchitecture.",
@@ -118,7 +108,17 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
     image: "/cpus.jpg",
     link: "https://github.com/TsiantosD/ECE219-Organization",
     people: 2,
-    content: contentSoon,
+    content: `
+### Project 8 - K-Means
+
+[View report (PDF)](/organization/lab8/report-EN.pdf)
+
+Improved the performance of a **K-Means algorithm written in C** achieving up to **3.3x speedup** compared to the original implementation. The goal of this lab was to learn how a high-level language such as C interacts with the underlying CPU's microarchitecture, specifically the caches and the branch predictor. Made profile-driven optimizations using intel **VTune** and **perf**, spotting bad code behavior such as big data structures, expensive computations, and cache evictions on power of two sized arrays.
+
+The most important changes made were **loop interchange** and a more **efficient data layout** to achieve better cache locality, as well as the use of **Manhattan distance** instead of Euclidean distance, effectively reducing the overall runtime.
+
+![Comparison between low and high color variety images. The first image runs faster since there are less branch mispredictions](/organization/lab8/lfh-hf_rgb-comparison.png#medium)  
+`,
   },
   {
     slug: "cs50w-projects",
@@ -130,4 +130,14 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
     people: 1,
     content: contentSoon,
   },
+  // {
+  //   slug: "algorithms",
+  //   title: "Algorithms",
+  //   description: "One project and three sets of problems regarding algorithms and data structures.",
+  //   tags: ["Algorithms", "Python", "Calculus I", "Calculus II"],
+  //   image: "/network.png",
+  //   link: "https://github.com/TsiantosD/ECE216-Algorithms/tree/main/coding-project",
+  //   people: 3,
+  //   content: contentSoon,
+  // },
 ];
