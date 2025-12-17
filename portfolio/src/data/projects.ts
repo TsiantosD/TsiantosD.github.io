@@ -21,10 +21,10 @@ export const projects = [
     link: "https://github.com/TsiantosD/ECE415-High-Performance-Computing",
     people: 3,
     content: `
-### Project 5
+### Project 5 - N-Body
 *In progress - due to Jan 9 2026*
 
-### Project 4
+### Project 4 - GPU CLAHE
 
 [View report (PDF)](/hpc/project4/report-EN.pdf)
 
@@ -33,7 +33,7 @@ In this project, we engineered a high-performance **GPU implementation** of the 
 ![Diagram of the first step of the algorithm](/hpc/project4/first_step.png#medium)
 ![Diagram of the second step of the algorithm](/hpc/project4/second_step.png#small)
 
-### Project 3
+### Project 3 - GPU Convolution
 [View report (PDF)](/hpc/project3/report-EN.pdf)
 
 Implemented a 2D convolution on a GPU using the CUDA programming environment. Our initial implementation was constrained by using only a single thread block, which limited us to processing very small images (up to 32x32) because we quickly ran out of available threads per block. To overcome this, we redesigned the solution to use multiple thread blocks organized into a square grid, allowing us to process much larger high-resolution images, such as 16384x16384, until we reached the physical limits of the Tesla K80's global memory.
@@ -42,7 +42,7 @@ A major challenge we addressed was "thread divergence," which occurred because o
 
 ![Grid structure of blocks, each containing threads. Example of CUDA threads structure.](/hpc/project3/grid.png#small)
 
-### Project 2
+### Project 2 - Parallel K-Means
 [View report (PDF)](/hpc/project2/report-EN.pdf)
 
 Parallelization of a sequential C implementation of the **k-means clustering algorithm**. Our objective was to leverage OpenMP to optimize the algorithm's execution on a multi-core Intel Xeon E5-2695 system. We began by profiling the application using Intel VTune Profiler to identify critical hotspots, specifically focusing on the object-to-cluster assignment loop and the centroid recalculation process.
@@ -51,7 +51,7 @@ Our experimental results demonstrated that using atomic directives was 27% faste
 
 This project provided us with valuable experience in balancing synchronization overhead, vectorization, and thread distribution to achieve maximum speedup in shared-memory architectures.
 
-### Project 1
+### Project 1 - Sobel Operator
 [View report (PDF)](/hpc/project1/report-EN.pdf)
 
 Optimization of a **sequential C implementation** of the **Sobel Operator**, a discrete differentiation operator widely used in image processing for edge detection. Starting from a provided baseline, we iteratively applied code transformations to reduce execution time on the CPU while maintaining mathematical accuracy, verified through Peak Signal-to-Noise Ratio (PSNR) comparisons against a reference implementation. Our optimization strategy involved improving memory locality via **Loop Interchange**, reducing overhead through **Loop Unrolling** and **Function Inlining**, and enhancing instruction efficiency with **Loop Fusion**, **Loop Invariant Code Motion**, and **Common Subexpression Elimination**. We also performed **Strength Reduction**, replacing computationally expensive arithmetic with more efficient bitwise shifts and additions.
@@ -70,7 +70,7 @@ To validate our improvements, we conducted an experimental analysis using the **
     link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
     people: 2,
     content: `
-### Project 3
+### Project 3 - FPGA Accelerated Smith-Waterman Algorithm
 
 [View report (PDF)](/embedded/project3/report-EN.pdf)
 
@@ -87,7 +87,18 @@ We designed and implemented a hardware accelerator for the **Smith-Waterman loca
     image: "/terminal.jpeg",
     link: "https://github.com/AcrispyCookie/ECE318/",
     people: 3,
-    content: contentSoon,
+    content: `
+### Project 3 - Filesystem
+
+[View report (PDF)](/os/project3/report-EN.pdf)
+
+We implement a custom **non-volatile**, **block-level deduplicating file system** built on top of **FUSE**, extending the Big Brother File System (BBFS). The core idea is to reduce disk usage by identifying identical 4 KB data blocks across files and storing each unique block only once. Blocks are detected using SHA-1 hashing and managed in a centralized block repository, while files are represented as virtual sequences of block references. The design carefully handles dynamic file sizes, metadata consistency, while supporting standard filesystem operations such as **write**, **read**, **truncate**, and **delete**. 
+
+Beyond basic functionality, the project tackles realistic filesystem challenges such as reference counting for **safe block deletion**, **free-space management** via a circular free list, and **partial defragmentation** to combat external fragmentation. A hierarchical directory structure is implemented using persistent metadata that is reconstructed in memory at mount time for performance. Correctness and robustness are validated through an automated **test suite written in Python**, covering block reuse, compression behavior, truncation semantics, defragmentation, and complex directory/file hierarchies. Overall, the project demonstrates practical operating systems concepts, including filesystem design trade-offs, metadata management, and performance-correctness balancing in user-space filesystems.
+
+![List of free blocks.](/os/project3/free_blocks_list.png#small)
+![Structure of the filesystem.](/os/project3/file_structure_memory.png#medium)
+`,
   },
   {
     slug: "algorithms",
