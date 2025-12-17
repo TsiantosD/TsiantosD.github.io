@@ -9,8 +9,6 @@ export interface Project {
   people: number;
 }
 
-const contentSoon = `Content will be added as soon as possible!`;
-
 export const projects = [
   {
     slug: "high-performance-computing",
@@ -172,6 +170,6 @@ A front-end clone of Google’s search interface built with **HTML** and **CSS**
   //   image: "/network.png",
   //   link: "https://github.com/TsiantosD/ECE216-Algorithms/tree/main/coding-project",
   //   people: 3,
-  //   content: contentSoon,
+  //   content: ``,
   // },
 ];

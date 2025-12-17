@@ -6,7 +6,7 @@ import {projects, type Project} from "@/data/projects.ts";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, {type Components} from "react-markdown";
 import remarkUnwrapImages from "remark-unwrap-images";
 import {CardDescription} from "@/components/ui/card.tsx";
 import {Badge} from "@/components/ui/badge.tsx";
@@ -24,7 +24,7 @@ const VideoEmbed = memo(({ videoId }: { videoId: string }) => (
   </div>
 ));
 
-const MARKDOWN_COMPONENTS = {
+const MARKDOWN_COMPONENTS: Components = {
   // Fixed: Use the correct tag (h1-h6) for each header level
   h1: ({node, ...props}) => <h1 className="text-4xl font-bold my-4" {...props} />,
   h2: ({node, ...props}) => <h2 className="text-3xl font-bold my-3" {...props} />,
