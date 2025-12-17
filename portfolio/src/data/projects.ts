@@ -109,7 +109,7 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
     link: "https://github.com/TsiantosD/ECE219-Organization",
     people: 2,
     content: `
-### Project 8 - K-Means
+### Lab 8 - K-Means
 
 [View report (PDF)](/organization/lab8/report-EN.pdf)
 
@@ -128,7 +128,41 @@ The most important changes made were **loop interchange** and a more **efficient
     image: "/ddb.jpg",
     link: "https://github.com/TsiantosD/CS50W",
     people: 1,
-    content: contentSoon,
+    content: `
+### Capstone
+
+*In progress*
+
+### Project 4 - Network
+
+A full-stack social network similar to Twitter, featuring user profiles, "Following" feeds, and real-time post editing. It utilizes **Django** for the backend and **JavaScript/React** concepts for front-end interactions like "Liking" posts without refreshing.
+
+![](https://www.youtube.com/watch?v=RlF5D1EtAPY#youtube)
+
+### Project 3 - Mail
+
+A single-page email client that sends, receives, and archives emails without page reloads. This project focuses on **JavaScript** and **asynchronous API calls** to manage a dynamic inbox interface.
+
+![](https://www.youtube.com/watch?v=zLzraCJc_Uo#youtube)
+
+### Project 2 - Commerce
+
+An eBay-like e-commerce auction site where users can create listings, place bids, and manage "Watchlists." Built with **Django**, it implements complex model relationships to handle comments, categories, and closed auctions.
+
+![](https://www.youtube.com/watch?v=J2lydE5OlwU#youtube)
+
+### Project 1 - Wiki
+
+A Wikipedia-inspired markdown encyclopedia built with **Django**. Users can create, edit, and search for entries using Markdown syntax, featuring automated page generation and a random page explorer.
+
+![](https://www.youtube.com/watch?v=oaAc0CkfcDU#youtube)
+
+### Project 0 - Search
+
+A front-end clone of Google’s search interface built with **HTML** and **CSS**, focusing on design and functional integration with Google’s search API via query strings.
+
+![](https://www.youtube.com/watch?v=eBn5-zb0kO4#youtube)
+`,
   },
   // {
   //   slug: "algorithms",

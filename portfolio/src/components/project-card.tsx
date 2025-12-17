@@ -138,12 +138,14 @@ export function ProjectCard({ slug, title, description, image, link, tags, peopl
       </CardHeader>
 
       {image && (
-        <img
-          ref={imageRef}
-          src={image}
-          alt={title}
-          className="h-60 w-[98%] object-cover rounded-md mx-auto"
-        />
+        <a href={`/project/${slug}`}>
+          <img
+            ref={imageRef}
+            src={image}
+            alt={title}
+            className="h-60 w-[98%] object-cover rounded-md mx-auto"
+          />
+        </a>
       )}
 
       <CardContent>
