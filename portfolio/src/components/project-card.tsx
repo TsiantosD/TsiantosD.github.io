@@ -127,7 +127,7 @@ export function ProjectCard({ slug, title, description, image, link, tags, peopl
             <div
               className="flex flex-wrap"
               title={(people > 1)
-                ? `${people}` + ' people in the team'
+                ? 'Team of ' + `${people}`
                 : 'solo project'
               }>
               {[...Array(people)].map((index) => (

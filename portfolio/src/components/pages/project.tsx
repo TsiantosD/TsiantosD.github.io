@@ -138,7 +138,7 @@ export default function Project() {
           <div
             className="flex flex-wrap pt-4 gap-2"
             title={(project?.people ?? 1 > 1)
-              ? `${project?.people}` + ' people in the team'
+              ? 'Team of ' + `${project?.people}`
               : 'solo project'
             }>
             <span>
