@@ -162,6 +162,22 @@ A front-end clone of Google’s search interface built with **HTML** and **CSS**
 ![](https://www.youtube.com/watch?v=eBn5-zb0kO4#youtube)
 `,
   },
+  {
+    slug: "uthapp",
+    title: "UTH App",
+    description: "Android application to view grades for University of Thessaly students.",
+    tags: ["React Native", "TypeScript", "Django", "Python", "Nginx"],
+    image: "/uthapp/stats.png",
+    link: "https://github.com/TsiantosD/UthAppClient",
+    people: 1,
+    content: `
+### The application
+
+Published on **PlayStore** an android application. This app allows University of Thessaly students to easily view their grades and statistics from their phone. Made using **React Native** (Expo) and **Django**. Reached 7,500+ downloads and ∼2,500 daily active users. The app is currently discontinued.
+
+![Designed using Figma. Special thanks to Panagiotis Nanousis at [nanousis.com](https://nanousis.com/) for the inspiration.](/uthapp/stats.png#medium)
+`,
+  }
   // {
   //   slug: "algorithms",
   //   title: "Algorithms",
