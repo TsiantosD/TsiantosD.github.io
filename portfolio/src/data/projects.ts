@@ -20,7 +20,16 @@ export const projects = [
     people: 3,
     content: `
 ### Project 5 - N-Body
-*In progress - due to Jan 9 2026*
+
+[View report (PDF)](/hpc/project5/report-EN.pdf)
+
+Starting from a sequential CPU baseline, the simulation was progressively optimized using **OpenMP** for multicore CPUs and **CUDA** for GPUs. The work examines multiple levels of parallelism, including **thread-level parallelism**, **SIMD vectorization**, **GPU kernel design**, **CUDA streams**, and **data-layout transformations**.
+
+Key optimizations include dynamic scheduling and SIMD pragmas on the CPU, as well as GPU-specific techniques such as kernel separation, use of special function units, stream-based concurrency, structure-of-arrays data layouts for coalesced memory access, kernel fusion, coarsening, and branch divergence reduction. Performance was evaluated through repeated measurements, reporting throughput, execution time, and scaling improvements across versions.
+
+The final GPU implementation achieves over two orders of magnitude speedup compared to the sequential CPU version, demonstrating a systematic approach to performance analysis, architectural awareness, and data-driven optimization on both CPUs and GPUs.
+
+![Memory flow of the program.](/hpc/project5/memory-flow.png)
 
 ### Project 4 - GPU CLAHE
 
