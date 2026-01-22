@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {Container} from "@/components/layout/container";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUser} from "@fortawesome/free-solid-svg-icons";
-import {projects, type Project} from "@/data/projects.ts";
+import {courses, type Course} from "@/data/courses.ts";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,6 @@ const VideoEmbed = memo(({ videoId }: { videoId: string }) => (
 ));
 
 const MARKDOWN_COMPONENTS: Components = {
-  // Fixed: Use the correct tag (h1-h6) for each header level
   h1: ({node, ...props}) => <h1 className="text-4xl font-bold my-4" {...props} />,
   h2: ({node, ...props}) => <h2 className="text-3xl font-bold my-3" {...props} />,
   h3: ({node, ...props}) => <h3 className="text-2xl font-bold my-2" {...props} />, // Changed h1 to h3
@@ -90,11 +89,11 @@ const MARKDOWN_COMPONENTS: Components = {
   }
 }
 
-export default function Project() {
+export default function Course() {
   const { slug } = useParams<{ slug: string }>();
 
-  const project: Project | undefined = projects.find(
-    (p): p is Project => p.slug === slug
+  const course: Course | undefined = courses.find(
+    (p): p is Course => p.slug === slug
   );
 
   const navigate = useNavigate();
@@ -118,9 +117,9 @@ export default function Project() {
             <button className="hover:cursor-pointer" onClick={handleBack}>
               <FontAwesomeIcon icon={faArrowLeft} size="lg" />
             </button>
-            {project?.link && (
+            {course?.link && (
               <a
-                href={project.link}
+                href={course.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-sm text-gray-600 hover:text-black"
@@ -133,22 +132,22 @@ export default function Project() {
             )}
           </div>
           <h1 className="text-4xl font-bold">
-            {project?.title}
+            {course?.title}
           </h1>
           <div
             className="flex flex-wrap pt-4 gap-2"
-            title={(project?.people ?? 1 > 1)
-              ? 'Team of ' + `${project?.people}`
+            title={(course?.people ?? 1 > 1)
+              ? 'Team of ' + `${course?.people}`
               : 'solo project'
             }>
             <span>
-              {[...Array(project?.people)].map((index) => (
+              {[...Array(course?.people)].map((index) => (
                 <FontAwesomeIcon key={index} icon={faUser} />
               ))}
             </span>
-            {project?.tags && (
+            {course?.tags && (
               <CardDescription className="flex flex-wrap gap-2">
-                {project?.tags.map((tag) => (
+                {course?.tags.map((tag) => (
                   <Badge key={tag} variant="outline">
                     {tag}
                   </Badge>
@@ -161,25 +160,31 @@ export default function Project() {
       <section className="pb-5 w-full">
         <Container>
           <p className="text-left text-muted-foreground mx-auto italic">
-            {project?.description}
+            {course?.description}
           </p>
         </Container>
       </section>
-      <section className="pb-20 w-full">
-        <Container>
-          {/* 'prose' styles HTML elements automatically.
-              'prose-slate' sets the color theme.
-              'lg:prose-xl' makes it larger on desktop. */}
-          <div className="prose prose-slate lg:prose-lg max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkUnwrapImages]}
-              components={MARKDOWN_COMPONENTS}
-            >
-              {project?.content ?? ""}
-            </ReactMarkdown>
-          </div>
-        </Container>
-      </section>
+      {course?.projects.map(project => {
+        return <div key={project.slug}>
+          <section className="pb-20 w-full">
+            <Container>
+              <h3 className="text-2xl font-bold my-2 scroll-mt-25" id={project.slug}>{project.title}</h3>
+              {/* 'prose' styles HTML elements automatically.
+                  'prose-slate' sets the color theme.
+                  'lg:prose-xl' makes it larger on desktop. */}
+              <div className="prose prose-slate lg:prose-lg max-w-none">
+                <ReactMarkdown
+                  remarkPlugins={[remarkUnwrapImages]}
+                  components={MARKDOWN_COMPONENTS}
+                >
+                  {project?.content ?? ""}
+                </ReactMarkdown>
+              </div>
+            </Container>
+          </section>
+        </div>
+      })
+      }
     </>
   );
 }

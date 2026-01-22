@@ -4,20 +4,33 @@ import {ChevronUpIcon} from "../ui/icons/lucide-chevron-up.tsx";
 import {ChevronDownIcon} from "../ui/icons/lucide-chevron-down.tsx";
 import {useState} from "react";
 import {SectionHeader} from "../section-header.tsx";
-import {projects} from "@/data/projects.ts";
-import {ProjectCard} from "../project-card.tsx";
+import {courses} from "@/data/courses.ts";
+import {CourseCard} from "../course-card.tsx";
 import {TimelineItem} from "../timeline-item.tsx";
 import {timeline} from "@/data/timeline.ts";
 import {Button} from "../ui/button.tsx";
 import {ArrowUpRightIcon} from "lucide-react";
 import { BackgroundPaths } from "@/components/ui/shadcn-io/background-paths";
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const [isReversed, setIsReversed] = useState(false);
   const toggleOrder = () => setIsReversed(!isReversed);
   const displayedTimeline = isReversed ? [...timeline].reverse() : timeline;
-  const skills = [...new Set(projects.flatMap(p => p.tags))];
+  const skills = [...new Set(courses.flatMap(p => p.tags))];
+  const featuredProjects = courses.flatMap(course => 
+    (course.projects || [])
+      .filter(project => project.featured)
+      .map(project => ({
+        ...project,
+        courseTitle: course.title,
+        courseSlug: course.slug
+      }))
+  );
 
   return (
     <>
@@ -48,6 +61,36 @@ export default function Home() {
               ))}
             </MarqueeContent>
           </Marquee>
+        </Container>
+        <Container className="py-20">
+          <SectionHeader
+            title="Favourite Projects"
+            subtitle=""
+          />
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            className="w-full relative"
+          >
+            <CarouselContent className="-ml-4">
+              {featuredProjects.map((project, index) => (
+                <CarouselItem key={index} className="m-2 pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                  <CourseCard
+                    slug={project.courseSlug}
+                    title={project?.title ?? ''}
+                    description={project?.description ?? ''}
+                    scrollId={project.slug}
+                    image={project.image}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            {/* Navigation Controls */}
+            <div className="hidden md:block">
+              <CarouselPrevious className="-left-12 border-none bg-background shadow-lg" />
+              <CarouselNext className="-right-12 border-none bg-background shadow-lg" />
+            </div>
+          </Carousel>
         </Container>
         {/* <Container>
           <SectionHeader
@@ -88,8 +131,8 @@ export default function Home() {
             subtitle="Some of the things I've worked on."
           />
           <div className="grid gap-6 sm:grid-cols-2">
-            {projects.map((p) => (
-              <ProjectCard key={p.title} {...p} />
+            {courses.map((p) => (
+              <CourseCard key={p.title} {...p} />
             ))}
           </div>
         </Container>

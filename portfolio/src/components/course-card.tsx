@@ -6,14 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-interface ProjectCardProps {
+interface CourseCardProps {
   slug: string;
   title: string
   description: string
   image?: string
-  link?: string
   tags?: string[]
   people?: number
+  scrollId?: string
 }
 
 interface CardTransform {
@@ -22,7 +22,7 @@ interface CardTransform {
   scale: number
 }
 
-export function ProjectCard({ slug, title, description, image, link, tags, people }: ProjectCardProps) {
+export function CourseCard({ slug, title, description, image, tags, people, scrollId }: CourseCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
@@ -138,7 +138,7 @@ export function ProjectCard({ slug, title, description, image, link, tags, peopl
       </CardHeader>
 
       {image && (
-        <a href={`/project/${slug}`}>
+        <a href={`/course/${slug}`}>
           <img
             ref={imageRef}
             src={image}
@@ -150,8 +150,8 @@ export function ProjectCard({ slug, title, description, image, link, tags, peopl
 
       <CardContent>
         <p className="mb-4 text-sm">{description}</p>
-        {link && (
-          <a href={`/project/${slug}`} className="text-sm underline">
+        {slug && (
+          <a href={`/course/${slug}${scrollId ? `#${scrollId}` : ''}`} className="text-sm underline">
             Learn more →
           </a>
         )}

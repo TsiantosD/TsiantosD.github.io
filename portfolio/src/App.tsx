@@ -1,10 +1,31 @@
 import { useEffect, useState } from "react";
 import { Navbar } from "./components/layout/navbar";
 import Home from "./components/pages/home.tsx";
-import Project from "./components/pages/project.tsx";
+import Course from "./components/pages/course.tsx";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+export function ScrollToHash() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      // Small timeout ensures the DOM has rendered before we try to scroll
+      const timeout = setTimeout(() => {
+        const element = document.getElementById(hash.replace("#", ""));
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [hash]);
+
+  return null;
+}
 
 export default function App() {
   const [showTop, setShowTop] = useState(false);
@@ -22,11 +43,12 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToHash />
       <Navbar />
       <div className="justify-items-center">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/project/:slug" element={<Project />} />
+          <Route path="/course/:slug" element={<Course />} />
         </Routes>
 
         <Footer2 />
