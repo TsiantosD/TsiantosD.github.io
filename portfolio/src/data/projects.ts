@@ -66,6 +66,10 @@ Optimization of a **sequential C implementation** of the **Sobel Operator**, a d
 To validate our improvements, we conducted an experimental analysis using the **Intel OneAPI Base Toolkit** (icx), comparing our results across both non-optimized (-O0) and highly-optimized (-fast) compiler environments. Our final report analyzed these performance gains through detailed statistical processing—reporting the mean and standard deviation of 12-run averages and comprehensive graphical diagrams to illustrate the impact of each transformation on the system's microarchitecture.
 
 ![Plot of y = x+µ and y = log2(1+x), y = x+µ is used for the approximation of the fast square root.](/hpc/project1/logx.png#small)
+
+\`\`\`gist
+TsiantosD/44952094ffe543bf2c3225b7f2b51820
+\`\`\`
 `,
   },
   {
