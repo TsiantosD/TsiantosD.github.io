@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -27,6 +27,11 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
   const imageRef = useRef<HTMLImageElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
   const lastMousePosition = useRef({ x: 0, y: 0 })
+  const [url, setUrl] = useState("");
+
+  useEffect(() => {
+    setUrl(`/course/${slug}${scrollId ? `#${scrollId}` : ''}`);
+  }, []);
 
   useEffect(() => {
     const card = cardRef.current
@@ -138,7 +143,7 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
       </CardHeader>
 
       {image && (
-        <a href={`/course/${slug}`}>
+        <a href={url}>
           <img
             ref={imageRef}
             src={image}
@@ -151,7 +156,7 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
       <CardContent>
         <p className="mb-4 text-sm">{description}</p>
         {slug && (
-          <a href={`/course/${slug}${scrollId ? `#${scrollId}` : ''}`} className="text-sm underline">
+          <a href={url} className="text-sm underline">
             Learn more →
           </a>
         )}
