@@ -97,51 +97,62 @@ Optimization of a **sequential C implementation** of the **Sobel Operator**, a d
 To validate our improvements, we conducted an experimental analysis using the **Intel OneAPI Base Toolkit** (icx), comparing our results across both non-optimized (-O0) and highly-optimized (-fast) compiler environments. Our final report analyzed these performance gains through detailed statistical processing—reporting the mean and standard deviation of 12-run averages and comprehensive graphical diagrams to illustrate the impact of each transformation on the system's microarchitecture.
 
 ![Plot of y = x+µ and y = log2(1+x), y = x+µ is used for the approximation of the fast square root.](/hpc/project1/logx.png#small)`
-      },
-      {
-
       }
     ],
   },
-//   {
-//     slug: "embedded-systems",
-//     title: "Embedded Systems",
-//     description: "Three projects on a ZedBoard Zynq-7000 ARM/FPGA SoC Development Board and one on x86",
-//     tags: ["FPGA", "Arm", "x86", "Xilinx Vitis", "Xilinx Vivado", "C++", "OpenMP", "Intel V-Tune", "Intel Advisor"],
-//     image: "/fpga.jpg",
-//     link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
-//     people: 2,
-//     content: `
-// ### Project 3 - FPGA Accelerated Smith-Waterman Algorithm
+  {
+    slug: "embedded-systems",
+    title: "Embedded Systems",
+    description: "Three projects on a ZedBoard Zynq-7000 ARM/FPGA SoC Development Board and one on x86",
+    tags: ["FPGA", "Arm", "x86", "Xilinx Vitis", "Xilinx Vivado", "C++", "OpenMP", "Intel V-Tune", "Intel Advisor"],
+    image: "/fpga.jpg",
+    link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
+    people: 2,
+    projects: [
+      {
+        slug: "fpga-accelerated-smith-waterman-algorithm",
+        title: "FPGA Accelerated Smith-Waterman Algorithm",
+        featured: true,
+        image: "/embedded/project3/similarity_matrix.png",
+        content: `
+[View report (PDF)](/embedded/project3/report-EN.pdf)
 
-// [View report (PDF)](/embedded/project3/report-EN.pdf)
+We designed and implemented a hardware accelerator for the **Smith-Waterman local sequence alignment algorithm** on an **FPGA** to address the high computational complexity of genomic data analysis. To establish a performance baseline, we first developed optimized software implementations on **x86** and **Arm** architectures, utilizing anti-diagonal data layouts and OpenMP for parallelization. For the FPGA design, we utilized **High-Level Synthesis (HLS)** to execute a series of critical optimizations: reducing space complexity by replacing the full dynamic programming matrix with anti-diagonal BRAM buffers, maximizing memory bandwidth through array partitioning, and flattening memory write operations to eliminate pipeline bottlenecks. By refining branching logic and implementing optimal array rotation, we achieved an Iteration Interval (II) of 1. The final hardware implementation demonstrated a 3.3x speedup compared to the x86 software version.
 
-// We designed and implemented a hardware accelerator for the **Smith-Waterman local sequence alignment algorithm** on an **FPGA** to address the high computational complexity of genomic data analysis. To establish a performance baseline, we first developed optimized software implementations on **x86** and **Arm** architectures, utilizing anti-diagonal data layouts and OpenMP for parallelization. For the FPGA design, we utilized **High-Level Synthesis (HLS)** to execute a series of critical optimizations: reducing space complexity by replacing the full dynamic programming matrix with anti-diagonal BRAM buffers, maximizing memory bandwidth through array partitioning, and flattening memory write operations to eliminate pipeline bottlenecks. By refining branching logic and implementing optimal array rotation, we achieved an Iteration Interval (II) of 1. The final hardware implementation demonstrated a 3.3x speedup compared to the x86 software version.
+![Similarity matrix of the Smith-Waterman algorithm](/embedded/project3/similarity_matrix.png#medium)
+          `
+      }
+    ]
+  },
+  {
+    slug: "operating-systems",
+    title: "Operating Systems",
+    description: "Three projects on the basic functionality of an OS.",
+    tags: ["Algorithms", "Unix", "C", "FUSE"],
+    image: "/terminal.jpeg",
+    link: "https://github.com/AcrispyCookie/ECE318/",
+    people: 3,
+    projects: [
+      {
+        slug: "compressed-filesystem",
+        title: "Compressed Filesystem",
+        featured: true,
+        image: "/os/project3/file_structure_memory.png",
+        description: "",
+        content: `
+[View report (PDF)](/os/project3/report-EN.pdf)
 
-// ![Similarity matrix of the Smith-Waterman algorithm](/embedded/project3/similarity_matrix.png#medium)
-// `,
-//   },
-//   {
-//     slug: "operating-systems",
-//     title: "Operating Systems",
-//     description: "Three projects on the basic functionality of an OS.",
-//     tags: ["Algorithms", "Unix", "C", "FUSE"],
-//     image: "/terminal.jpeg",
-//     link: "https://github.com/AcrispyCookie/ECE318/",
-//     people: 3,
-//     content: `
-// ### Project 3 - Compressed Filesystem
+We implement a custom **non-volatile**, **block-level deduplicating file system** built on top of **FUSE**, extending the Big Brother File System (BBFS). The core idea is to reduce disk usage by identifying identical 4 KB data blocks across files and storing each unique block only once. Blocks are detected using SHA-1 hashing and managed in a centralized block repository, while files are represented as virtual sequences of block references. The design carefully handles dynamic file sizes, metadata consistency, while supporting standard filesystem operations such as **write**, **read**, **truncate**, and **delete**. 
 
-// [View report (PDF)](/os/project3/report-EN.pdf)
+Beyond basic functionality, the project tackles realistic filesystem challenges such as reference counting for **safe block deletion**, **free-space management** via a circular free list, and **partial defragmentation** to combat external fragmentation. A hierarchical directory structure is implemented using persistent metadata that is reconstructed in memory at mount time for performance. Correctness and robustness are validated through an automated **test suite written in Python**, covering block reuse, compression behavior, truncation semantics, defragmentation, and complex directory/file hierarchies. Overall, the project demonstrates practical operating systems concepts, including filesystem design trade-offs, metadata management, and performance-correctness balancing in user-space filesystems.
 
-// We implement a custom **non-volatile**, **block-level deduplicating file system** built on top of **FUSE**, extending the Big Brother File System (BBFS). The core idea is to reduce disk usage by identifying identical 4 KB data blocks across files and storing each unique block only once. Blocks are detected using SHA-1 hashing and managed in a centralized block repository, while files are represented as virtual sequences of block references. The design carefully handles dynamic file sizes, metadata consistency, while supporting standard filesystem operations such as **write**, **read**, **truncate**, and **delete**. 
+![List of free blocks.](/os/project3/free_blocks_list.png#small)
+![Structure of the filesystem.](/os/project3/file_structure_memory.png#medium)
+`
+      }
+    ]
+  }
 
-// Beyond basic functionality, the project tackles realistic filesystem challenges such as reference counting for **safe block deletion**, **free-space management** via a circular free list, and **partial defragmentation** to combat external fragmentation. A hierarchical directory structure is implemented using persistent metadata that is reconstructed in memory at mount time for performance. Correctness and robustness are validated through an automated **test suite written in Python**, covering block reuse, compression behavior, truncation semantics, defragmentation, and complex directory/file hierarchies. Overall, the project demonstrates practical operating systems concepts, including filesystem design trade-offs, metadata management, and performance-correctness balancing in user-space filesystems.
-
-// ![List of free blocks.](/os/project3/free_blocks_list.png#small)
-// ![Structure of the filesystem.](/os/project3/file_structure_memory.png#medium)
-// `,
-//   },
 //   {
 //     slug: "computer-organization-and-design",
 //     title: "Computer Organization & Design",
@@ -162,6 +173,7 @@ To validate our improvements, we conducted an experimental analysis using the **
 // ![Comparison between low and high color variety images. The first image runs faster since there are less branch mispredictions](/organization/lab8/lfh-hf_rgb-comparison.png#medium)  
 // `,
 //   },
+
 //   {
 //     slug: "hardware-security",
 //     title: "Hardware Security",
@@ -182,6 +194,7 @@ To validate our improvements, we conducted an experimental analysis using the **
 // ![Picture of the setup. The ADALM-PLUTO SDR listening for EM radiation from the RAM of the target computer a meter away.](/hardware-security/setup.jpg#small)
 // `,
 //   },
+
 //   {
 //     slug: "cs50w-projects",
 //     title: "CS50W Projects",
@@ -226,6 +239,7 @@ To validate our improvements, we conducted an experimental analysis using the **
 // ![](https://www.youtube.com/watch?v=eBn5-zb0kO4#youtube)
 // `,
 //   },
+
 //   {
 //     slug: "uthapp",
 //     title: "UTH App",
