@@ -9,13 +9,12 @@ export interface Course {
   projects: Project[];
 }
 
-interface Project {
+export interface Project {
   title: string;
   slug: string;
-  description: string|null;
+  description?: string|null;
   featured: boolean;
-  image: string|null;
-  favouritePriority: number|null;
+  image?: string|null;
   content: string;
 }
 
@@ -92,7 +91,6 @@ This project provided us with valuable experience in balancing synchronization o
         featured: true,
         image: "/hpc/project1/shibuya-before-after.png",
         description: "Optimized the Sobel operator on x86 CPU.",
-        favouritePriority: 1,
         content: `
 [View report (PDF)](/hpc/project1/report-EN.pdf)
 

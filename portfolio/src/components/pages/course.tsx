@@ -116,9 +116,7 @@ const MARKDOWN_COMPONENTS: Components = {
 export default function Course() {
   const { slug } = useParams<{ slug: string }>();
 
-  const course: Course | undefined = courses.find(
-    (p): p is Course => p.slug === slug
-  );
+  const course = courses.find((p) => p.slug === slug);
 
   const navigate = useNavigate();
 

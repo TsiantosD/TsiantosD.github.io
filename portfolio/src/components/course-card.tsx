@@ -1,28 +1,28 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface CourseCardProps {
   slug: string;
-  title: string
-  description: string
-  image?: string
-  tags?: string[]
-  people?: number
-  scrollId?: string
+  title: string;
+  description: string;
+  image?: string|null;
+  tags?: string[];
+  people?: number|null;
+  scrollId?: string;
 }
 
 interface CardTransform {
-  rotateX: number
-  rotateY: number
-  scale: number
+  rotateX: number;
+  rotateY: number;
+  scale: number;
 }
 
-export function CourseCard({ slug, title, description, image, tags, people, scrollId }: CourseCardProps) {
+export function CourseCard({ slug, title, description, image, tags, people = null, scrollId }: CourseCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
@@ -120,7 +120,7 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
             ref={imageRef}
             src={image}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-300"
           />
         </a>
       )}
@@ -137,7 +137,7 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
               ))}
             </div>
           )}
-          {people > 0 && (
+          {people != null && people > 0 && (
             <div className="flex gap-0.5 text-muted-foreground">
               {[...Array(people)].map((_, i) => (
                 <FontAwesomeIcon key={i} icon={faUser} className="text-[10px]" />
