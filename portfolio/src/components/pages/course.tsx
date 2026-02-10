@@ -12,6 +12,7 @@ import {CardDescription} from "@/components/ui/card.tsx";
 import {Badge} from "@/components/ui/badge.tsx";
 import YouTube from 'react-youtube';
 import { memo } from 'react';
+import {GistEmbed} from "@/components/gistEmbed.tsx";
 
 const VideoEmbed = memo(({ videoId }: { videoId: string }) => (
   <div style={{ position: 'relative', paddingTop: '56.25%', height: 0, marginBottom: '20px' }}>
@@ -86,7 +87,30 @@ const MARKDOWN_COMPONENTS: Components = {
         )}
       </figure>
     );
-  }
+  },
+  code: ({ node, inline, className, children, ...props }: any) => {
+    const match = /language-(\w+)/.exec(className || '');
+    const isGist = match && match[1] === 'gist';
+    
+    // Ensure children is treated as a clean string ID
+    const gistId = Array.isArray(children) 
+      ? children[0].toString().trim() 
+      : children.toString().trim();
+
+    if (!inline && isGist) {
+      return (
+        <div className="my-8 w-full">
+          <GistEmbed gistId={gistId} />
+        </div>
+      );
+    }
+
+    return <code className={className} {...props}>{children}</code>;
+  },
+  pre: ({ children }) => {
+    // If the child is our GistEmbed, don't wrap it in <pre>
+    return <>{children}</>;
+  },
 }
 
 export default function Course() {
