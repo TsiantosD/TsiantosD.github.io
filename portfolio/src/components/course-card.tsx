@@ -74,7 +74,6 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
       )
 
       card.style.transform = `perspective(1000px) rotateX(${cardTransform.rotateX}deg) rotateY(${cardTransform.rotateY}deg) scale3d(${cardTransform.scale}, ${cardTransform.scale}, ${cardTransform.scale})`
-      card.style.boxShadow = '0 10px 35px rgba(0, 0, 0, 0.2)'
 
       img.style.transform = `perspective(1000px) rotateX(${imageTransform.rotateX}deg) rotateY(${imageTransform.rotateY}deg) scale3d(${imageTransform.scale}, ${imageTransform.scale}, ${imageTransform.scale})`
 
@@ -95,7 +94,6 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
 
       card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)'
-      card.style.boxShadow = 'none'
       card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease'
 
       img.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)'
@@ -115,51 +113,51 @@ export function CourseCard({ slug, title, description, image, tags, people, scro
   }, [])
 
   return (
-    <Card ref={cardRef} className="overflow-hidden max-w-md">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {tags && (
-          <CardDescription className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="outline">
-                {tag}
-              </Badge>
-            ))}
-          </CardDescription>
-        )}
-        {people
-          ? (
-            <div
-              className="flex flex-wrap"
-              title={(people > 1)
-                ? 'Team of ' + `${people}`
-                : 'solo project'
-              }>
-              {[...Array(people)].map((index) => (
-                <FontAwesomeIcon key={index} icon={faUser} />
-              ))}
-            </div>
-          ) : <></>}
-      </CardHeader>
-
+    <Card ref={cardRef} className="flex flex-col h-full overflow-hidden border-none shadow-md transition-all">
       {image && (
-        <a href={url}>
+        <a href={url} className="block aspect-video overflow-hidden">
           <img
             ref={imageRef}
             src={image}
             alt={title}
-            className="h-60 w-[98%] object-cover rounded-md mx-auto"
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           />
         </a>
       )}
 
-      <CardContent>
-        <p className="mb-4 text-sm">{description}</p>
-        {slug && (
-          <a href={url} className="text-sm underline">
-            Learn more →
-          </a>
-        )}
+      <CardHeader className="space-y-2 flex-none">
+        <CardTitle className="line-clamp-1">{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          {tags && (
+            <div className="flex flex-wrap gap-1">
+              {tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
+          {people > 0 && (
+            <div className="flex gap-0.5 text-muted-foreground">
+              {[...Array(people)].map((_, i) => (
+                <FontAwesomeIcon key={i} icon={faUser} className="text-[10px]" />
+              ))}
+            </div>
+          )}
+        </div>
+      </CardHeader>
+
+      <CardContent className="flex flex-col flex-grow">
+        <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+          {description}
+        </p>
+        <div className="mt-auto">
+          {slug && (
+            <a href={url} className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1">
+              Learn more <span className="text-xs">→</span>
+            </a>
+          )}
+        </div>
       </CardContent>
     </Card>
   )

@@ -62,7 +62,7 @@ export default function Home() {
             </MarqueeContent>
           </Marquee>
         </Container>
-        <Container className="py-20">
+        <Container>
           <SectionHeader
             title="Favourite Projects"
             subtitle=""
@@ -71,9 +71,9 @@ export default function Home() {
             opts={{ align: "start", loop: true }}
             className="w-full relative"
           >
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="my-10 mx-5">
               {featuredProjects.map((project, index) => (
-                <CarouselItem key={index} className="m-2 pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                <CarouselItem key={index} className="basis-full flex justify-center md:basis-1/2 lg:basis-1/3">
                   <CourseCard
                     slug={project.courseSlug}
                     title={project?.title ?? ''}

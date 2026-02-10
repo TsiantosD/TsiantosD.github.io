@@ -10,12 +10,13 @@ export interface Course {
 }
 
 interface Project {
-  slug: string;
   title: string;
-  featured: boolean;
-  content: string;
-  image: string|null;
+  slug: string;
   description: string|null;
+  featured: boolean;
+  image: string|null;
+  favouritePriority: number|null;
+  content: string;
 }
 
 export const courses = [
@@ -33,6 +34,7 @@ export const courses = [
         title: "Project 5 - N-Body",
         featured: true,
         image: "/hpc/project5/memory-flow.png",
+        description: "GPU-accelerated N-Body simulation.",
         content: `
 [View report (PDF)](/hpc/project5/report-EN.pdf)
 
@@ -48,7 +50,8 @@ The final GPU implementation achieves over two orders of magnitude speedup compa
         slug: "clahe",
         title: "Project 4 - CLAHE",
         featured: true,
-        image: "/hpc/project4/first_step.png",
+        image: "/hpc/project4/second_step.png",
+        description: "GPU-accelerated CLAHE.",
         content: `
 [View report (PDF)](/hpc/project4/report-EN.pdf)
 
@@ -89,6 +92,7 @@ This project provided us with valuable experience in balancing synchronization o
         featured: true,
         image: "/hpc/project1/shibuya-before-after.png",
         description: "Optimized the Sobel operator on x86 CPU.",
+        favouritePriority: 1,
         content: `
 [View report (PDF)](/hpc/project1/report-EN.pdf)
 
@@ -138,7 +142,7 @@ We designed and implemented a hardware accelerator for the **Smith-Waterman loca
         title: "Compressed Filesystem",
         featured: true,
         image: "/os/project3/file_structure_memory.png",
-        description: "",
+        description: "User-level filesystem with FUSE.",
         content: `
 [View report (PDF)](/os/project3/report-EN.pdf)
 
@@ -151,119 +155,155 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
 `
       }
     ]
+  },
+  {
+    slug: "computer-organization-and-design",
+    title: "Computer Organization & Design",
+    description: "Nine projects related to the MIPS CPU architecture, microarchitecture and one for the x86 microarchitecture.",
+    tags: ["MIPS", "Assembly", "Intel V-Tune", "Verilog", "C", "Python"],
+    image: "/cpus.jpg",
+    link: "https://github.com/TsiantosD/ECE219-Organization",
+    people: 2,
+    projects: [
+      {
+        slug: "kmeans",
+        title: "Lab 8 - K-Means",
+        featured: true,
+        image: "/organization/lab8/andromeda_comparison.png",
+        description: "Optimized K-Means on x86.",
+        content: `
+[View report (PDF)](/organization/lab8/report-EN.pdf)
+
+Improved the performance of a **K-Means algorithm written in C** achieving up to **3.3x speedup** compared to the original implementation. The goal of this lab was to learn how a high-level language such as C interacts with the underlying CPU's microarchitecture, specifically the caches and the branch predictor. Made profile-driven optimizations using intel **VTune** and **perf**, spotting bad code behavior such as big data structures, expensive computations, and cache evictions on power of two sized arrays.
+
+The most important changes made were **loop interchange** and a more **efficient data layout** to achieve better cache locality, as well as the use of **Manhattan distance** instead of Euclidean distance, effectively reducing the overall runtime.
+
+![Comparison between low and high color variety images. The first image runs faster since there are less branch mispredictions](/organization/lab8/lfh-hf_rgb-comparison.png#medium)
+![Image of andromeda. Original vs processed with K-means (k = 4)](/organization/lab8/andromeda_comparison.png#medium)`
+      }
+    ]
+  },
+  {
+    slug: "hardware-security",
+    title: "Hardware Security",
+    description: "A covert attack capturing EM radiation from DDR RAM.",
+    tags: ["GNU Radio", "Signal Processing", "Covert Attack", "C"],
+    image: "/hardware-security/signal.jpg",
+    link: "https://github.com/TsiantosD/ECE455-Hardware-Security",
+    people: 3,
+    projects: [
+      {
+        title: "SDR-Based DDR Air-Gap Data Exfiltration",
+        slug: "ddr-air-gap",
+        description: "A covert attack capturing RAM's radiation.",
+        featured: true,
+        image: "/hardware-security/setup.jpg",
+        content: `
+[View report (PDF)](/hardware-security/report-EN.pdf)
+
+We designed and implemented a practical electromagnetic side-channel attack that exfiltrates data from an air-gapped system by exploiting unintended emissions from the DDR memory bus. The project includes a user-space C transmitter that bypasses CPU caches using non-temporal memory instructions to intentionally modulate DDR bus activity, and an SDR-based receiver (ADALM-PLUTO + GNU Radio) that demodulates the signal using On-Off Keying.
+
+The system demonstrates reliable key exfiltration across physical distances without network connectivity, kernel privileges, or hardware modification. Beyond implementation, I analyzed timing jitter, cache hierarchy effects, noise sources, and BER limits, highlighting the real-world constraints of electromagnetic covert channels and the fragility of “air-gap” security assumptions.
+
+![Picture of the setup. The ADALM-PLUTO SDR listening for EM radiation from the RAM of the target computer a meter away.](/hardware-security/setup.jpg#small)`
+      }
+    ]
+  },
+  {
+    slug: "cs50w-projects",
+    title: "CS50W Projects",
+    description: "Projects for the CS50’s Web Programming with Python and JavaScript online course.",
+    tags: ["Web", "Django", "React", "Vue", "Docker", "Nginx", "Redis", "Python", "JavaScript"],
+    image: "/ddb.jpg",
+    link: "https://github.com/TsiantosD/CS50W",
+    people: 1,
+    projects: [
+//       {
+//         title: "Capstone",
+//         slug: "capstone",
+//         description: "",
+//         featured: false,
+//         image: "",
+//         content: `
+// *In progress*`
+//       },
+      {
+        title: "Project 4 - Network",
+        slug: "",
+        description: "",
+        featured: false,
+        image: "",
+        content: `
+A full-stack social network similar to Twitter, featuring user profiles, "Following" feeds, and real-time post editing. It utilizes **Django** for the backend and **JavaScript/React** concepts for front-end interactions like "Liking" posts without refreshing.
+
+![](https://www.youtube.com/watch?v=RlF5D1EtAPY#youtube)`
+      },
+      {
+        title: "Project 3 - Mail",
+        slug: "",
+        description: "",
+        featured: false,
+        image: "",
+        content: `
+A single-page email client that sends, receives, and archives emails without page reloads. This project focuses on **JavaScript** and **asynchronous API calls** to manage a dynamic inbox interface.
+
+![](https://www.youtube.com/watch?v=zLzraCJc_Uo#youtube)`
+      },
+      {
+        title: "Project 2 - Commerce",
+        slug: "",
+        description: "",
+        featured: false,
+        image: "",
+        content: `
+An eBay-like e-commerce auction site where users can create listings, place bids, and manage "Watchlists." Built with **Django**, it implements complex model relationships to handle comments, categories, and closed auctions.
+
+![](https://www.youtube.com/watch?v=J2lydE5OlwU#youtube)`
+      },
+      {
+        title: "Project 1 - Wiki",
+        slug: "",
+        description: "",
+        featured: false,
+        image: "",
+        content: `
+A Wikipedia-inspired markdown encyclopedia built with **Django**. Users can create, edit, and search for entries using Markdown syntax, featuring automated page generation and a random page explorer.
+
+![](https://www.youtube.com/watch?v=oaAc0CkfcDU#youtube)`
+      },
+      {
+        title: "Project 0 - Search",
+        slug: "",
+        description: "",
+        featured: false,
+        image: "",
+        content: `
+A front-end clone of Google’s search interface built with **HTML** and **CSS**, focusing on design and functional integration with Google’s search API via query strings.
+
+![](https://www.youtube.com/watch?v=eBn5-zb0kO4#youtube)`
+      }
+    ]
+  },
+  {
+    slug: "uthapp",
+    title: "UTH App",
+    description: "Android application to view grades for University of Thessaly students.",
+    tags: ["React Native", "TypeScript", "Django", "Python", "Nginx"],
+    image: "/uthapp/stats.png",
+    link: "https://github.com/TsiantosD/UthAppClient",
+    people: 1,
+    projects: [
+      {
+        title: "The application",
+        slug: "",
+        description: "",
+        featured: false,
+        image: "",
+        content: `
+Published on **PlayStore** an android application. This app allows University of Thessaly students to easily view their grades and statistics from their phone. Made using **React Native** (Expo) and **Django**. Reached 7,500+ downloads and ∼2,500 daily active users. The app is currently discontinued.
+
+![Designed using Figma. Special thanks to Panagiotis Nanousis at [nanousis.com](https://nanousis.com/) for the inspiration.](/uthapp/stats.png#medium)`
+      }
+    ]
   }
-
-//   {
-//     slug: "computer-organization-and-design",
-//     title: "Computer Organization & Design",
-//     description: "Nine projects related to the MIPS CPU architecture, microarchitecture and one for the x86 microarchitecture.",
-//     tags: ["MIPS", "Assembly", "Intel V-Tune", "Verilog", "C", "Python"],
-//     image: "/cpus.jpg",
-//     link: "https://github.com/TsiantosD/ECE219-Organization",
-//     people: 2,
-//     content: `
-// ### Lab 8 - K-Means
-
-// [View report (PDF)](/organization/lab8/report-EN.pdf)
-
-// Improved the performance of a **K-Means algorithm written in C** achieving up to **3.3x speedup** compared to the original implementation. The goal of this lab was to learn how a high-level language such as C interacts with the underlying CPU's microarchitecture, specifically the caches and the branch predictor. Made profile-driven optimizations using intel **VTune** and **perf**, spotting bad code behavior such as big data structures, expensive computations, and cache evictions on power of two sized arrays.
-
-// The most important changes made were **loop interchange** and a more **efficient data layout** to achieve better cache locality, as well as the use of **Manhattan distance** instead of Euclidean distance, effectively reducing the overall runtime.
-
-// ![Comparison between low and high color variety images. The first image runs faster since there are less branch mispredictions](/organization/lab8/lfh-hf_rgb-comparison.png#medium)  
-// `,
-//   },
-
-//   {
-//     slug: "hardware-security",
-//     title: "Hardware Security",
-//     description: "A covert attack capturing EM radiation from DDR RAM.",
-//     tags: ["GNU Radio", "Signal Processing", "Covert Attack", "C"],
-//     image: "/hardware-security/signal.jpg",
-//     link: "https://github.com/TsiantosD/ECE455-Hardware-Security",
-//     people: 3,
-//     content: `
-// ### The attack
-
-// [View report (PDF)](/hardware-security/report-EN.pdf)
-
-// We designed and implemented a practical electromagnetic side-channel attack that exfiltrates data from an air-gapped system by exploiting unintended emissions from the DDR memory bus. The project includes a user-space C transmitter that bypasses CPU caches using non-temporal memory instructions to intentionally modulate DDR bus activity, and an SDR-based receiver (ADALM-PLUTO + GNU Radio) that demodulates the signal using On-Off Keying.
-
-// The system demonstrates reliable key exfiltration across physical distances without network connectivity, kernel privileges, or hardware modification. Beyond implementation, I analyzed timing jitter, cache hierarchy effects, noise sources, and BER limits, highlighting the real-world constraints of electromagnetic covert channels and the fragility of “air-gap” security assumptions.
-
-// ![Picture of the setup. The ADALM-PLUTO SDR listening for EM radiation from the RAM of the target computer a meter away.](/hardware-security/setup.jpg#small)
-// `,
-//   },
-
-//   {
-//     slug: "cs50w-projects",
-//     title: "CS50W Projects",
-//     description: "Projects for the CS50’s Web Programming with Python and JavaScript online course.",
-//     tags: ["Web", "Django", "React", "Vue", "Docker", "Nginx", "Redis", "Python", "JavaScript"],
-//     image: "/ddb.jpg",
-//     link: "https://github.com/TsiantosD/CS50W",
-//     people: 1,
-//     content: `
-// ### Capstone
-
-// *In progress*
-
-// ### Project 4 - Network
-
-// A full-stack social network similar to Twitter, featuring user profiles, "Following" feeds, and real-time post editing. It utilizes **Django** for the backend and **JavaScript/React** concepts for front-end interactions like "Liking" posts without refreshing.
-
-// ![](https://www.youtube.com/watch?v=RlF5D1EtAPY#youtube)
-
-// ### Project 3 - Mail
-
-// A single-page email client that sends, receives, and archives emails without page reloads. This project focuses on **JavaScript** and **asynchronous API calls** to manage a dynamic inbox interface.
-
-// ![](https://www.youtube.com/watch?v=zLzraCJc_Uo#youtube)
-
-// ### Project 2 - Commerce
-
-// An eBay-like e-commerce auction site where users can create listings, place bids, and manage "Watchlists." Built with **Django**, it implements complex model relationships to handle comments, categories, and closed auctions.
-
-// ![](https://www.youtube.com/watch?v=J2lydE5OlwU#youtube)
-
-// ### Project 1 - Wiki
-
-// A Wikipedia-inspired markdown encyclopedia built with **Django**. Users can create, edit, and search for entries using Markdown syntax, featuring automated page generation and a random page explorer.
-
-// ![](https://www.youtube.com/watch?v=oaAc0CkfcDU#youtube)
-
-// ### Project 0 - Search
-
-// A front-end clone of Google’s search interface built with **HTML** and **CSS**, focusing on design and functional integration with Google’s search API via query strings.
-
-// ![](https://www.youtube.com/watch?v=eBn5-zb0kO4#youtube)
-// `,
-//   },
-
-//   {
-//     slug: "uthapp",
-//     title: "UTH App",
-//     description: "Android application to view grades for University of Thessaly students.",
-//     tags: ["React Native", "TypeScript", "Django", "Python", "Nginx"],
-//     image: "/uthapp/stats.png",
-//     link: "https://github.com/TsiantosD/UthAppClient",
-//     people: 1,
-//     content: `
-// ### The application
-
-// Published on **PlayStore** an android application. This app allows University of Thessaly students to easily view their grades and statistics from their phone. Made using **React Native** (Expo) and **Django**. Reached 7,500+ downloads and ∼2,500 daily active users. The app is currently discontinued.
-
-// ![Designed using Figma. Special thanks to Panagiotis Nanousis at [nanousis.com](https://nanousis.com/) for the inspiration.](/uthapp/stats.png#medium)
-// `,
-//   }
-  // {
-  //   slug: "algorithms",
-  //   title: "Algorithms",
-  //   description: "One project and three sets of problems regarding algorithms and data structures.",
-  //   tags: ["Algorithms", "Python", "Calculus I", "Calculus II"],
-  //   image: "/network.png",
-  //   link: "https://github.com/TsiantosD/ECE216-Algorithms/tree/main/coding-project",
-  //   people: 3,
-  //   content: ``,
-  // },
 ];
