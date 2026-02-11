@@ -571,7 +571,11 @@ Key optimizations include dynamic scheduling and SIMD pragmas on the CPU, as wel
 
 The final GPU implementation achieves over two orders of magnitude speedup compared to the sequential CPU version, demonstrating a systematic approach to performance analysis, architectural awareness, and data-driven optimization on both CPUs and GPUs.
 
-![Memory flow of the program.](/hpc/project5/memory-flow.png)`},{slug:"clahe",title:"Project 4 - CLAHE",featured:!0,image:"/hpc/project4/second_step.png",description:"GPU-accelerated CLAHE.",content:`
+![Memory flow of the program.](/hpc/project5/memory-flow.png)
+
+\`\`\`gist
+TsiantosD/51900a7f4e2e3523581583bdbe5dbf52
+\`\`\``},{slug:"clahe",title:"Project 4 - CLAHE",featured:!0,image:"/hpc/project4/second_step.png",description:"GPU-accelerated CLAHE.",content:`
 [View report (PDF)](/hpc/project4/report-EN.pdf)
 
 In this project, we engineered a high-performance **GPU implementation** of the **Contrast Limited Adaptive Histogram Equalization (CLAHE)** algorithm using **CUDA C++**. The objective was to accelerate image contrast enhancement by migrating a sequential CPU workflow to a parallel architecture. We decomposed the workload by dividing images into tiles and computing local histograms using optimized shared memory and atomic operations to minimize global memory latency. The implementation featured a custom kernel for histogram clipping and redistribution, followed by bilinear interpolation to eliminate boundary artifacts. The final solution was optimized to avoid memory bank conflicts and maximize throughput (Mpixels/sec), demonstrating significant speedups over the reference CPU implementation.
