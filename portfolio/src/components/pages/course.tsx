@@ -1,8 +1,8 @@
 import {useParams} from "react-router-dom";
 import {Container} from "@/components/layout/container";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faUser} from "@fortawesome/free-solid-svg-icons";
-import {courses, type Course} from "@/data/courses.ts";
+import {faAward, faUser} from "@fortawesome/free-solid-svg-icons";
+import {courses, type Course, type Project} from "@/data/courses.ts";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -186,14 +186,26 @@ export default function Course() {
           </p>
         </Container>
       </section>
-      {course?.projects.map(project => {
+      {course?.projects.map((project: Project) => {
         return <div key={project.slug}>
           <section className="pb-20 w-full">
             <Container>
-              <h3 className="text-2xl font-bold my-2 scroll-mt-25" id={project.slug}>{project.title}</h3>
-              {/* 'prose' styles HTML elements automatically.
-                  'prose-slate' sets the color theme.
-                  'lg:prose-xl' makes it larger on desktop. */}
+              <div className="flex items-center gap-3 mb-2 scroll-mt-25" id={project.slug}>
+                <h3 className="text-2xl font-bold my-0">
+                  {project.title}
+                </h3>
+                
+                {/* Conditional Badge for topOfClass */}
+                {(project?.topOfClass ?? false) && (
+                  <Badge 
+                    variant="secondary" 
+                    className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold"
+                  >
+                    <FontAwesomeIcon className="ml-1 text-xs" icon={faAward} />
+                    {project?.topOfClass ?? ""}
+                  </Badge>
+                )}
+              </div>
               <div className="prose prose-slate lg:prose-lg max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkUnwrapImages]}

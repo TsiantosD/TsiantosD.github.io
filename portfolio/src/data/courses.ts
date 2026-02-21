@@ -16,6 +16,7 @@ export interface Project {
   featured: boolean;
   image?: string|null;
   content: string;
+  topOfClass?: string|null;
 }
 
 export const courses = [
@@ -34,6 +35,7 @@ export const courses = [
         featured: true,
         image: "/hpc/project5/memory-flow.png",
         description: "GPU-accelerated N-Body simulation.",
+        topOfClass: "Top of class performace",
         content: `
 [View report (PDF)](/hpc/project5/report-EN.pdf)
 
@@ -43,7 +45,11 @@ Key optimizations include dynamic scheduling and SIMD pragmas on the CPU, as wel
 
 The final GPU implementation achieves over two orders of magnitude speedup compared to the sequential CPU version, demonstrating a systematic approach to performance analysis, architectural awareness, and data-driven optimization on both CPUs and GPUs.
 
-![Memory flow of the program.](/hpc/project5/memory-flow.png)`
+![Memory flow of the program.](/hpc/project5/memory-flow.png)
+
+\`\`\`gist
+TsiantosD/51900a7f4e2e3523581583bdbe5dbf52
+\`\`\``
       },
       {
         slug: "clahe",
