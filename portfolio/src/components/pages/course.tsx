@@ -2,17 +2,17 @@ import {useParams} from "react-router-dom";
 import {Container} from "@/components/layout/container";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAward, faUser} from "@fortawesome/free-solid-svg-icons";
-import {courses, type Course, type Project} from "@/data/courses.ts";
+import {courses, type Course as CourseType, type Project} from "@/data/courses.ts";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown, {type Components} from "react-markdown";
 import remarkUnwrapImages from "remark-unwrap-images";
-import {CardDescription} from "@/components/ui/card.tsx";
 import {Badge} from "@/components/ui/badge.tsx";
 import YouTube from 'react-youtube';
 import { memo } from 'react';
 import {GistEmbed} from "@/components/gistEmbed.tsx";
+import {GradeCircle} from "@/components/grade-circle.tsx";
 
 const VideoEmbed = memo(({ videoId }: { videoId: string }) => (
   <div style={{ position: 'relative', paddingTop: '56.25%', height: 0, marginBottom: '20px' }}>
@@ -111,12 +111,21 @@ const MARKDOWN_COMPONENTS: Components = {
     // If the child is our GistEmbed, don't wrap it in <pre>
     return <>{children}</>;
   },
+  ul: ({node, ...props}) => (
+    <ul className="list-disc ml-6 mb-6 text-gray-700 space-y-2" {...props} />
+  ),
+  ol: ({node, ...props}) => (
+    <ol className="list-decimal ml-6 mb-6 text-gray-700 space-y-2" {...props} />
+  ),
+  li: ({node, ...props}) => (
+    <li className="leading-relaxed" {...props} />
+  ),
 }
 
 export default function Course() {
   const { slug } = useParams<{ slug: string }>();
 
-  const course = courses.find((p) => p.slug === slug);
+  const course: CourseType|undefined = courses.find((p) => p.slug === slug);
 
   const navigate = useNavigate();
 
@@ -133,10 +142,11 @@ export default function Course() {
 
   return (
     <>
-      <section className="py-10 w-full">
+      {/* --- Sticky Navigation Bar --- */}
+      <nav className="sticky top-[52px] z-50 w-full bg-white/70 backdrop-blur">
         <Container>
-          <div className="flex items-center justify-between mb-4 pb-8">
-            <button className="hover:cursor-pointer" onClick={handleBack}>
+          <div className="flex items-center justify-between pt-4 pb-2">
+            <button className="hover:cursor-pointer p-2 -ml-2 transition-colors hover:text-primary" onClick={handleBack}>
               <FontAwesomeIcon icon={faArrowLeft} size="lg" />
             </button>
             {course?.link && (
@@ -144,7 +154,7 @@ export default function Course() {
                 href={course.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-gray-600 hover:text-black"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 GitHub
                 <FontAwesomeIcon icon={faGithub} />
@@ -153,9 +163,27 @@ export default function Course() {
               </a>
             )}
           </div>
-          <h1 className="text-4xl font-bold">
-            {course?.title}
-          </h1>
+        </Container>
+      </nav>
+
+      {/* --- Main Course Header --- */}
+      <section className="py-10 w-full">
+        <Container>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-4xl font-bold">
+              {course?.title}
+            </h1>
+
+            {course?.grade !== undefined && (
+              <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                <GradeCircle grade={course.grade} />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground leading-none">
+                  Final Grade
+                </span>
+              </div>
+            )}
+          </div>
+
           <div
             className="flex flex-wrap pt-4 gap-2"
             title={(course?.people ?? 1 > 1)
@@ -163,62 +191,68 @@ export default function Course() {
               : 'solo project'
             }>
             <span>
-              {[...Array(course?.people)].map((index) => (
-                <FontAwesomeIcon key={index} icon={faUser} />
+              {[...Array(course?.people)].map((_, index) => (
+                <FontAwesomeIcon key={index} icon={faUser} className="mr-1" />
               ))}
             </span>
             {course?.tags && (
-              <CardDescription className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {course?.tags.map((tag) => (
                   <Badge key={tag} variant="outline">
                     {tag}
                   </Badge>
                 ))}
-              </CardDescription>
+              </div>
             )}
           </div>
         </Container>
       </section>
-      <section className="pb-5 w-full">
+
+      {/* --- Course Description --- */}
+      <section className="pb-10 w-full">
         <Container>
           <p className="text-left text-muted-foreground mx-auto italic">
             {course?.description}
           </p>
         </Container>
       </section>
+
+      {/* --- Projects List --- */}
       {course?.projects.map((project: Project) => {
-        return <div key={project.slug}>
-          <section className="pb-20 w-full">
-            <Container>
-              <div className="flex items-center gap-3 mb-2 scroll-mt-25" id={project.slug}>
-                <h3 className="text-2xl font-bold my-0">
-                  {project.title}
-                </h3>
-                
-                {/* Conditional Badge for topOfClass */}
-                {(project?.topOfClass ?? false) && (
-                  <Badge 
-                    variant="secondary" 
-                    className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold"
+        return (
+          <div key={project.slug}>
+            <section className="pb-20 w-full">
+              <Container>
+                {/* Note: increased scroll-mt-32 to account for the sticky nav height */}
+                <div className="flex items-center gap-3 mb-2 scroll-mt-32" id={project.slug}>
+                  <h3 className="text-2xl font-bold my-0">
+                    {project.title}
+                  </h3>
+                  
+                  {/* Conditional Badge for topOfClass */}
+                  {project?.topOfClass && (
+                    <Badge 
+                      variant="secondary" 
+                      className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold"
+                    >
+                      <FontAwesomeIcon className="mr-1 text-xs" icon={faAward} />
+                      {project.topOfClass}
+                    </Badge>
+                  )}
+                </div>
+                <div className="prose prose-slate lg:prose-lg max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkUnwrapImages]}
+                    components={MARKDOWN_COMPONENTS}
                   >
-                    <FontAwesomeIcon className="ml-1 text-xs" icon={faAward} />
-                    {project?.topOfClass ?? ""}
-                  </Badge>
-                )}
-              </div>
-              <div className="prose prose-slate lg:prose-lg max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkUnwrapImages]}
-                  components={MARKDOWN_COMPONENTS}
-                >
-                  {project?.content ?? ""}
-                </ReactMarkdown>
-              </div>
-            </Container>
-          </section>
-        </div>
-      })
-      }
+                    {project?.content ?? ""}
+                  </ReactMarkdown>
+                </div>
+              </Container>
+            </section>
+          </div>
+        )
+      })}
     </>
   );
 }

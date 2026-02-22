@@ -7,6 +7,7 @@ export interface Course {
   link: string;
   people: number;
   projects: Project[];
+  grade?: number;
 }
 
 export interface Project {
@@ -28,6 +29,7 @@ export const courses = [
     image: "/nvidia.jpeg",
     link: "https://github.com/TsiantosD/ECE415-High-Performance-Computing",
     people: 3,
+    grade: 9.5,
     projects: [
       {
         slug: "nbody",
@@ -121,6 +123,7 @@ TsiantosD/44952094ffe543bf2c3225b7f2b51820
     image: "/fpga.jpg",
     link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
     people: 2,
+    grade: 9.5,
     projects: [
       {
         slug: "fpga-accelerated-smith-waterman-algorithm",
@@ -145,6 +148,7 @@ We designed and implemented a hardware accelerator for the **Smith-Waterman loca
     image: "/terminal.jpeg",
     link: "https://github.com/AcrispyCookie/ECE318/",
     people: 3,
+    grade: 7.5,
     projects: [
       {
         slug: "compressed-filesystem",
@@ -173,6 +177,7 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
     image: "/cpus.jpg",
     link: "https://github.com/TsiantosD/ECE219-Organization",
     people: 2,
+    grade: 8.0,
     projects: [
       {
         slug: "kmeans",
@@ -200,6 +205,7 @@ The most important changes made were **loop interchange** and a more **efficient
     image: "/hardware-security/signal.jpg",
     link: "https://github.com/TsiantosD/ECE455-Hardware-Security",
     people: 3,
+    grade: 9.5,
     projects: [
       {
         title: "SDR-Based DDR Air-Gap Data Exfiltration",
@@ -215,6 +221,35 @@ We designed and implemented a practical electromagnetic side-channel attack that
 The system demonstrates reliable key exfiltration across physical distances without network connectivity, kernel privileges, or hardware modification. Beyond implementation, I analyzed timing jitter, cache hierarchy effects, noise sources, and BER limits, highlighting the real-world constraints of electromagnetic covert channels and the fragility of “air-gap” security assumptions.
 
 ![Picture of the setup. The ADALM-PLUTO SDR listening for EM radiation from the RAM of the target computer a meter away.](/hardware-security/setup.jpg#small)`
+      }
+    ]
+  },
+  {
+    slug: "inter-network-protocol-design",
+    title: "Inter-network Protocol Design",
+    description: "Implemented and simulated the Routing Information Protocol (RIP).",
+    tags: ["TCP/IP", "Wireshark", "Docker", "Python"],
+    image: "inter-network-protocol-design/globe-network.jpg",
+    link: "https://github.com/TsiantosD/ECE441-Inter-network-Protocol-Design",
+    people: 2,
+    grade: 10,
+    projects: [
+      {
+        title: "Routing Information Protocol",
+        slug: "routing-information-protocol",
+        description: "Implemented and simulated the Routing Information Protocol (RIP).",
+        featured: true,
+        image: "inter-network-protocol-design/routing-tables.png",
+        content: `
+Implemented and simulated the **Routing Information Protocol - RIP** using **Python**, **Docker**, and **Google Protocol Buffers**, as a part of the optional course assignment. Created a virtual network with Docker Compose and added python **Unit Tests** to ensure the implementation's correctness and stability. Implemented the following:
+
+- Real-time monitoring of routing tables
+- Avoid routing loops with split horizon, poision reverse, and infinity count of 16
+- Triggered updates to ensure fast convergence
+
+![Example network topology.](/inter-network-protocol-design/topology.png#medium)
+![Real-time routing tables monitoring.](/inter-network-protocol-design/routing-tables.png#small)
+`
       }
     ]
   },

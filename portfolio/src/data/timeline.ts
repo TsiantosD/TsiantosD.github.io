@@ -47,7 +47,7 @@ export const timeline = [
     description: "Continued work on " + workaduLink + ", focusing on infrastructure automation, CI/CD pipelines, and cloud deployment.",
   },
   {
-    year: "2025",
+    year: "2025-2026",
     title: "Teaching Assistant",
     description: "Helping students with Computer Organization & Design assignments.",
   },
