@@ -141,61 +141,56 @@ export default function Course() {
   };
 
   return (
-    <>
-      {/* --- Sticky Navigation Bar --- */}
-      <nav className="sticky top-[52px] z-50 w-full bg-white/70 backdrop-blur">
-        <Container>
-          <div className="flex items-center justify-between pt-4 pb-2">
-            <button className="hover:cursor-pointer p-2 -ml-2 transition-colors hover:text-primary" onClick={handleBack}>
-              <FontAwesomeIcon icon={faArrowLeft} size="lg" />
-            </button>
+  <>
+    {/* --- Sticky Navigation Bar --- */}
+    <nav className="sticky top-[52px] z-50 w-full bg-white/70 backdrop-blur border-border/40 transition-shadow duration-300">
+      <Container>
+        <div className="flex items-center justify-between py-3">
+          <button 
+            className="hover:cursor-pointer p-2 -ml-2 transition-all hover:bg-muted rounded-full" 
+            onClick={handleBack}
+            aria-label="Back"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="w-5 h-5" />
+          </button>
+          
+          <div className="flex items-center gap-6">
             {course?.link && (
               <a
                 href={course.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="group flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                GitHub
                 <FontAwesomeIcon icon={faGithub} />
-                Repository
-                <FontAwesomeIcon icon={faExternalLinkAlt} />
+                <span>Repository</span>
+                <FontAwesomeIcon icon={faExternalLinkAlt} className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             )}
           </div>
-        </Container>
-      </nav>
+        </div>
+      </Container>
+    </nav>
 
-      {/* --- Main Course Header --- */}
-      <section className="py-10 w-full">
-        <Container>
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-4xl font-bold">
+    {/* --- Main Course Header --- */}
+    <section className="pt-16 pb-12 w-full">
+      <Container>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               {course?.title}
             </h1>
-
-            {course?.grade !== undefined && (
-              <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                <GradeCircle grade={course.grade} />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground leading-none">
-                  Final Grade
+            
+            <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-gray-700 text-slate-50 rounded-full border border-slate-800 shadow-sm transition-colors hover:bg-slate-800">
+                {[...Array(course?.people)].map((_, index) => (
+                  <FontAwesomeIcon key={index} icon={faUser} className="text-xs" />
+                ))}
+                <span className="ml-1 text-xs font-bold">
+                  {course?.people === 1 ? 'Solo Project' : `Team of ${course?.people}`}
                 </span>
               </div>
-            )}
-          </div>
-
-          <div
-            className="flex flex-wrap pt-4 gap-2"
-            title={(course?.people ?? 1 > 1)
-              ? 'Team of ' + `${course?.people}`
-              : 'solo project'
-            }>
-            <span>
-              {[...Array(course?.people)].map((_, index) => (
-                <FontAwesomeIcon key={index} icon={faUser} className="mr-1" />
-              ))}
-            </span>
-            {course?.tags && (
+              
               <div className="flex flex-wrap gap-2">
                 {course?.tags.map((tag) => (
                   <Badge key={tag} variant="outline">
@@ -203,56 +198,57 @@ export default function Course() {
                   </Badge>
                 ))}
               </div>
-            )}
+            </div>
           </div>
-        </Container>
-      </section>
 
-      {/* --- Course Description --- */}
-      <section className="pb-10 w-full">
-        <Container>
-          <p className="text-left text-muted-foreground mx-auto italic">
+          {course?.grade !== undefined && (
+            <div className="flex flex-col items-center gap-2">
+              <GradeCircle grade={course.grade} />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                Final Grade
+              </span>
+            </div>
+          )}
+        </div>
+      </Container>
+    </section>
+
+    {/* --- Content Grid --- */}
+    <main className="py-12">
+      <Container>
+        <div className="max-w-3xl mx-auto"> {/* Constraining width for readability */}
+          <p className="text-xl text-muted-foreground mb-16 leading-relaxed italic border-l-4 pl-6 border-primary/20">
             {course?.description}
           </p>
-        </Container>
-      </section>
 
-      {/* --- Projects List --- */}
-      {course?.projects.map((project: Project) => {
-        return (
-          <div key={project.slug}>
-            <section className="pb-20 w-full">
-              <Container>
-                {/* Note: increased scroll-mt-32 to account for the sticky nav height */}
-                <div className="flex items-center gap-3 mb-2 scroll-mt-32" id={project.slug}>
-                  <h3 className="text-2xl font-bold my-0">
-                    {project.title}
-                  </h3>
-                  
-                  {/* Conditional Badge for topOfClass */}
-                  {project?.topOfClass && (
-                    <Badge 
-                      variant="secondary" 
-                      className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold"
-                    >
-                      <FontAwesomeIcon className="mr-1 text-xs" icon={faAward} />
-                      {project.topOfClass}
-                    </Badge>
-                  )}
-                </div>
-                <div className="prose prose-slate lg:prose-lg max-w-none">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkUnwrapImages]}
-                    components={MARKDOWN_COMPONENTS}
-                  >
-                    {project?.content ?? ""}
-                  </ReactMarkdown>
-                </div>
-              </Container>
+          {course?.projects.map((project: Project) => (
+            <section key={project.slug} className="mb-24 last:mb-0">
+              <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8 scroll-mt-40" id={project.slug}>
+                <h3 className="text-3xl font-bold tracking-tight">
+                  {project.title}
+                </h3>
+                
+                {project?.topOfClass && (
+                  <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold">
+                    <FontAwesomeIcon className="mr-2 text-xs" icon={faAward} />
+                    {project.topOfClass}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="prose prose-slate dark:prose-invert lg:prose-lg max-w-none">
+                <ReactMarkdown
+                  remarkPlugins={[remarkUnwrapImages]}
+                  components={MARKDOWN_COMPONENTS}
+                >
+                  {project?.content ?? ""}
+                </ReactMarkdown>
+              </div>
             </section>
-          </div>
-        )
-      })}
-    </>
-  );
+          ))}
+        </div>
+      </Container>
+    </main>
+  </>
+);
 }

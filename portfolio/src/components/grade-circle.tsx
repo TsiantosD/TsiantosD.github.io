@@ -29,7 +29,7 @@ export const GradeCircle = ({ grade }: { grade: number }) => {
           cy="32"
           r={radius}
           stroke="currentColor"
-          strokeWidth={strokeWidth}
+          strokeWidth={strokeWidth+1}
           fill="transparent"
           strokeDasharray={circumference}
           style={{ strokeDashoffset: offset }}
