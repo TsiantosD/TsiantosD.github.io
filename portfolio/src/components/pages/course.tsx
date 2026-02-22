@@ -13,6 +13,7 @@ import YouTube from 'react-youtube';
 import { memo } from 'react';
 import {GistEmbed} from "@/components/gistEmbed.tsx";
 import {GradeCircle} from "@/components/grade-circle.tsx";
+import TeamSection from "../team-section";
 
 const VideoEmbed = memo(({ videoId }: { videoId: string }) => (
   <div style={{ position: 'relative', paddingTop: '56.25%', height: 0, marginBottom: '20px' }}>
@@ -248,6 +249,7 @@ export default function Course() {
           ))}
         </div>
       </Container>
+      <TeamSection members={course?.members ?? []} />
     </main>
   </>
 );

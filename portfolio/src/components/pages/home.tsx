@@ -33,6 +33,10 @@ export default function Home() {
         courseSlug: course.slug
       }))
   );
+  const allCollaborators = courses.flatMap(course => course.members || []);
+  const uniqueCollaborators = Array.from(
+    new Map(allCollaborators.map(m => [m.linkedin || m.name, m])).values()
+  ).filter(m => !m.name.toLowerCase().includes("tsiantos")); // Replace with your actual name filter
 
   return (
     <>
@@ -135,6 +139,50 @@ export default function Home() {
           <div className="grid gap-6 sm:grid-cols-2">
             {courses.map((p) => (
               <CourseCard key={p.title} {...p} />
+            ))}
+          </div>
+        </Container>
+      </section>
+      <section id="collaborators" className="py-20 w-full">
+        <Container>
+          <SectionHeader
+            title="Collaborators"
+            subtitle="The talented people I've had the pleasure of working with on various projects."
+          />
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
+            {uniqueCollaborators.map((member) => (
+              <a
+                key={member.linkedin || member.name}
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col h-full items-center text-center p-6 bg-background border rounded-2xl transition-all hover:shadow-md hover:border-primary/50"
+              >
+                {/* Avatar logic: Image or Initial fallback */}
+                <div className={`
+                  w-16 h-16 rounded-full bg-black dark:bg-white text-white dark:text-black 
+                  flex items-center justify-center font-bold text-xl mb-4 overflow-hidden 
+                  shrink-0 border-2 group-hover:border-primary transition-all
+                  ${!member.avatar ? "border-gray-200 dark:border-gray-800" : "border-transparent"}
+                `}>
+                  {member.avatar ? (
+                    <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                  ) : (
+                    member.name.charAt(0)
+                  )}
+                </div>
+                
+                <h3 className="font-bold text-sm group-hover:text-primary transition-colors">
+                  {member.name}
+                </h3>
+
+                <div className="mt-auto pt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                    View Profile
+                  </span>
+                </div>
+              </a>
             ))}
           </div>
         </Container>

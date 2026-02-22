@@ -8,6 +8,7 @@ export interface Course {
   people: number;
   projects: Project[];
   grade?: number;
+  members?: TeamMember[];
 }
 
 export interface Project {
@@ -20,6 +21,42 @@ export interface Project {
   topOfClass?: string|null;
 }
 
+export interface TeamMember {
+  name: string;
+  linkedin?: string;
+  avatar?: string;
+}
+
+const me: TeamMember = {
+  name: "Tsiantos Dimitrios",
+  linkedin: "https://linkedin.com/in/tsiantosd",
+  avatar: "/me.jpg"
+};
+const tsogkas: TeamMember = {
+  name: "Tsogkas Panagiotis Nikolaos",
+  linkedin: "https://www.linkedin.com/in/panagiotis-nikolaos-tsogkas-650871293/"
+}
+const nikas: TeamMember = {
+  name: "Nikas Jason", 
+  linkedin: "https://www.linkedin.com/in/jason-nikas-b64163255/",
+  avatar: "/team-members/nikas.jpeg"
+};
+const zerdalis: TeamMember = {
+  name: "Zerdalis Christodoulos",
+  linkedin: "https://www.linkedin.com/in/christodoulos-zerdalis-8a0839399/",
+  avatar: "/team-members/zerdalis.jpeg"
+}
+const romanidis: TeamMember = {
+  name: "Romanidis Aggelos",
+  linkedin: "",
+  avatar: ""
+}
+const malakoudis: TeamMember = {
+  name: "Malakoudis Harris",
+  linkedin: "https://www.linkedin.com/in/harris-malakoudis-a22462309/",
+  avatar: "/team-members/malakoudis.jpeg"
+}
+
 export const courses = [
   {
     slug: "high-performance-computing",
@@ -30,6 +67,7 @@ export const courses = [
     link: "https://github.com/TsiantosD/ECE415-High-Performance-Computing",
     people: 3,
     grade: 9.5,
+    members: [ me, nikas, tsogkas ],
     projects: [
       {
         slug: "nbody",
@@ -124,6 +162,7 @@ TsiantosD/44952094ffe543bf2c3225b7f2b51820
     link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
     people: 2,
     grade: 9.5,
+    members: [ me, zerdalis ],
     projects: [
       {
         slug: "fpga-accelerated-smith-waterman-algorithm",
@@ -149,6 +188,7 @@ We designed and implemented a hardware accelerator for the **Smith-Waterman loca
     link: "https://github.com/AcrispyCookie/ECE318/",
     people: 3,
     grade: 7.5,
+    members: [ me, nikas, tsogkas ],
     projects: [
       {
         slug: "compressed-filesystem",
@@ -178,6 +218,7 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
     link: "https://github.com/TsiantosD/ECE219-Organization",
     people: 2,
     grade: 8.0,
+    members: [ me, romanidis ],
     projects: [
       {
         slug: "kmeans",
@@ -206,6 +247,7 @@ The most important changes made were **loop interchange** and a more **efficient
     link: "https://github.com/TsiantosD/ECE455-Hardware-Security",
     people: 3,
     grade: 9.5,
+    members: [ me, nikas, tsogkas ],
     projects: [
       {
         title: "SDR-Based DDR Air-Gap Data Exfiltration",
@@ -233,6 +275,7 @@ The system demonstrates reliable key exfiltration across physical distances with
     link: "https://github.com/TsiantosD/ECE441-Inter-network-Protocol-Design",
     people: 2,
     grade: 10,
+    members: [ me, malakoudis ],
     projects: [
       {
         title: "Routing Information Protocol",
@@ -261,6 +304,7 @@ Implemented and simulated the **Routing Information Protocol - RIP** using **Pyt
     image: "/ddb.jpg",
     link: "https://github.com/TsiantosD/CS50W",
     people: 1,
+    members: [ me ],
     projects: [
 //       {
 //         title: "Capstone",
@@ -336,6 +380,7 @@ A front-end clone of Google’s search interface built with **HTML** and **CSS**
     image: "/uthapp/stats.png",
     link: "https://github.com/TsiantosD/UthAppClient",
     people: 1,
+    members: [ me ],
     projects: [
       {
         title: "The application",
