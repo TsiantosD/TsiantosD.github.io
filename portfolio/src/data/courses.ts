@@ -47,7 +47,7 @@ const zerdalis: TeamMember = {
   avatar: "/team-members/zerdalis.jpeg"
 }
 const romanidis: TeamMember = {
-  name: "Romanidis Aggelos",
+  name: "Romanidis Angelos",
   linkedin: "",
   avatar: ""
 }
@@ -246,7 +246,7 @@ The most important changes made were **loop interchange** and a more **efficient
     image: "/hardware-security/signal.jpg",
     link: "https://github.com/TsiantosD/ECE455-Hardware-Security",
     people: 3,
-    grade: 9.5,
+    grade: 10,
     members: [ me, nikas, tsogkas ],
     projects: [
       {
