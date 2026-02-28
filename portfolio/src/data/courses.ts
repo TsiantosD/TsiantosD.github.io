@@ -95,7 +95,7 @@ TsiantosD/51900a7f4e2e3523581583bdbe5dbf52
       {
         slug: "clahe",
         title: "Project 4 - CLAHE",
-        featured: true,
+        featured: false,
         image: "/hpc/project4/second_step.png",
         description: "GPU-accelerated CLAHE.",
         content: `
@@ -157,7 +157,7 @@ TsiantosD/44952094ffe543bf2c3225b7f2b51820
   {
     slug: "embedded-systems",
     title: "Embedded Systems",
-    description: "Three projects on a ZedBoard Zynq-7000 ARM/FPGA SoC Development Board and one on x86",
+    description: "Three projects on a ZedBoard Zynq-7000 ARM/FPGA SoC Development Board",
     tags: ["FPGA", "Arm", "x86", "Xilinx Vitis", "Xilinx Vivado", "C++", "OpenMP", "Intel V-Tune", "Intel Advisor"],
     image: "/fpga.jpg",
     link: "https://github.com/TsiantosD/ECE340-Embedded-Systems",
@@ -176,6 +176,7 @@ TsiantosD/44952094ffe543bf2c3225b7f2b51820
 We designed and implemented a hardware accelerator for the **Smith-Waterman local sequence alignment algorithm** on an **FPGA** to address the high computational complexity of genomic data analysis. To establish a performance baseline, we first developed optimized software implementations on **x86** and **Arm** architectures, utilizing anti-diagonal data layouts and OpenMP for parallelization. For the FPGA design, we utilized **High-Level Synthesis (HLS)** to execute a series of critical optimizations: reducing space complexity by replacing the full dynamic programming matrix with anti-diagonal BRAM buffers, maximizing memory bandwidth through array partitioning, and flattening memory write operations to eliminate pipeline bottlenecks. By refining branching logic and implementing optimal array rotation, we achieved an Iteration Interval (II) of 1. The final hardware implementation demonstrated a 3.3x speedup compared to the x86 software version.
 
 ![Similarity matrix of the Smith-Waterman algorithm](/embedded/project3/similarity_matrix.png#medium)
+![Running the Smith-Waterman algorithm on the ZedBoard Zynq-7000 ARM/FPGA SoC Development Board](/embedded/project3/zedboard.png#medium)
           `
       }
     ]
