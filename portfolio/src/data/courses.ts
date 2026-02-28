@@ -259,11 +259,15 @@ The most important changes made were **loop interchange** and a more **efficient
         content: `
 [View report (PDF)](/hardware-security/report-EN.pdf)
 
-We designed and implemented a practical electromagnetic side-channel attack that exfiltrates data from an air-gapped system by exploiting unintended emissions from the DDR memory bus. The project includes a user-space C transmitter that bypasses CPU caches using non-temporal memory instructions to intentionally modulate DDR bus activity, and an SDR-based receiver (ADALM-PLUTO + GNU Radio) that demodulates the signal using On-Off Keying.
+We designed and implemented a practical **electromagnetic side-channel attack** that exfiltrates data from an **air-gapped system** by exploiting unintended **emissions from the DDR memory bus**. The project includes a user-space C transmitter that bypasses CPU caches using **non-temporal memory instructions** to intentionally modulate DDR bus activity, and an SDR-based receiver (**ADALM-PLUTO** and **GNU Radio**) that demodulates the signal using **On-Off Keying**.
 
 The system demonstrates reliable key exfiltration across physical distances without network connectivity, kernel privileges, or hardware modification. Beyond implementation, I analyzed timing jitter, cache hierarchy effects, noise sources, and BER limits, highlighting the real-world constraints of electromagnetic covert channels and the fragility of “air-gap” security assumptions.
 
-![Picture of the setup. The ADALM-PLUTO SDR listening for EM radiation from the RAM of the target computer a meter away.](/hardware-security/setup.jpg#small)`
+Managed to successfully transfer data up to two meters away with a bitrate of 128 bits per second.
+
+![Picture of the setup. The ADALM-PLUTO SDR listening for EM radiation from the RAM of the target computer a meter away.](/hardware-security/setup.jpg#small)
+![Capturing and decoding a message in real-time using GNU radio and a helper script.](/hardware-security/demo.gif)
+`
       }
     ]
   },
