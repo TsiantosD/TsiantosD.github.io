@@ -75,7 +75,7 @@ export const courses = [
         featured: true,
         image: "/hpc/project5/nbody_simulation.png",
         description: "GPU-accelerated N-Body simulation.",
-        topOfClass: "Top of class performace",
+        topOfClass: "Top of class performance",
         content: `
 [View report (PDF)](/hpc/project5/report-EN.pdf)
 
