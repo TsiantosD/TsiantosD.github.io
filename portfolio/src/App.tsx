@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "./components/layout/navbar";
 import Home from "./components/pages/home.tsx";
 import Course from "./components/pages/course.tsx";
+import Tomasulo from "./components/pages/tomasulo.tsx";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -49,6 +50,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/course/:slug" element={<Course />} />
+          <Route path="/tomasulo/" element={<Tomasulo />} />
         </Routes>
 
         <Footer2 />
