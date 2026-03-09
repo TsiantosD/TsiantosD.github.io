@@ -208,6 +208,21 @@ Beyond basic functionality, the project tackles realistic filesystem challenges 
 ![List of free blocks.](/os/project3/free_blocks_list.png#small)
 ![Structure of the filesystem.](/os/project3/file_structure_memory.png#medium)
 `
+      },
+      {
+        slug: "scheduling",
+        title: "Scheduling",
+        featured: false,
+        image: "/os/project2/gantt.png",
+        description: "",
+        content: `
+[View report (PDF)](/os/project2/report-EL.pdf)
+
+This project involves the implementation and experimental analysis of **scheduling algorithms** within an operating system, specifically comparing the classic **Shortest Job First** (SJF) algorithm with a variation designed for **starvation avoidance**. Through profiling, the study demonstrated that while SJF selects the process with the shortest expected burst time, it often leads to the "starvation" of non-interactive processes when faced with a continuous flow of interactive requests. The proposed solution utilizes a "goodness score" index that factors in both the expected burst time and the waiting time in the ready queue. The findings conclude that this variation ensures a fairer distribution of CPU resources, allowing all processes a chance to execute despite the slightly higher computational overhead imposed on the scheduler.
+
+![Gantt chart of the modified SJF running four IO processes.](/os/project2/gantt.png#medium)
+![Modified SJF's priorities.](/os/project2/sjf-mod-plain.png#medium)
+        `
       }
     ]
   },
