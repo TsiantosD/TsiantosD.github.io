@@ -143,6 +143,44 @@ export default function Home() {
           </div>
         </Container>
       </section>
+      <section id="tools" className="py-20 w-full">
+        <Container className="space-x-6">
+          <SectionHeader
+            title="Tools"
+            subtitle="Online helper tools."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Tomasulo Algorithm Card */}
+            <a href="/tomasulo" className="group">
+              <div className="p-6 border border-gray-200 rounded-xl hover:border-black hover:shadow-xl transition-all duration-300 bg-white">
+                {/* Icon Container with Black Accent */}
+                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-black transition-colors duration-300">
+                  <svg 
+                    className="w-6 h-6 text-black group-hover:text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                  </svg>
+                </div>
+                
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Tomasulo Visualizer</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Step-by-step interactive simulation of dynamic instruction scheduling, reservation stations, and register renaming.
+                </p>
+                
+                <span className="text-black font-semibold text-sm flex items-center border-b-2 border-transparent group-hover:border-black w-fit transition-all">
+                  Launch Simulator
+                  <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </div>
+        </Container>
+      </section>
       <section id="collaborators" className="py-20 w-full">
         <Container>
           <SectionHeader
