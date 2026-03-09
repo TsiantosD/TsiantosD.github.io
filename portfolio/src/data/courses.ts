@@ -85,7 +85,7 @@ Key optimizations include dynamic scheduling and SIMD pragmas on the CPU, as wel
 
 The final GPU implementation achieves over two orders of magnitude speedup compared to the sequential CPU version, demonstrating a systematic approach to performance analysis, architectural awareness, and data-driven optimization on both CPUs and GPUs.
 
-![Simulation of a galaxy with 4096 bodies and a black hole in the center.](/hpc/project5/nbody_simulation.gif)
+![Simulation of a galaxy with 4096 bodies and a black hole in the center. Visualized using matlab and ffmpeg.](/hpc/project5/nbody_simulation.gif)
 ![Memory flow of the program.](/hpc/project5/memory-flow.png)
 
 \`\`\`gist
