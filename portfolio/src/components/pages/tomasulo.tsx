@@ -36,12 +36,13 @@ interface HistoryState {
 
 const TomasuloVisualizer: React.FC = () => {
   const [currentCycle, setCurrentCycle] = useState<number>(1);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const jsonInputRef = useRef<HTMLInputElement>(null);
+  const txtInputRef = useRef<HTMLInputElement>(null);
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
 
   const createEmptyCycle = (): CycleData => ({
-    instructions: Array(6).fill(0).map(() => ({ op: '', issue: '', exec: '', wb: '' })),
+    instructions: [],
     reservationStations: [
       { name: 'Add1', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
       { name: 'Add2', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
@@ -77,6 +78,48 @@ const TomasuloVisualizer: React.FC = () => {
     });
   };
 
+  const handleJsonUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (rev) => {
+      const result = rev.target?.result;
+      if (typeof result === 'string') {
+        setHistory(JSON.parse(result));
+        setCurrentCycle(1);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleTxtUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (rev) => {
+      const content = rev.target?.result;
+      if (typeof content === 'string') {
+        const lines = content.split(/\r?\n/).filter(line => line.trim() !== '');
+        const newInstructions: Instruction[] = lines.map(line => ({
+          op: line.trim(),
+          issue: '',
+          exec: '',
+          wb: ''
+        }));
+
+        updateHistoryForward((cycle) => {
+          cycle.instructions = [...cycle.instructions, ...newInstructions];
+          return cycle;
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const data = history[currentCycle] || createEmptyCycle();
+  const allCycles = Object.keys(history).map(Number).sort((a, b) => a - b);
+
+  // Remaining logic (addRow, removeRow, toggleBusy, handleSort) stays the same...
   const toggleBusy = (index: number) => {
     const currentVal = history[currentCycle].reservationStations[index].busy;
     updateField('reservationStations', index, 'busy', currentVal === 'Yes' ? 'No' : 'Yes');
@@ -125,23 +168,6 @@ const TomasuloVisualizer: React.FC = () => {
     dragOverItem.current = null;
   };
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (rev) => {
-      const result = rev.target?.result;
-      if (typeof result === 'string') {
-        setHistory(JSON.parse(result));
-        setCurrentCycle(1);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  const data = history[currentCycle] || createEmptyCycle();
-  const allCycles = Object.keys(history).map(Number).sort((a, b) => a - b);
-
   return (
     <div style={{ padding: '20px', maxWidth: '1600px', margin: 'auto', fontFamily: 'system-ui, sans-serif', backgroundColor: '#fdfdfd', minHeight: '100vh', paddingBottom: '100px' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #eee', paddingBottom: '15px' }}>
@@ -151,12 +177,21 @@ const TomasuloVisualizer: React.FC = () => {
         </div>
         
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileUpload} accept=".json" />
-          <button onClick={() => fileInputRef.current?.click()} style={secondaryBtn}>Upload JSON</button>
+          {/* Assembly Import */}
+          <input type="file" ref={txtInputRef} style={{ display: 'none' }} onChange={handleTxtUpload} />
+          <button onClick={() => txtInputRef.current?.click()} style={{ ...secondaryBtn, backgroundColor: '#f0fdf4', borderColor: '#bbf7d0', color: '#166534' }}>Import asm</button>
+
+          {/* JSON Upload */}
+          <input type="file" ref={jsonInputRef} style={{ display: 'none' }} onChange={handleJsonUpload} accept=".json" />
+          <button onClick={() => jsonInputRef.current?.click()} style={secondaryBtn}>Load JSON</button>
+          
           <button onClick={() => {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
             const a = document.createElement('a'); a.setAttribute("href", dataStr); a.setAttribute("download", `tomasulo.json`); a.click();
-          }} style={secondaryBtn}>Download JSON</button>
+          }} style={secondaryBtn}>Save JSON</button>
+          
+          <div style={{ width: '1px', height: '30px', backgroundColor: '#ddd', margin: '0 5px' }} />
+          
           <button onClick={() => setCurrentCycle(Math.max(1, currentCycle - 1))} style={navBtn}>Prev</button>
           <button onClick={() => {
             const next = currentCycle + 1;
@@ -170,7 +205,7 @@ const TomasuloVisualizer: React.FC = () => {
         <TableSection title="Instruction Status" headers={['Instruction', 'Issue', 'Exec', 'WB', '']} onAdd={() => addRow('instructions')}>
           {data.instructions.map((inst, i) => (
             <tr key={i} draggable onDragStart={() => (dragItem.current = i)} onDragEnter={() => (dragOverItem.current = i)} onDragEnd={() => handleSort('instructions')} onDragOver={(e) => e.preventDefault()} style={{ ...rowStyle, backgroundColor: i % 2 === 0 ? '#ffffff' : '#f8f9fa' }}>
-              <td><input style={inputStyle} value={inst.op} onChange={e => updateField('instructions', i, 'op', e.target.value)} /></td>
+              <td><input style={inputStyle} value={inst.op} onChange={e => updateField('instructions', i, 'op', e.target.value)} placeholder="ADD.D F6, F2, F1" /></td>
               <td style={{ width: '50px' }}><input style={inputStyle} value={inst.issue} onChange={e => updateField('instructions', i, 'issue', e.target.value)} /></td>
               <td style={{ width: '50px' }}><input style={inputStyle} value={inst.exec} onChange={e => updateField('instructions', i, 'exec', e.target.value)} /></td>
               <td style={{ width: '50px' }}><input style={inputStyle} value={inst.wb} onChange={e => updateField('instructions', i, 'wb', e.target.value)} /></td>
@@ -195,7 +230,7 @@ const TomasuloVisualizer: React.FC = () => {
         </TableSection>
       </div>
 
-      <div>
+      <div style={{ marginTop: '20px' }}>
         <h3 style={labelStyle}>Register Status (Qi)</h3>
         <table style={tableMainStyle}>
           <thead>
@@ -246,7 +281,7 @@ const TableSection: React.FC<TableSectionProps> = ({ title, headers, children, o
   </div>
 );
 
-// --- Styles with Proper Types ---
+// --- Static Styles ---
 const tableMainStyle: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', border: '1px solid #dfe6e9', backgroundColor: 'white' };
 const headerRowStyle: React.CSSProperties = { backgroundColor: '#2d3436', color: 'white', fontSize: '12px' };
 const cellStyle: React.CSSProperties = { border: '1px solid #f1f2f6' };
