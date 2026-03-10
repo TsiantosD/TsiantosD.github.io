@@ -20,14 +20,16 @@ interface ReservationStation {
   [key: string]: string;
 }
 
-interface Registers {
-  [key: string]: string;
+// Changed to a more flexible structure for dynamic keys
+interface RegisterEntry {
+  name: string;
+  value: string;
 }
 
 interface CycleData {
   instructions: Instruction[];
   reservationStations: ReservationStation[];
-  registers: Registers;
+  registers: RegisterEntry[];
 }
 
 interface HistoryState {
@@ -38,19 +40,21 @@ const TomasuloVisualizer: React.FC = () => {
   const [currentCycle, setCurrentCycle] = useState<number>(1);
   const jsonInputRef = useRef<HTMLInputElement>(null);
   const txtInputRef = useRef<HTMLInputElement>(null);
-  const dragItem = useRef<number | null>(null);
-  const dragOverItem = useRef<number | null>(null);
+  // const dragItem = useRef<number | null>(null);
+  // const dragOverItem = useRef<number | null>(null);
 
   const createEmptyCycle = (): CycleData => ({
     instructions: [],
     reservationStations: [
       { name: 'Add1', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
       { name: 'Add2', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
-      { name: 'Add3', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
       { name: 'Mult1', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
-      { name: 'Mult2', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
     ],
-    registers: { F0: '', F2: '', F4: '', F6: '', F8: '', F10: '', F12: '', F14: '', F16: '' }
+    // Initial registers as an array of objects
+    registers: [
+      { name: 'F0', value: '' }, { name: 'F2', value: '' }, { name: 'F4', value: '' },
+      { name: 'F6', value: '' }, { name: 'F8', value: '' }, { name: 'F10', value: '' }
+    ]
   });
 
   const [history, setHistory] = useState<HistoryState>({ 1: createEmptyCycle() });
@@ -66,30 +70,40 @@ const TomasuloVisualizer: React.FC = () => {
     });
   };
 
-  const updateField = (section: keyof CycleData, index: number | null, field: string, value: string) => {
+  const updateField = (section: keyof CycleData, index: number, field: string, value: string) => {
     updateHistoryForward((cycle) => {
-      if (section === 'registers') {
-        cycle.registers[field] = value;
-      } else if (index !== null) {
-        const target = cycle[section] as any[];
+      const target = cycle[section] as any[];
+      if (target[index]) {
         target[index][field] = value;
       }
       return cycle;
     });
   };
 
-  const handleJsonUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (rev) => {
-      const result = rev.target?.result;
-      if (typeof result === 'string') {
-        setHistory(JSON.parse(result));
-        setCurrentCycle(1);
+  const addRow = (section: keyof CycleData) => {
+    updateHistoryForward((cycle) => {
+      if (section === 'instructions') {
+        cycle.instructions.push({ op: '', issue: '', exec: '', wb: '' });
+      } else if (section === 'reservationStations') {
+        cycle.reservationStations.push({ name: `RS${cycle.reservationStations.length + 1}`, busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' });
+      } else if (section === 'registers') {
+        cycle.registers.push({ name: `R${cycle.registers.length}`, value: '' });
       }
-    };
-    reader.readAsText(file);
+      return cycle;
+    });
+  };
+
+  const removeRow = (section: keyof CycleData, index: number) => {
+    updateHistoryForward((cycle) => {
+      const target = cycle[section] as any[];
+      target.splice(index, 1);
+      return cycle;
+    });
+  };
+
+  const toggleBusy = (index: number) => {
+    const currentVal = history[currentCycle].reservationStations[index].busy;
+    updateField('reservationStations', index, 'busy', currentVal === 'Yes' ? 'No' : 'Yes');
   };
 
   const handleTxtUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -100,14 +114,8 @@ const TomasuloVisualizer: React.FC = () => {
       const content = rev.target?.result;
       if (typeof content === 'string') {
         const lines = content.split(/\r?\n/).filter(line => line.trim() !== '');
-        const newInstructions: Instruction[] = lines.map(line => ({
-          op: line.trim(),
-          issue: '',
-          exec: '',
-          wb: ''
-        }));
-
         updateHistoryForward((cycle) => {
+          const newInstructions = lines.map(line => ({ op: line.trim(), issue: '', exec: '', wb: '' }));
           cycle.instructions = [...cycle.instructions, ...newInstructions];
           return cycle;
         });
@@ -116,82 +124,39 @@ const TomasuloVisualizer: React.FC = () => {
     reader.readAsText(file);
   };
 
+  const handleJsonUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (rev) => {
+      if (typeof rev.target?.result === 'string') {
+        setHistory(JSON.parse(rev.target.result));
+        setCurrentCycle(1);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const data = history[currentCycle] || createEmptyCycle();
   const allCycles = Object.keys(history).map(Number).sort((a, b) => a - b);
 
-  // Remaining logic (addRow, removeRow, toggleBusy, handleSort) stays the same...
-  const toggleBusy = (index: number) => {
-    const currentVal = history[currentCycle].reservationStations[index].busy;
-    updateField('reservationStations', index, 'busy', currentVal === 'Yes' ? 'No' : 'Yes');
-  };
-
-  const addRow = (section: 'instructions' | 'reservationStations') => {
-    const newRow = section === 'instructions' 
-      ? { op: '', issue: '', exec: '', wb: '' }
-      : { name: `RS${history[currentCycle].reservationStations.length + 1}`, busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' };
-
-    updateHistoryForward((cycle) => {
-      if (section === 'instructions') {
-        cycle.instructions = [...cycle.instructions, newRow as Instruction];
-      } else {
-        cycle.reservationStations = [...cycle.reservationStations, newRow as ReservationStation];
-      }
-      return cycle;
-    });
-  };
-
-  const removeRow = (section: 'instructions' | 'reservationStations', index: number) => {
-    updateHistoryForward((cycle) => {
-      if (section === 'instructions') {
-        cycle.instructions = cycle.instructions.filter((_, i) => i !== index);
-      } else {
-        cycle.reservationStations = cycle.reservationStations.filter((_, i) => i !== index);
-      }
-      return cycle;
-    });
-  };
-
-  const handleSort = (section: 'instructions' | 'reservationStations') => {
-    if (dragItem.current === null || dragOverItem.current === null) return;
-    const from = dragItem.current;
-    const to = dragOverItem.current;
-
-    updateHistoryForward((cycle) => {
-      const list = [...cycle[section]] as any[];
-      const [removed] = list.splice(from, 1);
-      list.splice(to, 0, removed);
-      if (section === 'instructions') cycle.instructions = list;
-      else cycle.reservationStations = list;
-      return cycle;
-    });
-    dragItem.current = null;
-    dragOverItem.current = null;
-  };
-
   return (
-    <div style={{ padding: '20px', maxWidth: '1600px', margin: 'auto', fontFamily: 'system-ui, sans-serif', backgroundColor: '#fdfdfd', minHeight: '100vh', paddingBottom: '100px' }}>
+    <div style={{ padding: '20px', maxWidth: '1600px', margin: 'auto', fontFamily: 'system-ui, sans-serif', backgroundColor: '#fdfdfd', minHeight: '100vh', paddingBottom: '120px' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #eee', paddingBottom: '15px' }}>
         <div>
           <h1 style={{ margin: 0, color: '#2c3e50', fontSize: '22px' }}>Tomasulo Visualizer</h1>
           <p style={{ margin: '5px 0 0', color: '#7f8c8d', fontSize: '14px' }}>Active step: <strong>Cycle {currentCycle}</strong></p>
         </div>
         
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          {/* Assembly Import */}
+        <div style={{ display: 'flex', gap: '10px' }}>
           <input type="file" ref={txtInputRef} style={{ display: 'none' }} onChange={handleTxtUpload} />
-          <button onClick={() => txtInputRef.current?.click()} style={{ ...secondaryBtn, backgroundColor: '#f0fdf4', borderColor: '#bbf7d0', color: '#166534' }}>Import asm</button>
-
-          {/* JSON Upload */}
+          <button onClick={() => txtInputRef.current?.click()} style={{ ...secondaryBtn, backgroundColor: '#f0fdf4', color: '#166534' }}>Import asm</button>
           <input type="file" ref={jsonInputRef} style={{ display: 'none' }} onChange={handleJsonUpload} accept=".json" />
           <button onClick={() => jsonInputRef.current?.click()} style={secondaryBtn}>Load JSON</button>
-          
           <button onClick={() => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
-            const a = document.createElement('a'); a.setAttribute("href", dataStr); a.setAttribute("download", `tomasulo.json`); a.click();
+             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
+             const a = document.createElement('a'); a.href = dataStr; a.download = `tomasulo.json`; a.click();
           }} style={secondaryBtn}>Save JSON</button>
-          
-          <div style={{ width: '1px', height: '30px', backgroundColor: '#ddd', margin: '0 5px' }} />
-          
           <button onClick={() => setCurrentCycle(Math.max(1, currentCycle - 1))} style={navBtn}>Prev</button>
           <button onClick={() => {
             const next = currentCycle + 1;
@@ -204,49 +169,54 @@ const TomasuloVisualizer: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px', marginBottom: '30px' }}>
         <TableSection title="Instruction Status" headers={['Instruction', 'Issue', 'Exec', 'WB', '']} onAdd={() => addRow('instructions')}>
           {data.instructions.map((inst, i) => (
-            <tr key={i} draggable onDragStart={() => (dragItem.current = i)} onDragEnter={() => (dragOverItem.current = i)} onDragEnd={() => handleSort('instructions')} onDragOver={(e) => e.preventDefault()} style={{ ...rowStyle, backgroundColor: i % 2 === 0 ? '#ffffff' : '#f8f9fa' }}>
-              <td><input style={inputStyle} value={inst.op} onChange={e => updateField('instructions', i, 'op', e.target.value)} placeholder="ADD.D F6, F2, F1" /></td>
-              <td style={{ width: '50px' }}><input style={inputStyle} value={inst.issue} onChange={e => updateField('instructions', i, 'issue', e.target.value)} /></td>
-              <td style={{ width: '50px' }}><input style={inputStyle} value={inst.exec} onChange={e => updateField('instructions', i, 'exec', e.target.value)} /></td>
-              <td style={{ width: '50px' }}><input style={inputStyle} value={inst.wb} onChange={e => updateField('instructions', i, 'wb', e.target.value)} /></td>
-              <td style={{ width: '30px', textAlign: 'center' }}><button onClick={() => removeRow('instructions', i)} style={removeBtnStyle}>×</button></td>
+            <tr key={i} style={{ backgroundColor: i % 2 === 0 ? '#ffffff' : '#f8f9fa' }}>
+              <td><input style={inputStyle} value={inst.op} onChange={e => updateField('instructions', i, 'op', e.target.value)} /></td>
+              <td style={{ width: '60px' }}><input style={inputStyle} value={inst.issue} onChange={e => updateField('instructions', i, 'issue', e.target.value)} /></td>
+              <td style={{ width: '60px' }}><input style={inputStyle} value={inst.exec} onChange={e => updateField('instructions', i, 'exec', e.target.value)} /></td>
+              <td style={{ width: '60px' }}><input style={inputStyle} value={inst.wb} onChange={e => updateField('instructions', i, 'wb', e.target.value)} /></td>
+              <td style={{ textAlign: 'center' }}><button onClick={() => removeRow('instructions', i)} style={removeBtnStyle}>×</button></td>
             </tr>
           ))}
         </TableSection>
 
         <TableSection title="Reservation Stations" headers={['Name', 'Busy', 'Op', 'Vj', 'Vk', 'Qj', 'Qk', 'Addr', '']} onAdd={() => addRow('reservationStations')}>
           {data.reservationStations.map((rs, i) => (
-            <tr key={i} draggable onDragStart={() => (dragItem.current = i)} onDragEnter={() => (dragOverItem.current = i)} onDragEnd={() => handleSort('reservationStations')} onDragOver={(e) => e.preventDefault()} style={{ ...rowStyle, backgroundColor: i % 2 === 0 ? '#ffffff' : '#f8f9fa' }}>
-              <td style={{ width: '80px' }}><input style={{...inputStyle, fontWeight: 'bold'}} value={rs.name} onChange={e => updateField('reservationStations', i, 'name', e.target.value)} /></td>
-              <td style={{ width: '60px', textAlign: 'center' }}>
+            <tr key={i} style={{ backgroundColor: i % 2 === 0 ? '#ffffff' : '#f8f9fa' }}>
+              <td><input style={{...inputStyle, fontWeight: 'bold'}} value={rs.name} onChange={e => updateField('reservationStations', i, 'name', e.target.value)} /></td>
+              <td style={{ textAlign: 'center' }}>
                 <button onClick={() => toggleBusy(i)} style={{ ...busyToggleStyle, backgroundColor: rs.busy === 'Yes' ? '#fab1a0' : '#f1f2f6', color: rs.busy === 'Yes' ? '#d63031' : '#2d3436' }}>{rs.busy}</button>
               </td>
               {['op', 'vj', 'vk', 'qj', 'qk', 'addr'].map(f => (
                 <td key={f}><input style={inputStyle} value={rs[f]} onChange={e => updateField('reservationStations', i, f, e.target.value)} /></td>
               ))}
-              <td style={{ width: '30px', textAlign: 'center' }}><button onClick={() => removeRow('reservationStations', i)} style={removeBtnStyle}>×</button></td>
+              <td style={{ textAlign: 'center' }}><button onClick={() => removeRow('reservationStations', i)} style={removeBtnStyle}>×</button></td>
             </tr>
           ))}
         </TableSection>
       </div>
 
-      <div style={{ marginTop: '20px' }}>
-        <h3 style={labelStyle}>Register Status (Qi)</h3>
-        <table style={tableMainStyle}>
-          <thead>
-            <tr style={headerRowStyle}>
-              {Object.keys(data.registers).map(reg => <th key={reg} style={{ padding: '8px', borderRight: '1px solid #444' }}>{reg}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {Object.keys(data.registers).map(reg => (
-                <td key={reg} style={cellStyle}><input style={inputStyle} value={data.registers[reg]} onChange={e => updateField('registers', null, reg, e.target.value)} /></td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <TableSection title="Register Status (Qi)" headers={[]} onAdd={() => addRow('registers')}>
+        <div style={{ display: 'flex', overflowX: 'auto', border: '1px solid #dfe6e9', borderRadius: '4px' }}>
+          {data.registers.map((reg, i) => (
+            <div key={i} style={{ minWidth: '80px', borderRight: '1px solid #dfe6e9', backgroundColor: 'white' }}>
+              <div style={{ backgroundColor: '#2d3436', color: 'white', padding: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <input 
+                  style={{ ...inputStyle, color: 'white', fontSize: '11px', textAlign: 'left', padding: '2px' }} 
+                  value={reg.name} 
+                  onChange={e => updateField('registers', i, 'name', e.target.value)} 
+                />
+                <button onClick={() => removeRow('registers', i)} style={{ background: 'none', border: 'none', color: '#ff7675', cursor: 'pointer', fontSize: '10px', padding: '0 2px' }}>×</button>
+              </div>
+              <input 
+                style={inputStyle} 
+                value={reg.value} 
+                onChange={e => updateField('registers', i, 'value', e.target.value)} 
+                placeholder="Qi"
+              />
+            </div>
+          ))}
+        </div>
+      </TableSection>
 
       <footer style={timelineStyle}>
         <span style={{ fontSize: '11px', color: '#636e72', marginRight: '10px' }}>TIMELINE:</span>
@@ -258,37 +228,30 @@ const TomasuloVisualizer: React.FC = () => {
   );
 };
 
-// --- Helper Component ---
-interface TableSectionProps {
-  title: string;
-  headers: string[];
-  children: React.ReactNode;
-  onAdd: () => void;
-}
-
-const TableSection: React.FC<TableSectionProps> = ({ title, headers, children, onAdd }) => (
-  <div>
+// --- Updated Helper Component ---
+const TableSection: React.FC<{title: string, headers: string[], children: React.ReactNode, onAdd: () => void}> = ({ title, headers, children, onAdd }) => (
+  <div style={{ marginBottom: '20px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
       <h3 style={{ ...labelStyle, margin: 0 }}>{title}</h3>
-      <button onClick={onAdd} style={addBtnStyle}>+ Add Row</button>
+      <button onClick={onAdd} style={addBtnStyle}>+ Add {title.includes('Register') ? 'Register' : 'Row'}</button>
     </div>
-    <table style={tableMainStyle}>
-      <thead>
-        <tr style={headerRowStyle}>{headers.map(h => <th key={h} style={{ padding: '8px', borderRight: '1px solid #444' }}>{h}</th>)}</tr>
-      </thead>
-      <tbody>{children}</tbody>
-    </table>
+    {headers.length > 0 ? (
+      <table style={tableMainStyle}>
+        <thead>
+          <tr style={headerRowStyle}>{headers.map(h => <th key={h} style={{ padding: '8px', borderRight: '1px solid #444' }}>{h}</th>)}</tr>
+        </thead>
+        <tbody>{children}</tbody>
+      </table>
+    ) : children}
   </div>
 );
 
-// --- Static Styles ---
-const tableMainStyle: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', border: '1px solid #dfe6e9', backgroundColor: 'white' };
+// --- Styles ---
+const tableMainStyle: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', border: '1px solid #dfe6e9' };
 const headerRowStyle: React.CSSProperties = { backgroundColor: '#2d3436', color: 'white', fontSize: '12px' };
-const cellStyle: React.CSSProperties = { border: '1px solid #f1f2f6' };
-const rowStyle: React.CSSProperties = { cursor: 'grab' };
-const inputStyle: React.CSSProperties = { width: '100%', border: 'none', padding: '10px 4px', textAlign: 'center', outline: 'none', fontSize: '13px', boxSizing: 'border-box', background: 'transparent' };
+const inputStyle: React.CSSProperties = { width: '100%', border: 'none', padding: '8px 4px', textAlign: 'center', outline: 'none', fontSize: '13px', boxSizing: 'border-box', background: 'transparent' };
 const labelStyle: React.CSSProperties = { fontSize: '11px', color: '#636e72', textTransform: 'uppercase', letterSpacing: '0.5px' };
-const navBtn: React.CSSProperties = { padding: '6px 15px', cursor: 'pointer', borderRadius: '4px', fontWeight: 'bold', border: '1px solid #ccc', backgroundColor: 'white' };
+const navBtn: React.CSSProperties = { padding: '6px 12px', cursor: 'pointer', borderRadius: '4px', fontWeight: 'bold', border: '1px solid #ccc', backgroundColor: 'white' };
 const secondaryBtn: React.CSSProperties = { padding: '6px 12px', cursor: 'pointer', borderRadius: '4px', fontSize: '12px', border: '1px solid #dfe6e9', backgroundColor: '#f9f9f9' };
 const addBtnStyle: React.CSSProperties = { padding: '3px 8px', fontSize: '10px', cursor: 'pointer', backgroundColor: '#e1f5fe', border: '1px solid #81d4fa', borderRadius: '4px', color: '#0288d1' };
 const removeBtnStyle: React.CSSProperties = { background: 'none', border: 'none', color: '#ff7675', cursor: 'pointer', fontSize: '16px' };
