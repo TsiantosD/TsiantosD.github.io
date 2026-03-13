@@ -1,47 +1,18 @@
-import React, { useState, useRef, type ChangeEvent } from 'react';
+import React, { useState, useRef, useEffect, type ChangeEvent } from 'react';
 
 // --- Interfaces ---
-interface Instruction {
-  op: string;
-  issue: string;
-  exec: string;
-  wb: string;
-}
+interface Instruction { op: string; issue: string; exec: string; wb: string; }
+interface ReservationStation { name: string; busy: string; op: string; vj: string; vk: string; qj: string; qk: string; addr: string; [key: string]: string; }
+interface RegisterEntry { name: string; value: string; }
+interface CycleData { instructions: Instruction[]; reservationStations: ReservationStation[]; registers: RegisterEntry[]; }
+interface HistoryState { [key: number]: CycleData; }
 
-interface ReservationStation {
-  name: string;
-  busy: string;
-  op: string;
-  vj: string;
-  vk: string;
-  qj: string;
-  qk: string;
-  addr: string;
-  [key: string]: string;
-}
-
-// Changed to a more flexible structure for dynamic keys
-interface RegisterEntry {
-  name: string;
-  value: string;
-}
-
-interface CycleData {
-  instructions: Instruction[];
-  reservationStations: ReservationStation[];
-  registers: RegisterEntry[];
-}
-
-interface HistoryState {
-  [key: number]: CycleData;
-}
+const STORAGE_KEY = 'tomasulo_data';
 
 const TomasuloVisualizer: React.FC = () => {
   const [currentCycle, setCurrentCycle] = useState<number>(1);
   const jsonInputRef = useRef<HTMLInputElement>(null);
   const txtInputRef = useRef<HTMLInputElement>(null);
-  // const dragItem = useRef<number | null>(null);
-  // const dragOverItem = useRef<number | null>(null);
 
   const createEmptyCycle = (): CycleData => ({
     instructions: [],
@@ -50,15 +21,41 @@ const TomasuloVisualizer: React.FC = () => {
       { name: 'Add2', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
       { name: 'Mult1', busy: 'No', op: '', vj: '', vk: '', qj: '', qk: '', addr: '' },
     ],
-    // Initial registers as an array of objects
     registers: [
       { name: 'F0', value: '' }, { name: 'F2', value: '' }, { name: 'F4', value: '' },
       { name: 'F6', value: '' }, { name: 'F8', value: '' }, { name: 'F10', value: '' }
     ]
   });
 
-  const [history, setHistory] = useState<HistoryState>({ 1: createEmptyCycle() });
+  // --- Persistence Logic ---
+  const [history, setHistory] = useState<HistoryState>(() => {
+    // Load from local storage on initial mount
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse saved tomasulo data", e);
+      }
+    }
+    return { 1: createEmptyCycle() };
+  });
 
+  // Auto-save to local storage whenever history changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  }, [history]);
+
+  const resetStorage = () => {
+    if (window.confirm("Are you sure you want to clear all data and reset the visualizer?")) {
+      const initial = { 1: createEmptyCycle() };
+      setHistory(initial);
+      setCurrentCycle(1);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  };
+
+  // --- Logic helpers (History forward, updateField, etc.) ---
   const updateHistoryForward = (callback: (cycle: CycleData) => CycleData) => {
     setHistory(prev => {
       const newHistory = { ...prev };
@@ -137,7 +134,7 @@ const TomasuloVisualizer: React.FC = () => {
     reader.readAsText(file);
   };
 
-  const data = history[currentCycle] || createEmptyCycle();
+  const data = history[currentCycle] || history[1];
   const allCycles = Object.keys(history).map(Number).sort((a, b) => a - b);
 
   return (
@@ -149,6 +146,7 @@ const TomasuloVisualizer: React.FC = () => {
         </div>
         
         <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={resetStorage} style={{ ...secondaryBtn, backgroundColor: '#fff5f5', color: '#c53030', borderColor: '#feb2b2' }}>Reset All</button>
           <input type="file" ref={txtInputRef} style={{ display: 'none' }} onChange={handleTxtUpload} />
           <button onClick={() => txtInputRef.current?.click()} style={{ ...secondaryBtn, backgroundColor: '#f0fdf4', color: '#166534' }}>Import asm</button>
           <input type="file" ref={jsonInputRef} style={{ display: 'none' }} onChange={handleJsonUpload} accept=".json" />
@@ -157,6 +155,9 @@ const TomasuloVisualizer: React.FC = () => {
              const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
              const a = document.createElement('a'); a.href = dataStr; a.download = `tomasulo.json`; a.click();
           }} style={secondaryBtn}>Save JSON</button>
+          
+          <div style={{ width: '1px', height: '30px', backgroundColor: '#ddd', margin: '0 5px' }} />
+          
           <button onClick={() => setCurrentCycle(Math.max(1, currentCycle - 1))} style={navBtn}>Prev</button>
           <button onClick={() => {
             const next = currentCycle + 1;
@@ -228,7 +229,7 @@ const TomasuloVisualizer: React.FC = () => {
   );
 };
 
-// --- Updated Helper Component ---
+// --- Helper Component ---
 const TableSection: React.FC<{title: string, headers: string[], children: React.ReactNode, onAdd: () => void}> = ({ title, headers, children, onAdd }) => (
   <div style={{ marginBottom: '20px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
