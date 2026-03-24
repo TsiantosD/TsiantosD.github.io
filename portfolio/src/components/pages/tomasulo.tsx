@@ -27,35 +27,35 @@ const TomasuloVisualizer: React.FC = () => {
     ]
   });
 
-  // --- Persistence Logic ---
   const [history, setHistory] = useState<HistoryState>(() => {
-    // Load from local storage on initial mount
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse saved tomasulo data", e);
-      }
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
     }
     return { 1: createEmptyCycle() };
   });
 
-  // Auto-save to local storage whenever history changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   }, [history]);
 
   const resetStorage = () => {
     if (window.confirm("Are you sure you want to clear all data and reset the visualizer?")) {
-      const initial = { 1: createEmptyCycle() };
-      setHistory(initial);
+      setHistory({ 1: createEmptyCycle() });
       setCurrentCycle(1);
       localStorage.removeItem(STORAGE_KEY);
     }
   };
 
-  // --- Logic helpers (History forward, updateField, etc.) ---
+  // --- Helper: Updates only the cycle currently on screen ---
+  const updateCurrentCycle = (callback: (cycle: CycleData) => CycleData) => {
+    setHistory(prev => ({
+      ...prev,
+      [currentCycle]: callback(JSON.parse(JSON.stringify(prev[currentCycle])))
+    }));
+  };
+
+  // --- Helper: Updates current cycle AND all subsequent cycles ---
   const updateHistoryForward = (callback: (cycle: CycleData) => CycleData) => {
     setHistory(prev => {
       const newHistory = { ...prev };
@@ -68,17 +68,29 @@ const TomasuloVisualizer: React.FC = () => {
   };
 
   const updateField = (section: keyof CycleData, index: number, field: string, value: string) => {
-    updateHistoryForward((cycle) => {
-      const target = cycle[section] as any[];
-      if (target[index]) {
-        target[index][field] = value;
-      }
-      return cycle;
-    });
+    // Instruction fields ripple forward; everything else is local to the cycle
+    const isForwardPersistent = section === 'instructions';
+
+    if (isForwardPersistent) {
+      updateHistoryForward((cycle) => {
+        const target = cycle[section] as any[];
+        if (target[index]) target[index][field] = value;
+        return cycle;
+      });
+    } else {
+      updateCurrentCycle((cycle) => {
+        const target = cycle[section] as any[];
+        if (target[index]) target[index][field] = value;
+        return cycle;
+      });
+    }
   };
 
   const addRow = (section: keyof CycleData) => {
-    updateHistoryForward((cycle) => {
+    // Adding rows to instructions should also be forward persistent to maintain table structure
+    const updateFn = section === 'instructions' ? updateHistoryForward : updateCurrentCycle;
+    
+    updateFn((cycle) => {
       if (section === 'instructions') {
         cycle.instructions.push({ op: '', issue: '', exec: '', wb: '' });
       } else if (section === 'reservationStations') {
@@ -91,7 +103,8 @@ const TomasuloVisualizer: React.FC = () => {
   };
 
   const removeRow = (section: keyof CycleData, index: number) => {
-    updateHistoryForward((cycle) => {
+    const updateFn = section === 'instructions' ? updateHistoryForward : updateCurrentCycle;
+    updateFn((cycle) => {
       const target = cycle[section] as any[];
       target.splice(index, 1);
       return cycle;
@@ -111,6 +124,7 @@ const TomasuloVisualizer: React.FC = () => {
       const content = rev.target?.result;
       if (typeof content === 'string') {
         const lines = content.split(/\r?\n/).filter(line => line.trim() !== '');
+        // Importing instructions is forward persistent
         updateHistoryForward((cycle) => {
           const newInstructions = lines.map(line => ({ op: line.trim(), issue: '', exec: '', wb: '' }));
           cycle.instructions = [...cycle.instructions, ...newInstructions];
@@ -161,7 +175,12 @@ const TomasuloVisualizer: React.FC = () => {
           <button onClick={() => setCurrentCycle(Math.max(1, currentCycle - 1))} style={navBtn}>Prev</button>
           <button onClick={() => {
             const next = currentCycle + 1;
-            if (!history[next]) setHistory(prev => ({ ...prev, [next]: JSON.parse(JSON.stringify(prev[currentCycle])) }));
+            if (!history[next]) {
+              setHistory(prev => ({ 
+                ...prev, 
+                [next]: JSON.parse(JSON.stringify(prev[currentCycle])) 
+              }));
+            }
             setCurrentCycle(next);
           }} style={{ ...navBtn, backgroundColor: '#3498db', color: 'white', border: 'none' }}>Next Cycle</button>
         </div>
@@ -229,7 +248,7 @@ const TomasuloVisualizer: React.FC = () => {
   );
 };
 
-// --- Helper Component ---
+// --- Helper Components & Styles ---
 const TableSection: React.FC<{title: string, headers: string[], children: React.ReactNode, onAdd: () => void}> = ({ title, headers, children, onAdd }) => (
   <div style={{ marginBottom: '20px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -247,7 +266,6 @@ const TableSection: React.FC<{title: string, headers: string[], children: React.
   </div>
 );
 
-// --- Styles ---
 const tableMainStyle: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', border: '1px solid #dfe6e9' };
 const headerRowStyle: React.CSSProperties = { backgroundColor: '#2d3436', color: 'white', fontSize: '12px' };
 const inputStyle: React.CSSProperties = { width: '100%', border: 'none', padding: '8px 4px', textAlign: 'center', outline: 'none', fontSize: '13px', boxSizing: 'border-box', background: 'transparent' };
