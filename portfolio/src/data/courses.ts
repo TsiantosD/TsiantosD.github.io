@@ -9,7 +9,7 @@ export interface Course {
   projects: Project[];
   grade?: number;
   members?: TeamMember[];
-  inProgress?: boolean;
+  inProgress?: boolean|null;
 }
 
 export interface Project {
@@ -280,6 +280,7 @@ The most important changes made were **loop interchange** and a more **efficient
     people: 3,
     members: [ me, nikas, balamotis ],
     inProgress: true,
+    link: "",
     projects: [
       {
         title: "Wi-Fi Jammer",

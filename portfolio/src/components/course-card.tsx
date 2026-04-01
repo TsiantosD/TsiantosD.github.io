@@ -14,7 +14,7 @@ interface CourseCardProps {
   tags?: string[];
   people?: number|null;
   scrollId?: string;
-  inProgress?: boolean;
+  inProgress?: boolean|null;
 }
 
 interface CardTransform {
