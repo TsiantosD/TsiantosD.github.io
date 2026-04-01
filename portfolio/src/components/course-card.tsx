@@ -14,6 +14,7 @@ interface CourseCardProps {
   tags?: string[];
   people?: number|null;
   scrollId?: string;
+  inProgress?: boolean;
 }
 
 interface CardTransform {
@@ -22,7 +23,7 @@ interface CardTransform {
   scale: number;
 }
 
-export function CourseCard({ slug, title, description, image, tags, people = null, scrollId }: CourseCardProps) {
+export function CourseCard({ slug, title, description, image, tags, people = null, scrollId, inProgress = null }: CourseCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
@@ -126,7 +127,15 @@ export function CourseCard({ slug, title, description, image, tags, people = nul
       )}
 
       <CardHeader className="space-y-2 flex-none">
-        <CardTitle className="line-clamp-1">{title}</CardTitle>
+        <CardTitle className="line-clamp-1 flex justify-between">
+          {title}
+          {inProgress === true && (
+            <Badge variant="outline" className="animate-pulse bg-blue-50 text-blue-700 border-blue-200">
+              <span className="mr-1.5 h-2 w-2 rounded-full bg-blue-600"></span>
+              In Progress
+            </Badge>
+          )}
+        </CardTitle>
         <div className="flex items-center justify-between">
           {tags && (
             <div className="flex flex-wrap gap-1">

@@ -9,6 +9,7 @@ export interface Course {
   projects: Project[];
   grade?: number;
   members?: TeamMember[];
+  inProgress?: boolean;
 }
 
 export interface Project {
@@ -55,6 +56,21 @@ const malakoudis: TeamMember = {
   name: "Malakoudis Harris",
   linkedin: "https://www.linkedin.com/in/harris-malakoudis-a22462309/",
   avatar: "/team-members/malakoudis.jpeg"
+}
+const kalousis: TeamMember = {
+  name: "Kalousis Anastasios",
+  linkedin: "",
+  avatar: ""
+}
+const tsimponidis: TeamMember = {
+  name: "Tsimponidis Alexandros",
+  linkedin: "https://www.linkedin.com/in/alexandros-tsimponidis-9ab830248/",
+  avatar: ""
+}
+const balamotis: TeamMember = {
+  name: "Balamotis Panagiotis",
+  linkedin: "https://www.linkedin.com/in/panagiotisbalamotis/",
+  avatar: "/team-members/balamotis.jpeg"
 }
 
 export const courses = [
@@ -252,6 +268,51 @@ The most important changes made were **loop interchange** and a more **efficient
 
 ![Comparison between low and high color variety images. The first image runs faster since there are less branch mispredictions](/organization/lab8/lfh-hf_rgb-comparison.png#medium)
 ![Image of andromeda. Original vs processed with K-means (k = 4)](/organization/lab8/andromeda_comparison.png#medium)`
+      }
+    ]
+  },
+  {
+    slug: "wireless-comunications",
+    title: "Wireless Communications",
+    description: "One project modifying the Ath9k Wi-Fi (IEEE 802.11) driver.",
+    tags: ["Networks", "IEEE 802.11", "Drivers", "Operating Systems", "C"],
+    image: "/wireless-communications/nitos-indoor.jpeg",
+    people: 3,
+    members: [ me, nikas, balamotis ],
+    inProgress: true,
+    projects: [
+      {
+        title: "Wi-Fi Jammer",
+        slug: "wifi-jammer",
+        description: "",
+        featured: false,
+        image: "wireless-communications/nitos-indoor.jpeg",
+        content: `
+Implementing a Wi-Fi jammer by modifying the Ath9k Wi-Fi driver. All experiments are made using the NITlab's Indoor RF Isolated Testbed. More information about the testbed here: [https://nitlab.inf.uth.gr/NITlab/indoor-hidden](https://nitlab.inf.uth.gr/NITlab/indoor-hidden)
+
+![Image of the university's Indoor RF Isolated Testbed.](/wireless-communications/nitos-indoor.jpeg)`
+      }
+    ]
+  },
+  {
+    slug: "radhard-circuit-design",
+    title: "Radhard Circuit Design",
+    description: "Simulating Single Event Upsets, Single Event Transients, measuring Soft Error Rate and exploring mitigation techniques.",
+    tags: ["Radiation Hardening", "Simulations", "C", "Circuits", "Verilog"],
+    image: "/radhard-circuit-design/cosmic-rays.jpg",
+    link: "https://github.com/TsiantosD/ECE484-Radhard-Circuit-Design",
+    people: 3,
+    members: [ me, kalousis, tsimponidis ],
+    inProgress: true,
+    projects: [
+      {
+        title: "SEUs Simulator",
+        slug: "seus-simulator",
+        description: "A custom gate-level netlist parser and simulator for SEUs.",
+        featured: false,
+        image: "/radhard-circuit-design/circuit.png",
+        content: `
+A custom gate-level netlist **Verilog parser** and **simulator** written in **C** used to measure the Soft Error Rate (SER) of a circuit when exposed to radiation.`
       }
     ]
   },

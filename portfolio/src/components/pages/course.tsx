@@ -191,7 +191,12 @@ export default function Course() {
                   {course?.people === 1 ? 'Solo Project' : `Team of ${course?.people}`}
                 </span>
               </div>
-              
+              {course?.inProgress === true && (
+                <Badge variant="outline" className="animate-pulse bg-blue-50 text-blue-700 border-blue-200">
+                  <span className="mr-1.5 h-2 w-2 rounded-full bg-blue-600"></span>
+                  In Progress
+                </Badge>
+              )}
               <div className="flex flex-wrap gap-2">
                 {course?.tags.map((tag) => (
                   <Badge key={tag} variant="outline">
