@@ -275,23 +275,33 @@ The most important changes made were **loop interchange** and a more **efficient
     slug: "wireless-comunications",
     title: "Wireless Communications",
     description: "One project modifying the Ath9k Wi-Fi (IEEE 802.11) driver.",
-    tags: ["Networks", "IEEE 802.11", "Drivers", "Operating Systems", "C"],
+    tags: ["Networks", "IEEE 802.11", "Drivers", "Operating Systems", "C", "Python", "NITLab"],
     image: "/wireless-communications/nitos-indoor.jpeg",
+    link: "https://github.com/TsiantosD/ECE436-Wireless-Communications",
     people: 3,
+    grade: 10,
     members: [ me, nikas, balamotis ],
-    inProgress: true,
-    link: "",
     projects: [
       {
         title: "Wi-Fi Jammer",
         slug: "wifi-jammer",
-        description: "",
-        featured: false,
-        image: "wireless-communications/nitos-indoor.jpeg",
+        description: "IEEE 802.11 medium-access unfairness experiments with a modified ath9k driver.",
+        featured: true,
+        image: "/wireless-communications/nitos-indoor.jpeg",
         content: `
-Implementing a Wi-Fi jammer by modifying the Ath9k Wi-Fi driver. All experiments are made using the NITlab's Indoor RF Isolated Testbed. More information about the testbed here: [https://nitlab.inf.uth.gr/NITlab/indoor-hidden](https://nitlab.inf.uth.gr/NITlab/indoor-hidden)
+[View report (PDF)](/wireless-communications/report-EN.pdf)
 
-![Image of the university's Indoor RF Isolated Testbed.](/wireless-communications/nitos-indoor.jpeg)`
+For the final project, we built a controlled **Wi-Fi jammer** by modifying the Linux **ath9k** driver from the kernel backports tree and exposing custom module parameters for unfair medium access. The implementation experimented with **CSMA/CA** behavior by forcing contention-window values, disabling hardware backoff through ath9k registers, optionally forcing the channel-idle signal, and configuring custom TXOP durations. Experiments were executed on the University of Thessaly **NITLab Indoor RF Isolated Testbed**, using real Wi-Fi nodes, hostapd, iw, iperf traffic generation, and repeatable driver deployment scripts.
+
+A major challenge was making low-level MAC-layer changes reproducible on remote testbed nodes while keeping the results measurable and comparable. We built automation around patch generation, backports compilation, module loading, topology setup, log collection, and CSV/plot generation, then extended the experiments to two-link scenarios with channel-switch behavior. Python tooling using **Scapy**, UDP control messages, and hostapd channel-switch announcements helped coordinate AP movement and unfair-station following, while the analysis focused on throughput, jitter, packet loss, and the practical limits of manipulating 802.11 fairness from inside a commodity driver.
+
+![Image of the university's Indoor RF Isolated Testbed.](/wireless-communications/nitos-indoor.jpeg)
+
+In the two-AP experiment of Section 5.4, we evaluated whether the unfair station could keep dominating the medium even when the fair link attempted to escape by switching channels. The topology used two independent AP-STA pairs, both initially operating on the same channel: STA1 used the normal fair driver, while STA2 used the modified unfair driver with backoff disabled. During the run, AP1 issued a Channel Switch Announcement to move the fair link to channel 6; the unfair side monitored these CSA beacons with a Scapy-based hunter and instructed AP2 to follow the same channel through a UDP-controlled hostapd channel switch. The resulting measurement shows that the fair STA briefly recovers around the switch event but quickly collapses back to only a few Mbit/s, while the unfair STA remains close to or above 100 Mbit/s, demonstrating that the driver-level backoff manipulation can continue starving the fair link even under dynamic channel movement.
+
+![Receiver bandwidth over time for Topology 4. Both stations offer 150 Mbit/s; after the channel-switch events around 30-32 seconds, the unfair STA remains dominant while the fair STA stays near zero throughput.](/wireless-communications/topology-4-throughput.webp)
+
+![Topology 4: two independent AP-STA links on the same channel, with STA1 using the fair driver and STA2 using the unfair driver.](/wireless-communications/topology-4.png#medium)`
       }
     ]
   },
@@ -302,8 +312,8 @@ Implementing a Wi-Fi jammer by modifying the Ath9k Wi-Fi driver. All experiments
     tags: ["Radiation Hardening", "Simulations", "C", "Circuits", "Verilog"],
     image: "/radhard-circuit-design/cosmic-rays.jpg",
     link: "https://github.com/TsiantosD/ECE484-Radhard-Circuit-Design",
-    people: 3,
-    members: [ me, kalousis, tsimponidis ],
+    people: 1,
+    members: [ me ],
     inProgress: true,
     projects: [
       {
