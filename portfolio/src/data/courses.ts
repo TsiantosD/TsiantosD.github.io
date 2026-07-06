@@ -289,7 +289,7 @@ The most important changes made were **loop interchange** and a more **efficient
         featured: true,
         image: "/wireless-communications/nitos-indoor.jpeg",
         content: `
-[View report (PDF)](/wireless-communications/report-EN.pdf)
+[View report (PDF)](/wireless-communications/report-EN.pdf) · [View presentation (PDF)](/wireless-communications/presentation.pdf)
 
 For the final project, we built a controlled **Wi-Fi jammer** by modifying the Linux **ath9k** driver from the kernel backports tree and exposing custom module parameters for unfair medium access. The implementation experimented with **CSMA/CA** behavior by forcing contention-window values, disabling hardware backoff through ath9k registers, optionally forcing the channel-idle signal, and configuring custom TXOP durations. Experiments were executed on the University of Thessaly **NITLab Indoor RF Isolated Testbed**, using real Wi-Fi nodes, hostapd, iw, iperf traffic generation, and repeatable driver deployment scripts.
 
@@ -301,7 +301,15 @@ In the two-AP experiment of Section 5.4, we evaluated whether the unfair station
 
 ![Receiver bandwidth over time for Topology 4. Both stations offer 150 Mbit/s; after the channel-switch events around 30-32 seconds, the unfair STA remains dominant while the fair STA stays near zero throughput.](/wireless-communications/topology-4-throughput.webp)
 
-![Topology 4: two independent AP-STA links on the same channel, with STA1 using the fair driver and STA2 using the unfair driver.](/wireless-communications/topology-4.png#medium)`
+![Topology 4: two independent AP-STA links on the same channel, with STA1 using the fair driver and STA2 using the unfair driver.](/wireless-communications/topology-4.png#medium)
+
+\`\`\`slidedeck
+title=Wi-Fi Jammer Presentation
+base=/wireless-communications/presentation
+count=33
+pdf=/wireless-communications/presentation.pdf
+\`\`\`
+`
       }
     ]
   },

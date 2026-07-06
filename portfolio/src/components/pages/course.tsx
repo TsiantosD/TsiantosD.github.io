@@ -14,6 +14,44 @@ import { memo } from 'react';
 import {GistEmbed} from "@/components/gistEmbed.tsx";
 import {GradeCircle} from "@/components/grade-circle.tsx";
 import TeamSection from "../team-section";
+import {SlideDeck} from "@/components/slide-deck.tsx";
+
+interface SlideDeckConfig {
+  slides: string[];
+  title?: string;
+  pdfUrl?: string;
+}
+
+function parseSlideDeckConfig(raw: string): SlideDeckConfig {
+  const lines = raw
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const settings = new Map<string, string>();
+  const explicitSlides: string[] = [];
+
+  for (const line of lines) {
+    const separator = line.indexOf("=");
+    if (separator > 0) {
+      settings.set(line.slice(0, separator).trim(), line.slice(separator + 1).trim());
+    } else {
+      explicitSlides.push(line);
+    }
+  }
+
+  const base = settings.get("base");
+  const count = Number(settings.get("count") ?? "0");
+  const slides = base && count > 0
+    ? Array.from({ length: count }, (_, index) => `${base}/slide-${String(index + 1).padStart(2, "0")}.webp`)
+    : explicitSlides;
+
+  return {
+    slides,
+    title: settings.get("title"),
+    pdfUrl: settings.get("pdf"),
+  };
+}
 
 const VideoEmbed = memo(({ videoId }: { videoId: string }) => (
   <div style={{ position: 'relative', paddingTop: '56.25%', height: 0, marginBottom: '20px' }}>
@@ -92,16 +130,29 @@ const MARKDOWN_COMPONENTS: Components = {
   code: ({ node, inline, className, children, ...props }: any) => {
     const match = /language-(\w+)/.exec(className || '');
     const isGist = match && match[1] === 'gist';
+    const isSlideDeck = match && match[1] === 'slidedeck';
     
     // Ensure children is treated as a clean string ID
-    const gistId = Array.isArray(children) 
+    const codeContent = Array.isArray(children) 
       ? children[0].toString().trim() 
       : children.toString().trim();
+
+    if (!inline && isSlideDeck) {
+      const config = parseSlideDeckConfig(codeContent);
+
+      return (
+        <SlideDeck
+          slides={config.slides}
+          title={config.title}
+          pdfUrl={config.pdfUrl}
+        />
+      );
+    }
 
     if (!inline && isGist) {
       return (
         <div className="my-8 w-full">
-          <GistEmbed gistId={gistId} />
+          <GistEmbed gistId={codeContent} />
         </div>
       );
     }
