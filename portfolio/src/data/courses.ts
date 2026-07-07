@@ -57,16 +57,16 @@ const malakoudis: TeamMember = {
   linkedin: "https://www.linkedin.com/in/harris-malakoudis-a22462309/",
   avatar: "/team-members/malakoudis.jpeg"
 }
-const kalousis: TeamMember = {
-  name: "Kalousis Anastasios",
-  linkedin: "",
-  avatar: ""
-}
-const tsimponidis: TeamMember = {
-  name: "Tsimponidis Alexandros",
-  linkedin: "https://www.linkedin.com/in/alexandros-tsimponidis-9ab830248/",
-  avatar: ""
-}
+// const kalousis: TeamMember = {
+//   name: "Kalousis Anastasios",
+//   linkedin: "",
+//   avatar: ""
+// }
+// const tsimponidis: TeamMember = {
+//   name: "Tsimponidis Alexandros",
+//   linkedin: "https://www.linkedin.com/in/alexandros-tsimponidis-9ab830248/",
+//   avatar: ""
+// }
 const balamotis: TeamMember = {
   name: "Balamotis Panagiotis",
   linkedin: "https://www.linkedin.com/in/panagiotisbalamotis/",
@@ -268,6 +268,56 @@ The most important changes made were **loop interchange** and a more **efficient
 
 ![Comparison between low and high color variety images. The first image runs faster since there are less branch mispredictions](/organization/lab8/lfh-hf_rgb-comparison.png#medium)
 ![Image of andromeda. Original vs processed with K-means (k = 4)](/organization/lab8/andromeda_comparison.png#medium)`
+      }
+    ]
+  },
+  {
+    slug: "parallel-computer-architecture",
+    title: "Parallel Computer Architecture",
+    description: "A 32-core RISC-V GPGPU-style accelerator implemented on a Zynq-7000 FPGA.",
+    tags: ["Parallel Architecture", "GPGPU", "RISC-V", "FPGA", "Verilog", "Vivado", "Vitis", "C"],
+    image: "/ece338-parallel-computer-architecture/nbody-screenshot.png",
+    link: "https://github.com/PANAGIVTHS/ECE338-Parallel-Computer-Architecture",
+    people: 3,
+    grade: 9,
+    members: [ me, nikas, tsogkas ],
+    projects: [
+      {
+        title: "Simple GPGPU",
+        slug: "simple-gpgpu",
+        description: "A programmable 32-lane SIMD accelerator with a small RISC-V software stack and FPGA bring-up flow.",
+        featured: true,
+        image: "/ece338-parallel-computer-architecture/nbody-screenshot.png",
+        content: `
+[View report (PDF)](/ece338-parallel-computer-architecture/report-EN.pdf) · [View presentation (PDF)](/ece338-parallel-computer-architecture/presentation.pdf)
+
+For the final project, we designed and implemented a **Simple GPGPU**: a custom **32-core lockstep SIMD accelerator** that executes a supported subset of **RISC-V** programs on the programmable logic of a **Digilent ZedBoard / Xilinx Zynq-7000 SoC**. The design keeps a shared instruction frontend for all lanes, while each streaming processor maintains its own register file, execution state, stack, and thread id. This makes the system simpler than a full GPU, but still captures the key architectural ideas of data-parallel execution, memory arbitration, host-controlled kernel launches, and accelerator/software co-design.
+
+\`\`\`gist
+TsiantosD/d50e3992bfeeed5b2d9e85009f8f5d38
+\`\`\`
+
+The hardware is written in **Verilog**, it is a 5-stage pipelined core with hazard detection, forwarding, branching, jumps, and a dedicated multi-cycle multiplier path mapped to FPGA DSP resources. The final Streaming Multiprocessor reuses the fetch/decode path across 32 processing lanes and connects them to dual-port BRAM through an **Nx2 memory crossbar**. The crossbar arbitrates simultaneous load/store requests, routes returning BRAM data back to the correct lane, and stalls the global pipeline safely when memory contention occurs.
+
+![Minimal block diagram of the GPU.](/ece338-parallel-computer-architecture/block-diagram.png)
+
+Beyond the RTL core, the project includes a complete bring-up and runtime flow. The accelerator is wrapped in a small SoC with a host controller, command processor, and **AXI GPIO** bridge to the Zynq Processing System. A lightweight ARM-side host program handles UART communication and translates external commands into memory-mapped PS-to-PL transactions, allowing a Python runner to load instruction memory, initialize data memory, start kernels, wait for completion, and dump results. The software stack compiles C kernels to bare-metal **RV32IM** code, generates instruction memory files, assigns per-lane stacks, exposes a **gpgpu_thread_id()** runtime helper, and keeps x86 reference implementations next to the RISC-V kernels for validation.
+
+![Diagram of the GPGPU integration on the SoC, the processing system, and the host computer.](/ece338-parallel-computer-architecture/SoC-and-host.png#small)
+
+Testing was a major part of the work. We built an automated test ecosystem with an assembler, Python golden model, RTL simulations, constrained-random program checking, and random instruction testing to stress forwarding, load-use hazards, branches, multiplication, memory operations, and crossbar behavior. The final design was also validated end-to-end on the FPGA board through the same host command flow used by the runtime.
+
+The main demo workloads were an **N-body simulation** and a **Mandelbrot renderer**, chosen to exercise both memory behavior and integer/multiplier-heavy computation. In the N-body workload, the FPGA GPGPU simulated 32 bodies in roughly **129 μs per step**, compared with about **308 μs** on the ARM Cortex-A9 reference path, for an approximate **2.38× speedup** despite the FPGA fabric running at a much lower clock frequency. The final implementation reached about **1.23 GINTOPS** peak integer throughput at ~38.5 MHz, with LUT utilization close to the practical limit of the target FPGA. The largest remaining bottleneck is the UART-based host communication path, motivating future work such as AXI-Lite/AXI-DMA integration, PCIe-capable FPGA targets, more memory banking, floating-point support, warp scheduling, and divergence handling.
+
+![Nbody running on the GPGPU on the ZedBoard setup. Output data of the simulation (x, y, and z coordinates of each body) are displayed using a custom browser visualizer with three-js.](/ece338-parallel-computer-architecture/fpga-demo.mp4#video)
+
+\`\`\`slidedeck
+title=Simple GPGPU Presentation
+base=/ece338-parallel-computer-architecture/presentation
+count=51
+pdf=/ece338-parallel-computer-architecture/presentation.pdf
+\`\`\`
+`
       }
     ]
   },

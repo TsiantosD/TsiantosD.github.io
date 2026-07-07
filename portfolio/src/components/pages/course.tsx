@@ -84,8 +84,31 @@ const MARKDOWN_COMPONENTS: Components = {
     const isSmall = props.src?.endsWith('#small');
     const isMedium = props.src?.endsWith('#medium');
     const isYoutubeEmbed = props.src?.endsWith('#youtube');
+    const isVideo = props.src?.endsWith('#video') || /\.(mp4|webm|ogg)$/i.test(props.src?.replace(/#.*$/, '') ?? '');
 
     const cleanSrc: string = props.src?.replace(/#.*$/, '') ?? '';
+
+    if (isVideo) {
+      const hasCaption = props.alt && props.alt.trim() !== "";
+
+      return (
+        <figure className="my-10 flex flex-col items-center">
+          <video
+            src={cleanSrc}
+            controls
+            preload="metadata"
+            className="rounded-lg shadow-md mx-auto block w-full"
+          >
+            Your browser does not support the video tag.
+          </video>
+          {hasCaption && (
+            <figcaption className="text-center text-sm text-gray-500 mt-2 italic">
+              {props.alt}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
 
     if (isYoutubeEmbed) {
       // Extract ID
