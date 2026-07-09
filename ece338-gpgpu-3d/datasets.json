@@ -1,0 +1,26 @@
+[
+  {
+    "file": "default.json",
+    "name": "default",
+    "description": "Matches the built-in nbody-3d reset formulas, but with zero initial velocity for a true free-fall collapse.",
+    "bodies": 32
+  },
+  {
+    "file": "binary-clouds.json",
+    "name": "binary-clouds",
+    "description": "Two counter-rotating 16-body clouds for a more visibly 3D interactive demo.",
+    "bodies": 32
+  },
+  {
+    "file": "rings.json",
+    "name": "dual_intersecting_rings",
+    "description": "Two perpendicularly orbiting rings with varied masses. Heavier bodies lead the rings to create a whipping effect.",
+    "bodies": 32
+  },
+  {
+    "file": "dataset.json",
+    "name": "random_galaxy",
+    "description": "A generated galaxy with a 1000-mass center and 31 orbiting stars, scaled for fixed-point integer integration.",
+    "bodies": 32
+  }
+]
