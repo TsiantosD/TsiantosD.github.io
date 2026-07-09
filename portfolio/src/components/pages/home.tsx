@@ -1,5 +1,4 @@
 import { Container } from "@/components/layout/container";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {ChevronUpIcon} from "../ui/icons/lucide-chevron-up.tsx";
 import {ChevronDownIcon} from "../ui/icons/lucide-chevron-down.tsx";
 import {useState} from "react";
@@ -10,7 +9,6 @@ import {TimelineItem} from "../timeline-item.tsx";
 import {timeline} from "@/data/timeline.ts";
 import {Button} from "../ui/button.tsx";
 import {ArrowUpRightIcon} from "lucide-react";
-import { BackgroundPaths } from "@/components/ui/shadcn-io/background-paths";
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
@@ -40,34 +38,83 @@ export default function Home() {
 
   return (
     <>
-      <section className="relative h-screen w-full">
-        <BackgroundPaths title="Tsiantos Dimitrios" />
-      </section>
-      <section id="about" className="py-20 w-full">
-        <Container className="text-center">
-          <Avatar className="w-64 h-64 mx-auto mb-6">
-            <AvatarImage src="/me.jpg" alt="Me" />
-          </Avatar>
-          <h1 className="text-4xl font-bold mb-4">
-            Hi, I'm Dimitris
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Electrical & Computer Engineering undergraduate, Software and DevOps Engineer from Greece. 🇬🇷️
-          </p>
-        </Container>
-        <Container className="py-20">
-          <Marquee>
-            <MarqueeFade side="left" />
-            <MarqueeFade side="right" />
-            <MarqueeContent>
-              {skills.map((value, index) => (
-                <MarqueeItem className="p-5" key={index}>
-                  <span>{value}</span>
-                </MarqueeItem>
+      <section className="relative w-full overflow-hidden bg-slate-950 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.28),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.18),transparent_28%),linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:100%_100%,100%_100%,48px_48px,48px_48px]" />
+        <Container className="relative grid min-h-[82vh] items-center gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm text-slate-300 shadow-lg shadow-blue-950/20">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Electrical & Computer Engineering undergraduate
+            </div>
+
+            <div className="space-y-5">
+              <h1 className="max-w-4xl text-5xl font-bold tracking-tight md:text-7xl">
+                Dimitris Tsiantos
+              </h1>
+              <p className="max-w-2xl text-xl leading-8 text-slate-300">
+                I build <b>Hardware</b> and <b>Software</b> systems and tools with an emphasis on correctness, automation, and performance.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3 text-sm font-semibold text-slate-200">
+              {['HPC', 'Computer Architecture', 'Computer Networks'].map((item) => (
+                <span key={item} className="rounded-full border border-slate-700 bg-slate-900/65 px-4 py-2">
+                  {item}
+                </span>
               ))}
-            </MarqueeContent>
-          </Marquee>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <a href="#projects" className="rounded-xl bg-white px-5 py-3 font-bold text-slate-950 transition hover:bg-blue-100">
+                View projects
+              </a>
+              <a href="https://github.com/TsiantosD/" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-600 bg-slate-900/70 px-5 py-3 font-bold text-white transition hover:border-blue-300 hover:bg-slate-800">
+                GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/tsiantosd/" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-600 bg-slate-900/70 px-5 py-3 font-bold text-white transition hover:border-blue-300 hover:bg-slate-800">
+                LinkedIn
+              </a>
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-lg">
+            <div className="absolute -inset-4 rounded-[2rem] bg-blue-500/20 blur-3xl" />
+            <div className="relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/80 shadow-2xl shadow-blue-950/40 backdrop-blur">
+              <img
+                src="/me.jpg"
+                alt="Dimitris Tsiantos"
+                className="h-[28rem] w-full object-cover object-center grayscale-[15%]"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/88 to-transparent p-6 pt-24">
+                <div className="rounded-2xl border border-slate-700/80 bg-slate-950/80 p-4 font-mono text-sm shadow-xl backdrop-blur">
+                  <div className="mb-3 flex items-center gap-2 border-b border-slate-800 pb-3">
+                    <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                    <span className="ml-2 text-slate-400">~/portfolio</span>
+                  </div>
+                  <p className="text-blue-300">$ currently</p>
+                  <p className="mt-1 text-slate-200">learning about HPC, architecture, networks, AI and building fun projects</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </Container>
+      </section>
+      <section className="w-full border-y border-emerald-300/20 bg-emerald-950 text-white shadow-lg shadow-emerald-950/20">
+        <Marquee>
+          <MarqueeFade side="left" className="from-emerald-950" />
+          <MarqueeFade side="right" className="from-emerald-950" />
+          <MarqueeContent>
+            {skills.map((value, index) => (
+              <MarqueeItem className="px-8 py-5" key={index}>
+                <span className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-100">{value}</span>
+              </MarqueeItem>
+            ))}
+          </MarqueeContent>
+        </Marquee>
+      </section>
+      <section id="about" className="py-16 w-full">
         <Container>
           <SectionHeader
             title="Favourite Projects"
