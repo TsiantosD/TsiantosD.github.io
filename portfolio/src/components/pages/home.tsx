@@ -178,6 +178,35 @@ export default function Home() {
                 </span>
               </div>
             </a>
+
+            {/* ECE338 3D GPGPU Visualizer Card */}
+            <a href="/gpgpu-3d" className="group">
+              <div className="p-6 border border-gray-200 rounded-xl hover:border-black hover:shadow-xl transition-all duration-300 bg-white">
+                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-black transition-colors duration-300">
+                  <svg
+                    className="w-6 h-6 text-black group-hover:text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12l8-4.5M12 12v9M12 12L4 7.5" />
+                  </svg>
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-2">GPGPU 3D Visualizer</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  three.js n-body demo UI for the ECE338 Simple GPGPU project, with the dummy backend running in-browser.
+                </p>
+
+                <span className="text-black font-semibold text-sm flex items-center border-b-2 border-transparent group-hover:border-black w-fit transition-all">
+                  Launch Tool
+                  <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </span>
+              </div>
+            </a>
           </div>
         </Container>
       </section>

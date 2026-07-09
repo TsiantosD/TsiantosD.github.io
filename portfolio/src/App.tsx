@@ -3,6 +3,7 @@ import { Navbar } from "./components/layout/navbar";
 import Home from "./components/pages/home.tsx";
 import Course from "./components/pages/course.tsx";
 import Tomasulo from "./components/pages/tomasulo.tsx";
+import Gpgpu3DVisualizer from "./components/pages/gpgpu-3d.tsx";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/course/:slug" element={<Course />} />
           <Route path="/tomasulo/" element={<Tomasulo />} />
+          <Route path="/gpgpu-3d/" element={<Gpgpu3DVisualizer />} />
         </Routes>
 
         <Footer2 />
