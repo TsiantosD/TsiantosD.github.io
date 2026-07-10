@@ -367,21 +367,72 @@ pdf=/wireless-communications/presentation.pdf
     slug: "radhard-circuit-design",
     title: "Radhard Circuit Design",
     description: "Simulating Single Event Upsets, Single Event Transients, measuring Soft Error Rate and exploring mitigation techniques.",
-    tags: ["Radiation Hardening", "Simulations", "C", "Circuits", "Verilog"],
+    tags: ["Radiation Hardening", "Simulations", "Circuits", "C", "CUDA", "HPC"],
     image: "/radhard-circuit-design/cosmic-rays.jpg",
     link: "https://github.com/TsiantosD/ECE484-Radhard-Circuit-Design",
     people: 1,
+    grade: 9.5,
     members: [ me ],
-    inProgress: true,
     projects: [
       {
-        title: "SEUs Simulator",
+        title: "Soft Error Rate Logic Simulation",
         slug: "seus-simulator",
-        description: "A custom gate-level netlist parser and simulator for SEUs.",
+        description: "A custom gate-level netlist parser and simulator for Single Event Transients and Soft Error Rate estimation.",
         featured: false,
-        image: "/radhard-circuit-design/circuit.png",
+        image: "/radhard-circuit-design/s27-circuit.png",
         content: `
-A custom gate-level netlist **Verilog parser** and **simulator** written in **C** used to measure the Soft Error Rate (SER) of a circuit when exposed to radiation.`
+![Flow diagram of the simulation algorithm.](/radhard-circuit-design/flow-diagram.png)
+
+The first project of **Radhard Circuit Design** was a custom **gate-level simulator** written in **C** for post-synthesis Verilog circuits. The assignment started from a parser that reads a synthesized netlist, reconstructs the circuit connectivity, and stores the design in explicit **Node** and **Gate** structures. Primary inputs, internal wires, primary outputs, gates, flip-flop-related nodes, and levelized gate groups are kept in arrays of pointers so that the circuit can be evaluated in topological order.
+
+![Generated visualization of the s27 benchmark circuit used to inspect the parsed netlist and signal connectivity.](/radhard-circuit-design/s27-circuit.png)
+
+After parsing, the simulator performs **logic simulation** for every primary-input vector. Flip-flops are modeled as simplified buffers for the assignment: their outputs are treated as stable circuit inputs, with fixed values for Q and QN, while their input pins are used as observation points for propagated errors. The implementation supports the common synthesized gate types used in the benchmarks, including inverters and multi-input AND, OR, NAND, and NOR gates.
+
+A key step is **levelization**. Each gate is assigned a logic level based on the levels of its input nodes, and gates with the same level are grouped together. This makes the simulation deterministic and efficient: the simulator evaluates the circuit level by level, stores node values, and also exports CSV files that can be used both for validation and for visualization.
+
+![Core data structures used by the simulator: primary-input nodes, regular nodes, gates, flip-flop inputs, and a levelized array of gates.](/radhard-circuit-design/data-structures.png)
+
+![Main C data types: Node entries store name, value, type, and level, while Gate entries store name, type, input/output node pointers, and level.](/radhard-circuit-design/data-types.png)
+
+The second part extended the simulator from steady-state logic evaluation to **Single Event Transient (SET)** propagation. For each input vector, the circuit first reaches a steady state. Then eligible gates are selected as particle-strike locations: flip-flops are excluded, as are gates that directly drive a primary output or a flip-flop input. A strike is modeled as a temporary bit-flip at the selected gate output, and the simulator re-evaluates the downstream logic to check whether the error reaches at least one flip-flop input.
+
+The final metric produced by the tool is the **Soft Error Rate (SER)**, computed as the fraction of simulated input-vector and gate-strike cases that result in a propagated error. The implementation was validated on the small **s27** benchmark by comparing the C simulator outputs against Verilog simulation results, while the exported node and level CSV files made the parsed netlist and the simulated signal states easier to inspect.
+
+For the full circuit, the reported SER is therefore:
+
+$$
+SER_{circuit} = \\frac{N_{errors}}{N_{simulations}} = \\frac{\\sum_{v \\in V} \\sum_{g \\in G_{hit}} E(v,g)}{|V| \\cdot |G_{hit}|}
+$$
+
+where $V$ is the set of simulated input vectors, $G_{hit}$ is the set of eligible gates where an SET can be injected, and $E(v,g)$ is 1 when the injected transient propagates to a flip-flop input and 0 otherwise.`
+      },
+      {
+        title: "CUDA Implementation Prototype",
+        slug: "cuda-ser-simulator",
+        description: "A CUDA backend prototype that maps independent SER simulation cases to GPU threads.",
+        featured: false,
+        content: `
+After the semester ended, a second implementation explored how the **Soft Error Rate simulator** could be moved from a pointer-heavy CPU design to a **CUDA** backend. This work was carried out during the [HPC Workshop: Large Scale Scientific Computations](https://hpc-workshop.chemeng.ntua.gr/) at the School of Chemical Engineering in Athens, 6-9 July 2026, using the [NTUA Chemical Engineering computer center / Andromeda infrastructure](https://www.chemeng.ntua.gr/computer_center/).
+
+The main change was to introduce a backend abstraction around the SER run. The original implementation remained available as a **legacy** backend, while new **x86/flat** and **cuda** paths could be selected from the build and run scripts. The executable gained timing-log support so that each run records the backend, benchmark, elapsed time, total simulations, number of hittable gates, soft-error count, and SER percentage.
+
+To make the circuit suitable for GPU execution, the parsed netlist was converted into a **flat netlist** representation. Instead of following C pointers between **Node** and **Gate** structs, the CUDA path stores compact integer arrays: node values, primary-input node indices, DFF observation nodes, hittable gate indices, gate types, gate input offsets/counts, output-node indices, and levelized gate lists. This layout can be copied directly to device memory and avoids pointer chasing inside the kernel.
+
+The CUDA kernel assigns **independent SER cases to GPU threads**. Each case corresponds to one input vector and one selected particle-strike gate. A thread reconstructs the input-vector state, runs the steady-state simulation, stores the golden DFF-input values, reruns the levelized circuit with one gate output flipped, and writes whether the transient propagated to a flip-flop input. The host then reduces the per-case error flags to compute the final SER.
+
+The retained benchmark is **s1423**. The CPU baseline was run on my laptop with a **12th Gen Intel(R) Core(TM) i5-1235U** processor, while the CUDA run was executed on the HPC cluster with **NVIDIA Tesla M2050** GPUs:
+
+| Backend | Platform | Total simulations | Soft errors | SER | Backend time |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Legacy CPU | Laptop, 12th Gen Intel(R) Core(TM) i5-1235U | 90,963,968 | 37,341,184 | 41.05% | 645.15 s |
+| CUDA | HPC cluster, NVIDIA Tesla M2050 and Intel Xeon X5660 | 90,963,968 | 37,341,184 | 41.05% | 382.85 s |
+
+Caption: Backend time measures only the selected simulator backend execution time for the SER computation, excluding parsing, setup, teardown, and other total-program overhead.
+
+The CUDA prototype preserved the same SER result and achieved a **1.69× speedup** over the legacy CPU backend, corresponding to about **40.7% less backend runtime** for this saved s1423 run.
+
+More info on the Andromeda HPC cluster [here](https://www.chemeng.ntua.gr/computer_center/).`
       }
     ]
   },

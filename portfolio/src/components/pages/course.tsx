@@ -8,6 +8,10 @@ import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown, {type Components} from "react-markdown";
 import remarkUnwrapImages from "remark-unwrap-images";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import {Badge} from "@/components/ui/badge.tsx";
 import YouTube from 'react-youtube';
 import { memo } from 'react';
@@ -50,6 +54,35 @@ function parseSlideDeckConfig(raw: string): SlideDeckConfig {
     slides,
     title: settings.get("title"),
     pdfUrl: settings.get("pdf"),
+  };
+}
+
+function markdownNodeText(node: any): string {
+  if (!node) return "";
+  if (typeof node.value === "string") return node.value;
+  if (Array.isArray(node.children)) {
+    return node.children.map(markdownNodeText).join("");
+  }
+  return "";
+}
+
+function remarkTableCaptions() {
+  return (tree: any) => {
+    if (!Array.isArray(tree.children)) return;
+
+    for (let i = 0; i < tree.children.length - 1; i++) {
+      const current = tree.children[i];
+      const next = tree.children[i + 1];
+      if (current?.type !== "table" || next?.type !== "paragraph") continue;
+
+      const captionMatch = markdownNodeText(next).trim().match(/^(?:Table caption|Caption):\s*(.+)$/i);
+      if (!captionMatch) continue;
+
+      current.data = current.data ?? {};
+      current.data.hProperties = current.data.hProperties ?? {};
+      current.data.hProperties["data-caption"] = captionMatch[1];
+      tree.children.splice(i + 1, 1);
+    }
   };
 }
 
@@ -195,6 +228,35 @@ const MARKDOWN_COMPONENTS: Components = {
   li: ({node, ...props}) => (
     <li className="leading-relaxed" {...props} />
   ),
+  table: ({node, ...props}) => {
+    const {children, ...tableProps} = props as any;
+    const caption = tableProps["data-caption"];
+    delete tableProps["data-caption"];
+
+    return (
+      <figure className="my-8">
+        <div className="overflow-x-auto rounded-lg border border-slate-200 shadow-sm">
+          <table className="min-w-full border-collapse text-sm" {...tableProps}>
+            {children}
+          </table>
+        </div>
+        {caption && (
+          <figcaption className="mt-2 text-center text-sm text-gray-500 italic">
+            {caption}
+          </figcaption>
+        )}
+      </figure>
+    );
+  },
+  thead: ({node, ...props}) => (
+    <thead className="bg-slate-100 text-slate-900" {...props} />
+  ),
+  th: ({node, ...props}) => (
+    <th className="border-b border-slate-200 px-4 py-3 text-left font-semibold" {...props} />
+  ),
+  td: ({node, ...props}) => (
+    <td className="border-b border-slate-100 px-4 py-3 align-top" {...props} />
+  ),
 }
 
 export default function Course() {
@@ -318,7 +380,8 @@ export default function Course() {
 
               <div className="prose prose-slate dark:prose-invert lg:prose-lg max-w-none">
                 <ReactMarkdown
-                  remarkPlugins={[remarkUnwrapImages]}
+                  remarkPlugins={[remarkGfm, remarkMath, remarkTableCaptions, remarkUnwrapImages]}
+                  rehypePlugins={[rehypeKatex]}
                   components={MARKDOWN_COMPONENTS}
                 >
                   {project?.content ?? ""}
