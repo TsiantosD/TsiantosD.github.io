@@ -234,7 +234,7 @@ pdf=/ece338-parallel-computer-architecture/presentation.pdf
       {
         slug: "fpga-accelerated-smith-waterman-algorithm",
         title: "FPGA Accelerated Smith-Waterman Algorithm",
-        featured: true,
+        featured: true, 
         image: "/embedded/project3/similarity_matrix.png",
         content: `
 [View report (PDF)](/embedded/project3/report-EN.pdf)
@@ -293,6 +293,61 @@ This project involves the implementation and experimental analysis of **scheduli
     ]
   },
   {
+    slug: "microprocessor-design",
+    title: "Microprocessor Design",
+    description: "Microarchitectural timing optimization of a CV32E40P RISC-V core on the Zedboard FPGA by selectively removing forwarding paths.",
+    tags: ["RISC-V", "Microarchitecture", "FPGA", "Verilog", "Vivado", "Timing Closure", "Pipeline Hazards"],
+    image: "/microprocessor-design/soc.png",
+    link: "https://github.com/TsiantosD/ECE494-Microprocessor-Design",
+    people: 3,
+    grade: 10,
+    members: [ me, nikas, tsogkas ],
+    projects: [
+      {
+        title: "CV32E40P Forwarding Optimization on FPGA",
+        slug: "cv32e40p-forwarding-optimization",
+        description: "Implementation-level comparison of baseline vs no-forwarding variants with post-implementation Vivado reports and RTL benchmarks.",
+        featured: true,
+        image: "/microprocessor-design/no-mul-forwarding.png",
+        content: `
+[View report (PDF)](/microprocessor-design/report.pdf) · [View presentation (PDF)](/microprocessor-design/presentation.pdf)
+
+In this project, we studied how changing the **forwarding paths** of a pipelined core affects the achievable **clock frequency on the Zedboard FPGA**, and whether that translates to better **overall performance**. The key question was simple: does improving timing closure by simplifying bypass logic actually help real workloads, or do added stalls cancel the gain?
+
+The processor under study is the **CV32E40P**, a 32-bit in-order RISC-V core from OpenHW Group ([core-v-cv32e40p repository](https://github.com/openhwgroup/cv32e40p)). It has a 4-stage pipeline (IF/ID/EX/WB) and a forwarding network that allows dependent instructions to consume ALU or multiplier results early.
+
+At RTL level, we implemented and compared four variants: **baseline**, **no-mul-forwarding**, **no-alu-forwarding**, and **no-alu-mul-forwarding**. The change was to remove selected EX→ID forwarding sources and force those results to be consumed later through the writeback path. To keep ISA behavior correct, the **hazard unit** was updated so newly exposed dependencies stall until the value is safely available (instead of consuming it from the removed forwarding path).
+
+![Example datapath reroute in the no-mul-forwarding variant: multiplier result is deferred to WB path instead of immediate EX forwarding.](/microprocessor-design/no-mul-forwarding.png)
+
+For implementation, all cores were placed in the same minimal **ZedBoard-oriented SoC wrapper** (local IMEM/DMEM BRAMs, same top-level context, same Vivado flow) so differences come from microarchitecture and not platform changes. Functionality was checked first with RTL tests (golden model vs simulated DMEM/register-file dumps), then timing/utilization/power were collected from post-implementation reports.
+
+![Minimal SoC context used for a fair implementation-level comparison across all forwarding variants.](/microprocessor-design/soc.png#medium)
+
+| Variant | Constraint period | WNS | Estimated Fmax | Critical-path delay |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline | 15.000 ns | 0.030 ns | 66.800 MHz | 14.871 ns |
+| No-MUL forwarding | 14.000 ns | 0.339 ns | 73.201 MHz | 13.440 ns |
+| No-ALU forwarding | 15.000 ns | 0.114 ns | 67.177 MHz | 14.769 ns |
+| No-ALU/MUL forwarding | 15.000 ns | 0.630 ns | 69.589 MHz | 14.154 ns |
+
+Caption: Post-implementation timing summary
+
+In benchmark runtime results, **no-mul-forwarding** is the clear overall winner: it beats the baseline in most workloads thanks to the higher achievable clock, while both **no-alu-forwarding** and **no-alu-mul-forwarding** are consistently slower than baseline due to extra dependency stalls. The only small exceptions for no-mul-forwarding are **multiply** and **mm**, where added MUL-related stalls slightly offset the frequency gain. Overall, the conclusion is that selective forwarding simplification can improve both **timing closure** and practical performance, as long as the removed path is chosen carefully.
+
+![Benchmark execution-time comparison across workloads and forwarding variants, highlighting timing gains vs stall-induced slowdowns.](/microprocessor-design/benchmark.png)
+
+\`\`\`slidedeck
+title=Microprocessor Design Presentation
+base=/microprocessor-design/presentation
+count=18
+pdf=/microprocessor-design/presentation.pdf
+\`\`\`
+`
+      }
+    ]
+  },
+  {
     slug: "computer-organization-and-design",
     title: "Computer Organization & Design",
     description: "Nine projects related to the MIPS CPU architecture, microarchitecture and one for the x86 microarchitecture.",
@@ -306,7 +361,7 @@ This project involves the implementation and experimental analysis of **scheduli
       {
         slug: "kmeans",
         title: "Lab 8 - K-Means",
-        featured: true,
+        featured: false,
         image: "/organization/lab8/andromeda_comparison.png",
         description: "Optimized K-Means on x86.",
         content: `
@@ -483,7 +538,7 @@ Managed to successfully transfer data up to two meters away with a bitrate of 12
         title: "Routing Information Protocol",
         slug: "routing-information-protocol",
         description: "Implemented and simulated the Routing Information Protocol (RIP).",
-        featured: true,
+        featured: false,
         image: "inter-network-protocol-design/routing-tables.png",
         content: `
 Implemented and simulated the **Routing Information Protocol - RIP** using **Python**, **Docker**, and **Google Protocol Buffers**, as a part of the optional course assignment. Created a virtual network with Docker Compose and added python **Unit Tests** to ensure the implementation's correctness and stability. Implemented the following:
