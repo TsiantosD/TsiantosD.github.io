@@ -540,7 +540,7 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-                    <Button asChild variant="secondary" size="default" className="rounded-xl font-bold">
+                    <Button asChild variant="outline" size="default" className="rounded-xl border-slate-700 bg-transparent font-bold text-white hover:bg-white hover:text-slate-950">
                       <a
                         href="https://docs.google.com/forms/d/e/1FAIpQLSchD7dRpaz4QXcKSyzURG8qRyZv1erO9FMpEjBjJvo0ekzfGg/viewform?usp=dialog"
                         target="_blank"
