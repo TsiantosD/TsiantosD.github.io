@@ -1,19 +1,17 @@
 export const GradeCircle = ({ grade }: { grade: number }) => {
   const strokeWidth = 6;
-  // Shrink radius so (radius * 2) + strokeWidth <= 64
-  // 28 * 2 + 6 = 62. This leaves a 1px safety margin on all sides.
   const radius = 28;
   const circumference = 2 * Math.PI * radius;
   const percentage = Math.round((grade / 10) * 100);
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative flex items-center justify-center w-16 h-16">
-      <svg 
-        viewBox="0 0 64 64" // Explicitly define the coordinate space
-        className="w-full h-full transform -rotate-90"
+    <div className="relative flex h-16 w-16 items-center justify-center">
+      <div className="absolute inset-0 rounded-full bg-slate-950 shadow-lg shadow-emerald-950/20" />
+      <svg
+        viewBox="0 0 64 64"
+        className="relative h-full w-full -rotate-90 transform"
       >
-        {/* Background Circle */}
         <circle
           cx="32"
           cy="32"
@@ -21,25 +19,23 @@ export const GradeCircle = ({ grade }: { grade: number }) => {
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="transparent"
-          className="text-neutral-500 dark:text-neutral-400"
+          className="text-slate-800"
         />
-        {/* Progress Circle */}
         <circle
           cx="32"
           cy="32"
           r={radius}
           stroke="currentColor"
-          strokeWidth={strokeWidth+1}
+          strokeWidth={strokeWidth + 1}
           fill="transparent"
           strokeDasharray={circumference}
           style={{ strokeDashoffset: offset }}
           strokeLinecap="round"
-          className="text-slate-100 dark:text-slate-800 transition-all duration-1000 ease-out"
+          className="text-emerald-300 transition-all duration-1000 ease-out"
         />
       </svg>
-      {/* Grade Text in Center */}
       <div className="absolute flex items-center justify-center">
-        <span className="text-lg font-bold leading-none">{percentage}%</span>
+        <span className="text-lg font-black leading-none text-white">{percentage}%</span>
       </div>
     </div>
   );

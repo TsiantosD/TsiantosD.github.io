@@ -301,7 +301,7 @@ export default function Home() {
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
                   <GraduationCapIcon className="mb-5 h-6 w-6 text-emerald-600" />
                   <p className="text-3xl font-black text-slate-950">{courses.length}</p>
-                  <p className="mt-1 text-sm font-semibold text-slate-500">course collections</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-500">courses</p>
                 </div>
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
                   <Layers3Icon className="mb-5 h-6 w-6 text-blue-600" />
