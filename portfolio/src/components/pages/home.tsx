@@ -22,10 +22,13 @@ import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/
 import {Badge} from "@/components/ui/badge.tsx";
 
 const highlightedCourseSlugs = [
-  "microprocessor-design",
   "parallel-computer-architecture",
+  "microprocessor-design",
   "radhard-circuit-design",
   "high-performance-computing",
+  "embedded-systems",
+  "operating-systems",
+  "wireless-comunications"
 ];
 
 type FeaturedProject = Project & {
@@ -203,7 +206,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.28),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.18),transparent_28%),linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:100%_100%,100%_100%,48px_48px,48px_48px]" />
         <Container className="relative grid min-h-[82vh] items-center gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm text-slate-300 shadow-lg shadow-blue-950/20">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-m text-slate-300 shadow-lg shadow-blue-950/20">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
               Electrical & Computer Engineering undergraduate
             </div>
@@ -286,11 +289,11 @@ export default function Home() {
                 <div>
                   {sectionEyebrow("Snapshot")}
                   <h2 className="max-w-2xl text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
-                    A portfolio organized around systems, evidence, and usable demos.
+                    Progress & Stats
                   </h2>
                 </div>
                 <p className="max-w-2xl text-lg leading-8 text-slate-600">
-                  The work below is grouped by course/project context, with quick signals for scope, collaborators, grades, and runnable tools so visitors can understand the strongest pieces without digging through every page first.
+                  My progress so far at the Electrical and Computer Engineering department.
                 </p>
               </div>
 
@@ -326,14 +329,14 @@ export default function Home() {
               <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div>
                   {sectionEyebrow("Selected work")}
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Projects & courses</h2>
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Courses</h2>
                   <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                    Larger, more visual cards for the strongest systems first, followed by a compact index of the rest.
+                    Some important courses and projects. This portfolio only covers the most notable courses, you can check the entire course list at the <a href="https://www.e-ce.uth.gr/studies/undergraduate/?lang=en" target="_blank" className="font-medium text-fg-brand underline hover:no-underline">department's website</a>.
                   </p>
                 </div>
-                <a href="#tools" className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:border-slate-900 hover:text-slate-950">
+                {/* <a href="#tools" className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:border-slate-900 hover:text-slate-950">
                   Jump to tools <ArrowRightIcon className="h-4 w-4" />
-                </a>
+                </a> */}
               </div>
 
               {highlightedCourses[0] && (
@@ -349,8 +352,8 @@ export default function Home() {
               <div className="mt-14 rounded-[2rem] border border-slate-200 bg-slate-50 p-4 md:p-6">
                 <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div>
-                    <h3 className="text-xl font-black text-slate-950">More course collections</h3>
-                    <p className="text-sm text-slate-500">Fast scan index for the remaining coursework and portfolio entries.</p>
+                    <h3 className="text-xl font-black text-slate-950">More courses</h3>
+                    {/* <p className="text-sm text-slate-500">Fast scan index for the remaining coursework and portfolio entries.</p> */}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {topTags.map((tag) => (
@@ -388,10 +391,10 @@ export default function Home() {
             <div className="rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
               <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div>
-                  {sectionEyebrow("Case studies")}
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Featured project paths</h2>
+                  {sectionEyebrow("Featured")}
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Featured projects</h2>
                   <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                    Direct links into the strongest project writeups, keeping the homepage useful for quick review.
+                    Some of my personal favourite projects.
                   </p>
                 </div>
               </div>
@@ -411,9 +414,9 @@ export default function Home() {
               <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div>
                   {sectionEyebrow("Timeline")}
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Progression on one line</h2>
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">My progress</h2>
                   <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                    Education, professional experience, and milestones as a horizontal timeline that scans from left to right.
+                    Education, professional experience, and milestones.
                   </p>
                 </div>
                 <button
@@ -453,9 +456,9 @@ export default function Home() {
               <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div>
                   {sectionEyebrow("Interactive tools")}
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Runnable portfolio tools</h2>
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Online tools</h2>
                   <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                    Small browser-accessible tools and visualizers that make architecture concepts easier to inspect.
+                    Tools used by myself and my colleagues.
                   </p>
                 </div>
               </div>
@@ -488,7 +491,7 @@ export default function Home() {
                   {sectionEyebrow("Collaborators")}
                   <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">People behind the projects</h2>
                   <p className="mt-4 text-lg leading-8 text-slate-600">
-                    A denser, easier-to-scan collaborator section that still keeps LinkedIn profiles one click away.
+                    The talented people I had the pleasure working with. Check out their LinkedIn profiles.
                   </p>
                 </div>
 
@@ -531,9 +534,9 @@ export default function Home() {
                       <SparklesIcon className="h-3.5 w-3.5" />
                       Contact
                     </div>
-                    <h2 className="text-3xl font-black tracking-tight md:text-5xl">Want to discuss a project?</h2>
+                    <h2 className="text-3xl font-black tracking-tight md:text-5xl">Want to discuss?</h2>
                     <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
-                      Send a short message with the context, repository, or idea. LinkedIn is best for quick conversations; the form is better for structured requests.
+                      Send a short message. LinkedIn is best for quick conversations; the form is better for structured requests.
                     </p>
                   </div>
                   <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
