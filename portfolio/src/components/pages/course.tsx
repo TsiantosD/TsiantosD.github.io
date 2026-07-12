@@ -14,7 +14,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import {Badge} from "@/components/ui/badge.tsx";
 import YouTube from 'react-youtube';
-import { memo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import {GistEmbed} from "@/components/gistEmbed.tsx";
 import {GradeCircle} from "@/components/grade-circle.tsx";
 import TeamSection from "../team-section";
@@ -259,8 +259,25 @@ const MARKDOWN_COMPONENTS: Components = {
   ),
 }
 
-function CourseSectionNav({ course }: { course?: CourseType }) {
-  const projectLinks = course?.projects ?? [];
+interface CourseSectionLink {
+  id: string;
+  label: string;
+  depth?: 0 | 1;
+}
+
+function CourseSectionNav({ links, activeSection }: { links: CourseSectionLink[]; activeSection: string }) {
+  const navLinkClass = (link: CourseSectionLink) => {
+    const isActive = activeSection === link.id;
+    const baseClass = link.depth === 1
+      ? "block rounded-lg px-3 py-1.5 pl-6 text-sm transition-colors"
+      : "block rounded-lg px-3 py-2 font-medium transition-colors";
+
+    return `${baseClass} ${
+      isActive
+        ? "bg-slate-900 text-white shadow-sm"
+        : "text-muted-foreground hover:bg-slate-100 hover:text-slate-950"
+    }`;
+  };
 
   return (
     <aside className="hidden lg:block">
@@ -269,28 +286,11 @@ function CourseSectionNav({ course }: { course?: CourseType }) {
           Sections
         </p>
         <nav aria-label="Course sections" className="space-y-1 text-sm">
-          <a href="#overview" className="block rounded-lg px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950">
-            Overview
-          </a>
-          {projectLinks.length > 0 && (
-            <a href="#projects" className="block rounded-lg px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950">
-              Projects
-            </a>
-          )}
-          {projectLinks.map((project) => (
-            <a
-              key={project.slug}
-              href={`#${project.slug}`}
-              className="block rounded-lg px-3 py-1.5 pl-6 text-muted-foreground transition-colors hover:bg-slate-100 hover:text-slate-950"
-            >
-              {project.title}
+          {links.map((link) => (
+            <a key={link.id} href={`#${link.id}`} className={navLinkClass(link)}>
+              {link.label}
             </a>
           ))}
-          {(course?.members?.length ?? 0) > 0 && (
-            <a href="#team" className="block rounded-lg px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950">
-              Team
-            </a>
-          )}
         </nav>
       </div>
     </aside>
@@ -301,6 +301,54 @@ export default function Course() {
   const { slug } = useParams<{ slug: string }>();
 
   const course: CourseType|undefined = courses.find((p) => p.slug === slug);
+
+  const sectionLinks = useMemo<CourseSectionLink[]>(() => {
+    if (!course) return [];
+
+    return [
+      { id: "overview", label: "Overview" },
+      ...(course.projects.length > 0 ? [{ id: "projects", label: "Projects" } as CourseSectionLink] : []),
+      ...course.projects.map((project) => ({ id: project.slug, label: project.title, depth: 1 as const })),
+      ...((course.members?.length ?? 0) > 0 ? [{ id: "team", label: "Team" } as CourseSectionLink] : []),
+    ];
+  }, [course]);
+
+  const [activeSection, setActiveSection] = useState("overview");
+  const [readingProgress, setReadingProgress] = useState(0);
+
+  useEffect(() => {
+    const updateScrollState = () => {
+      const scrollTop = window.scrollY;
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
+      setReadingProgress(Math.min(100, Math.max(0, progress)));
+
+      const anchorOffset = 180;
+      let currentSection = sectionLinks[0]?.id ?? "overview";
+
+      for (const link of sectionLinks) {
+        const element = document.getElementById(link.id);
+        if (!element) continue;
+
+        if (element.getBoundingClientRect().top <= anchorOffset) {
+          currentSection = link.id;
+        } else {
+          break;
+        }
+      }
+
+      setActiveSection(currentSection);
+    };
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [sectionLinks]);
 
   const navigate = useNavigate();
 
@@ -345,6 +393,13 @@ export default function Course() {
           </div>
         </div>
       </Container>
+      <div className="h-1 w-full bg-slate-200/70">
+        <div
+          className="h-full bg-slate-900 transition-[width] duration-150 ease-out"
+          style={{ width: `${readingProgress}%` }}
+          aria-hidden="true"
+        />
+      </div>
     </nav>
 
     {course?.image && (
@@ -411,12 +466,23 @@ export default function Course() {
     <main className="py-12">
       <Container>
         <div className="grid gap-10 lg:grid-cols-[16rem_minmax(0,1fr)]">
-          <CourseSectionNav course={course} />
+          <CourseSectionNav links={sectionLinks} activeSection={activeSection} />
 
           <div className="max-w-3xl min-w-0"> {/* Constraining width for readability */}
             <p className="text-xl text-muted-foreground mb-16 leading-relaxed italic border-l-4 pl-6 border-primary/20">
               {course?.description}
             </p>
+
+            {(course?.projects.length ?? 0) > 0 && (
+              <div id="projects" className="scroll-mt-32 mb-10">
+                <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">
+                  Course work
+                </p>
+                <h2 className="mt-2 text-3xl font-bold tracking-tight">
+                  Projects
+                </h2>
+              </div>
+            )}
 
             {course?.projects.map((project: Project) => (
               <section key={project.slug} className="mb-24 last:mb-0">
