@@ -259,6 +259,44 @@ const MARKDOWN_COMPONENTS: Components = {
   ),
 }
 
+function CourseSectionNav({ course }: { course?: CourseType }) {
+  const projectLinks = course?.projects ?? [];
+
+  return (
+    <aside className="hidden lg:block">
+      <div className="sticky top-32 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur">
+        <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          Sections
+        </p>
+        <nav aria-label="Course sections" className="space-y-1 text-sm">
+          <a href="#overview" className="block rounded-lg px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950">
+            Overview
+          </a>
+          {projectLinks.length > 0 && (
+            <a href="#projects" className="block rounded-lg px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950">
+              Projects
+            </a>
+          )}
+          {projectLinks.map((project) => (
+            <a
+              key={project.slug}
+              href={`#${project.slug}`}
+              className="block rounded-lg px-3 py-1.5 pl-6 text-muted-foreground transition-colors hover:bg-slate-100 hover:text-slate-950"
+            >
+              {project.title}
+            </a>
+          ))}
+          {(course?.members?.length ?? 0) > 0 && (
+            <a href="#team" className="block rounded-lg px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950">
+              Team
+            </a>
+          )}
+        </nav>
+      </div>
+    </aside>
+  );
+}
+
 export default function Course() {
   const { slug } = useParams<{ slug: string }>();
 
@@ -309,8 +347,22 @@ export default function Course() {
       </Container>
     </nav>
 
+    {course?.image && (
+      <section className="pt-8">
+        <Container>
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-xl">
+            <img
+              src={course.image}
+              alt={`${course.title} cover`}
+              className="h-[18rem] w-full object-cover object-center md:h-[26rem]"
+            />
+          </div>
+        </Container>
+      </section>
+    )}
+
     {/* --- Main Course Header --- */}
-    <section className="pt-16 pb-12 w-full">
+    <section id="overview" className="scroll-mt-32 pt-16 pb-12 w-full">
       <Container>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-4">
@@ -358,40 +410,46 @@ export default function Course() {
     {/* --- Content Grid --- */}
     <main className="py-12">
       <Container>
-        <div className="max-w-3xl mx-auto"> {/* Constraining width for readability */}
-          <p className="text-xl text-muted-foreground mb-16 leading-relaxed italic border-l-4 pl-6 border-primary/20">
-            {course?.description}
-          </p>
+        <div className="grid gap-10 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <CourseSectionNav course={course} />
 
-          {course?.projects.map((project: Project) => (
-            <section key={project.slug} className="mb-24 last:mb-0">
-              <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8 scroll-mt-40" id={project.slug}>
-                <h3 className="text-3xl font-bold tracking-tight">
-                  {project.title}
-                </h3>
-                
-                {project?.topOfClass && (
-                  <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold">
-                    <FontAwesomeIcon className="mr-2 text-xs" icon={faAward} />
-                    {project.topOfClass}
-                  </Badge>
-                )}
-              </div>
+          <div className="max-w-3xl min-w-0"> {/* Constraining width for readability */}
+            <p className="text-xl text-muted-foreground mb-16 leading-relaxed italic border-l-4 pl-6 border-primary/20">
+              {course?.description}
+            </p>
 
-              <div className="prose prose-slate dark:prose-invert lg:prose-lg max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkMath, remarkTableCaptions, remarkUnwrapImages]}
-                  rehypePlugins={[rehypeKatex]}
-                  components={MARKDOWN_COMPONENTS}
-                >
-                  {project?.content ?? ""}
-                </ReactMarkdown>
-              </div>
-            </section>
-          ))}
+            {course?.projects.map((project: Project) => (
+              <section key={project.slug} className="mb-24 last:mb-0">
+                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8 scroll-mt-40" id={project.slug}>
+                  <h3 className="text-3xl font-bold tracking-tight">
+                    {project.title}
+                  </h3>
+                  
+                  {project?.topOfClass && (
+                    <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800/50 font-semibold">
+                      <FontAwesomeIcon className="mr-2 text-xs" icon={faAward} />
+                      {project.topOfClass}
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="prose prose-slate dark:prose-invert lg:prose-lg max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkMath, remarkTableCaptions, remarkUnwrapImages]}
+                    rehypePlugins={[rehypeKatex]}
+                    components={MARKDOWN_COMPONENTS}
+                  >
+                    {project?.content ?? ""}
+                  </ReactMarkdown>
+                </div>
+              </section>
+            ))}
+          </div>
         </div>
       </Container>
-      <TeamSection members={course?.members ?? []} />
+      <div id="team" className="scroll-mt-32">
+        <TeamSection members={course?.members ?? []} />
+      </div>
     </main>
   </>
 );

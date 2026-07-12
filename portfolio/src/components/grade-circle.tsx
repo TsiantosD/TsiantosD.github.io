@@ -2,9 +2,9 @@ export const GradeCircle = ({ grade }: { grade: number }) => {
   const strokeWidth = 6;
   // Shrink radius so (radius * 2) + strokeWidth <= 64
   // 28 * 2 + 6 = 62. This leaves a 1px safety margin on all sides.
-  const radius = 28; 
+  const radius = 28;
   const circumference = 2 * Math.PI * radius;
-  const percentage = (grade / 10) * 100;
+  const percentage = Math.round((grade / 10) * 100);
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
@@ -38,9 +38,8 @@ export const GradeCircle = ({ grade }: { grade: number }) => {
         />
       </svg>
       {/* Grade Text in Center */}
-      <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-lg font-bold leading-none">{grade}</span>
-        <span className="text-[10px] opacity-60 font-medium mt-0.5">/10</span>
+      <div className="absolute flex items-center justify-center">
+        <span className="text-lg font-bold leading-none">{percentage}%</span>
       </div>
     </div>
   );
