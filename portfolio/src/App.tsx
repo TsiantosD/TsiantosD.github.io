@@ -47,7 +47,7 @@ export default function App() {
     <BrowserRouter>
       <ScrollToHash />
       <Navbar />
-      <div className="justify-items-center">
+      <div className="w-full justify-items-center">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/course/:slug" element={<Course />} />

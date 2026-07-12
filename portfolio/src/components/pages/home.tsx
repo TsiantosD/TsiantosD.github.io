@@ -1,28 +1,173 @@
 import { Container } from "@/components/layout/container";
 import {ChevronUpIcon} from "../ui/icons/lucide-chevron-up.tsx";
 import {ChevronDownIcon} from "../ui/icons/lucide-chevron-down.tsx";
-import {useState} from "react";
-import {SectionHeader} from "../section-header.tsx";
-import {courses, type Project} from "@/data/courses.ts";
-import {CourseCard} from "../course-card.tsx";
-import {TimelineItem} from "../timeline-item.tsx";
+import {useMemo, useState} from "react";
+import {courses, type Course, type Project} from "@/data/courses.ts";
 import {timeline} from "@/data/timeline.ts";
 import {Button} from "../ui/button.tsx";
-import {ArrowUpRightIcon} from "lucide-react";
+import {
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  BookOpenIcon,
+  CpuIcon,
+  GraduationCapIcon,
+  Layers3Icon,
+  LinkedinIcon,
+  MedalIcon,
+  SparklesIcon,
+  UsersIcon,
+  WrenchIcon,
+} from "lucide-react";
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import {Badge} from "@/components/ui/badge.tsx";
 
-type FeaturedProject = Project & { 
-  courseSlug: string; 
-  courseTitle: string; 
+const highlightedCourseSlugs = [
+  "microprocessor-design",
+  "parallel-computer-architecture",
+  "radhard-circuit-design",
+  "high-performance-computing",
+];
+
+type FeaturedProject = Project & {
+  courseSlug: string;
+  courseTitle: string;
 };
 
+function sectionEyebrow(label: string) {
+  return (
+    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-500 shadow-sm">
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+      {label}
+    </div>
+  );
+}
+
+function CourseShowcaseCard({ course, featured = false }: { course: Course; featured?: boolean }) {
+  const gradePercent = course.grade !== undefined ? Math.round((course.grade / 10) * 100) : null;
+  const visibleTags = course.tags.slice(0, featured ? 5 : 3);
+  const hiddenTagCount = course.tags.length - visibleTags.length;
+
+  return (
+    <a
+      href={`/course/${course.slug}`}
+      className={`group relative flex h-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-2xl hover:shadow-slate-200/80 ${featured ? "lg:grid lg:grid-cols-[1.05fr_0.95fr]" : "flex-col"}`}
+    >
+      {course.image && (
+        <div className={`relative overflow-hidden bg-slate-100 ${featured ? "min-h-[22rem]" : "aspect-video"}`}>
+          <img
+            src={course.image}
+            alt={course.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent" />
+          {gradePercent !== null && (
+            <div className="absolute left-4 top-4 rounded-2xl bg-white/90 px-3 py-2 text-sm font-black text-slate-950 shadow-lg backdrop-blur">
+              {gradePercent}%
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className={`flex flex-1 flex-col p-6 ${featured ? "justify-between" : ""}`}>
+        <div>
+          <div className="mb-4 flex flex-wrap gap-2">
+            {visibleTags.map((tag) => (
+              <Badge key={tag} variant="outline" className="rounded-full bg-slate-50 text-[11px]">
+                {tag}
+              </Badge>
+            ))}
+            {hiddenTagCount > 0 && (
+              <Badge variant="outline" className="rounded-full bg-slate-50 text-[11px] text-slate-500">
+                +{hiddenTagCount}
+              </Badge>
+            )}
+          </div>
+
+          <h3 className={`${featured ? "text-3xl" : "text-xl"} font-black tracking-tight text-slate-950`}>
+            {course.title}
+          </h3>
+          <p className={`mt-3 text-sm leading-6 text-slate-600 ${featured ? "md:text-base" : "line-clamp-3"}`}>
+            {course.description}
+          </p>
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4 text-sm text-slate-500">
+          <span className="inline-flex items-center gap-2 font-semibold">
+            <BookOpenIcon className="h-4 w-4" />
+            {course.projects.length} {course.projects.length === 1 ? "project" : "projects"}
+          </span>
+          <span className="inline-flex items-center gap-2 font-semibold">
+            <UsersIcon className="h-4 w-4" />
+            {course.people === 1 ? "Solo" : `${course.people} people`}
+          </span>
+          <span className="ml-auto inline-flex items-center gap-1 font-bold text-slate-950">
+            Open <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function FeaturedProjectCard({ project }: { project: FeaturedProject }) {
+  return (
+    <a
+      href={`/course/${project.courseSlug}#${project.slug}`}
+      className="group grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl sm:grid-cols-[11rem_1fr]"
+    >
+      {project.image && (
+        <div className="relative min-h-44 overflow-hidden bg-slate-100">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 to-transparent" />
+        </div>
+      )}
+      <div className="flex flex-col justify-between p-5">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">{project.courseTitle}</p>
+          <h3 className="mt-2 text-lg font-black text-slate-950">{project.title}</h3>
+          <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{project.description}</p>
+        </div>
+        <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-slate-950">
+          Read case study <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </span>
+      </div>
+    </a>
+  );
+}
+
+function ToolCard({ href, title, description, label, icon }: { href: string; title: string; description: string; label: string; icon: React.ReactNode }) {
+  return (
+    <a href={href} className="group relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 p-6 text-white shadow-xl shadow-slate-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/70">
+      <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-emerald-400/10 blur-2xl transition group-hover:bg-emerald-300/20" />
+      <div className="relative flex h-full flex-col">
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div className="rounded-2xl border border-slate-700 bg-slate-900 p-3 text-emerald-300 transition-colors group-hover:border-emerald-300/60 group-hover:bg-emerald-300 group-hover:text-slate-950">
+            {icon}
+          </div>
+          <ArrowUpRightIcon className="h-5 w-5 text-slate-500 transition group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-emerald-200" />
+        </div>
+        <h3 className="text-2xl font-black tracking-tight">{title}</h3>
+        <p className="mt-3 flex-1 text-sm leading-6 text-slate-300">{description}</p>
+        <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-emerald-200">
+          {label} <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </span>
+      </div>
+    </a>
+  );
+}
+
 export default function Home() {
-  const [isReversed, setIsReversed] = useState(false);
+  const [isReversed, setIsReversed] = useState(true);
   const toggleOrder = () => setIsReversed(!isReversed);
+
   const displayedTimeline = isReversed ? [...timeline].reverse() : timeline;
   const skills = [...new Set(courses.flatMap(p => p.tags))];
-  const featuredProjects: FeaturedProject[] = courses.flatMap(course => 
+
+  const featuredProjects: FeaturedProject[] = courses.flatMap(course =>
     (course.projects || [])
       .filter(project => project.featured)
       .map(project => ({
@@ -31,10 +176,26 @@ export default function Home() {
         courseSlug: course.slug
       }))
   );
+
   const allCollaborators = courses.flatMap(course => course.members || []);
   const uniqueCollaborators = Array.from(
     new Map(allCollaborators.map(m => [m.linkedin || m.name, m])).values()
-  ).filter(m => !m.name.toLowerCase().includes("tsiantos")); // Replace with your actual name filter
+  ).filter(m => !m.name.toLowerCase().includes("tsiantos"));
+
+  const highlightedCourses = useMemo(() => {
+    const priority = new Map(highlightedCourseSlugs.map((slug, index) => [slug, index]));
+    return [...courses]
+      .filter((course) => priority.has(course.slug))
+      .sort((a, b) => (priority.get(a.slug) ?? 999) - (priority.get(b.slug) ?? 999));
+  }, []);
+
+  const secondaryCourses = courses.filter((course) => !highlightedCourseSlugs.includes(course.slug));
+  const gradedCourses = courses.filter((course) => course.grade !== undefined);
+  const averageGrade = gradedCourses.length > 0
+    ? Math.round(gradedCourses.reduce((sum, course) => sum + (course.grade ?? 0), 0) / gradedCourses.length * 10)
+    : null;
+  const projectCount = courses.reduce((sum, course) => sum + course.projects.length, 0);
+  const topTags = skills.slice(0, 8);
 
   return (
     <>
@@ -114,227 +275,293 @@ export default function Home() {
           </MarqueeContent>
         </Marquee>
       </section>
-      <section id="about" className="py-16 w-full">
-        <Container>
-          <SectionHeader
-            title="Favourite Projects"
-            subtitle=""
-          />
-          <Carousel
-            opts={{ align: "start", loop: true }}
-            className="w-full relative"
-          >
-            <CarouselContent className="my-10 mx-5">
-              {featuredProjects.map((project, index) => (
-                <CarouselItem key={index} className="basis-full flex justify-center md:basis-1/2 lg:basis-1/3">
-                  <CourseCard
-                    slug={project.courseSlug}
-                    title={project?.title ?? ''}
-                    description={project?.description ?? ''}
-                    scrollId={project.slug}
-                    image={project.image}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            
-            {/* Navigation Controls */}
-            <div className="hidden md:block">
-              <CarouselPrevious className="-left-12 border-none bg-background shadow-lg" />
-              <CarouselNext className="-right-12 border-none bg-background shadow-lg" />
+
+      <div className="relative isolate w-full overflow-hidden bg-slate-100 py-14 md:py-20">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-full w-screen -translate-x-1/2 bg-[radial-gradient(circle_at_20%_0%,rgba(16,185,129,0.10),transparent_28%),radial-gradient(circle_at_85%_18%,rgba(59,130,246,0.08),transparent_30%),linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:100%_100%,100%_100%,56px_56px,56px_56px]" />
+
+        <section id="overview" className="relative scroll-mt-24">
+          <Container>
+            <div className="overflow-hidden rounded-[2.25rem] border border-slate-200/90 bg-white/92 p-6 shadow-xl shadow-slate-200/70 backdrop-blur md:p-10 lg:p-12">
+              <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
+                <div>
+                  {sectionEyebrow("Snapshot")}
+                  <h2 className="max-w-2xl text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+                    A portfolio organized around systems, evidence, and usable demos.
+                  </h2>
+                </div>
+                <p className="max-w-2xl text-lg leading-8 text-slate-600">
+                  The work below is grouped by course/project context, with quick signals for scope, collaborators, grades, and runnable tools so visitors can understand the strongest pieces without digging through every page first.
+                </p>
+              </div>
+
+              <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                  <GraduationCapIcon className="mb-5 h-6 w-6 text-emerald-600" />
+                  <p className="text-3xl font-black text-slate-950">{courses.length}</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-500">course collections</p>
+                </div>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                  <Layers3Icon className="mb-5 h-6 w-6 text-blue-600" />
+                  <p className="text-3xl font-black text-slate-950">{projectCount}</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-500">documented projects</p>
+                </div>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                  <MedalIcon className="mb-5 h-6 w-6 text-amber-600" />
+                  <p className="text-3xl font-black text-slate-950">{averageGrade ?? "—"}%</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-500">average listed grade</p>
+                </div>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                  <UsersIcon className="mb-5 h-6 w-6 text-purple-600" />
+                  <p className="text-3xl font-black text-slate-950">{uniqueCollaborators.length}</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-500">collaborators</p>
+                </div>
+              </div>
             </div>
-          </Carousel>
-        </Container>
-        {/* <Container>
-          <SectionHeader
-            title="Philosoply"
-            subtitle=""
-          />
-          <h2 className="text-3xl font-bold mb-2">Correctness</h2>
-          <h2 className="text-3xl font-bold mb-2">Security</h2>
-          <h2 className="text-3xl font-bold mb-2">Verifiability</h2>
-          <h2 className="text-3xl font-bold mb-2">Cooperation</h2>
-          <h2 className="text-3xl font-bold mb-2">Scalability</h2>
-        </Container> */}
-      </section>
-      <section id="timeline" className="py-20 w-full">
-        <Container>
-          <SectionHeader
-            title="Timeline"
-            subtitle="A quick overview of my education and achievements."
-          />
-          <div
-            onClick={toggleOrder}
-            className="flex items-center cursor-pointer mt-4 text-fg-muted hover:text-fg-primary transition-colors w-max"
-            title="Toggle timeline order"
-          >
-            {isReversed ? <ChevronUpIcon size={32} /> : <ChevronDownIcon size={32} />}
-          </div>
-          <div className="mt-10">
-            {displayedTimeline.map((item, i) => (
-              <TimelineItem key={i} {...item} />
-            ))}
-          </div>
-        </Container>
-      </section>
-      <section id="projects" className="py-20 w-full">
-        <Container>
-          <SectionHeader
-            title="Projects"
-            subtitle="Some of the things I've worked on."
-          />
-          <div className="grid gap-6 sm:grid-cols-2">
-            {courses.map((p) => (
-              <CourseCard key={p.title} {...p} />
-            ))}
-          </div>
-        </Container>
-      </section>
-      <section id="tools" className="py-20 w-full">
-        <Container className="space-x-6">
-          <SectionHeader
-            title="Tools"
-            subtitle="Online helper tools."
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Tomasulo Algorithm Card */}
-            <a href="/tomasulo" className="group">
-              <div className="p-6 border border-gray-200 rounded-xl hover:border-black hover:shadow-xl transition-all duration-300 bg-white">
-                {/* Icon Container with Black Accent */}
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-black transition-colors duration-300">
-                  <svg 
-                    className="w-6 h-6 text-black group-hover:text-white" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                  </svg>
+          </Container>
+        </section>
+
+        <section id="projects" className="relative mt-10 scroll-mt-24 md:mt-12">
+          <Container>
+            <div className="rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
+              <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div>
+                  {sectionEyebrow("Selected work")}
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Projects & courses</h2>
+                  <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+                    Larger, more visual cards for the strongest systems first, followed by a compact index of the rest.
+                  </p>
                 </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Tomasulo Visualizer</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Step-by-step interactive simulation of dynamic instruction scheduling, reservation stations, and register renaming.
-                </p>
-                
-                <span className="text-black font-semibold text-sm flex items-center border-b-2 border-transparent group-hover:border-black w-fit transition-all">
-                  Launch Simulator
-                  <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
+                <a href="#tools" className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:border-slate-900 hover:text-slate-950">
+                  Jump to tools <ArrowRightIcon className="h-4 w-4" />
+                </a>
               </div>
-            </a>
 
-            {/* ECE338 3D GPGPU Visualizer Card */}
-            <a href="/gpgpu-3d" className="group">
-              <div className="p-6 border border-gray-200 rounded-xl hover:border-black hover:shadow-xl transition-all duration-300 bg-white">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-black transition-colors duration-300">
-                  <svg
-                    className="w-6 h-6 text-black group-hover:text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12l8-4.5M12 12v9M12 12L4 7.5" />
-                  </svg>
-                </div>
+              {highlightedCourses[0] && (
+                <CourseShowcaseCard course={highlightedCourses[0]} featured />
+              )}
 
-                <h3 className="text-xl font-bold text-gray-900 mb-2">GPGPU 3D Visualizer</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  three.js n-body demo UI for the ECE338 Simple GPGPU project, with the dummy backend running in-browser.
-                </p>
-
-                <span className="text-black font-semibold text-sm flex items-center border-b-2 border-transparent group-hover:border-black w-fit transition-all">
-                  Launch Tool
-                  <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
+              <div className="mt-6 grid gap-6 lg:grid-cols-3">
+                {highlightedCourses.slice(1).map((course) => (
+                  <CourseShowcaseCard key={course.slug} course={course} />
+                ))}
               </div>
-            </a>
-          </div>
-        </Container>
-      </section>
-      <section id="collaborators" className="py-20 w-full">
-        <Container>
-          <SectionHeader
-            title="Collaborators"
-            subtitle="The talented people I've had the pleasure of working with on various projects."
-          />
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-            {uniqueCollaborators.map((member) => (
-              <a
-                key={member.linkedin || member.name}
-                href={member.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col h-full items-center text-center p-6 bg-background border rounded-2xl transition-all hover:shadow-md hover:border-primary/50"
-              >
-                {/* Avatar logic: Image or Initial fallback */}
-                <div className={`
-                  w-16 h-16 rounded-full bg-black dark:bg-white text-white dark:text-black 
-                  flex items-center justify-center font-bold text-xl mb-4 overflow-hidden 
-                  shrink-0 border-2 group-hover:border-primary transition-all
-                  ${!member.avatar ? "border-gray-200 dark:border-gray-800" : "border-transparent"}
-                `}>
-                  {member.avatar ? (
-                    <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
-                  ) : (
-                    member.name.charAt(0)
-                  )}
-                </div>
-                
-                <h3 className="font-bold text-sm group-hover:text-primary transition-colors">
-                  {member.name}
-                </h3>
 
-                <div className="mt-auto pt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
-                    View Profile
-                  </span>
+              <div className="mt-14 rounded-[2rem] border border-slate-200 bg-slate-50 p-4 md:p-6">
+                <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h3 className="text-xl font-black text-slate-950">More course collections</h3>
+                    <p className="text-sm text-slate-500">Fast scan index for the remaining coursework and portfolio entries.</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {topTags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="rounded-full bg-white">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              </a>
-            ))}
-          </div>
-        </Container>
-      </section>
-      <section id="contact" className="py-20 w-full">
-        <Container className="space-x-6">
-          <SectionHeader
-            title="Contact"
-            subtitle="Write me an email or DM me on LinkedIn!"
-          />
-          <Button
-            asChild
-            variant="outline"
-            size="default"
-          >
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSchD7dRpaz4QXcKSyzURG8qRyZv1erO9FMpEjBjJvo0ekzfGg/viewform?usp=dialog"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Google Form <ArrowUpRightIcon />
-            </a>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="default"
-          >
-            <a
-              href="https://www.linkedin.com/in/tsiantosd/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn <ArrowUpRightIcon />
-            </a>
-          </Button>
-        </Container>
-      </section>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {secondaryCourses.map((course) => (
+                    <a
+                      key={course.slug}
+                      href={`/course/${course.slug}`}
+                      className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-md"
+                    >
+                      {course.image && (
+                        <img src={course.image} alt={course.title} className="h-16 w-20 rounded-xl object-cover" />
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <h4 className="truncate font-black text-slate-950">{course.title}</h4>
+                        <p className="mt-1 line-clamp-1 text-sm text-slate-500">{course.description}</p>
+                      </div>
+                      <ArrowRightIcon className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-1 group-hover:text-slate-950" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section id="featured-projects" className="relative mt-10 scroll-mt-24 md:mt-12">
+          <Container>
+            <div className="rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
+              <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div>
+                  {sectionEyebrow("Case studies")}
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Featured project paths</h2>
+                  <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+                    Direct links into the strongest project writeups, keeping the homepage useful for quick review.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                {featuredProjects.slice(0, 6).map((project) => (
+                  <FeaturedProjectCard key={`${project.courseSlug}-${project.slug}`} project={project} />
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section id="timeline" className="relative mt-10 scroll-mt-24 md:mt-12">
+          <Container>
+            <div className="overflow-hidden rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
+              <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div>
+                  {sectionEyebrow("Timeline")}
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Progression on one line</h2>
+                  <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+                    Education, professional experience, and milestones as a horizontal timeline that scans from left to right.
+                  </p>
+                </div>
+                <button
+                  onClick={toggleOrder}
+                  className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:border-slate-900 hover:text-slate-950"
+                  title="Toggle timeline order"
+                >
+                  {isReversed ? <ChevronUpIcon size={18} /> : <ChevronDownIcon size={18} />}
+                  {isReversed ? "Newest first" : "Oldest first"}
+                </button>
+              </div>
+
+              <div className="relative -mx-6 overflow-x-auto px-6 pb-4 md:-mx-10 md:px-10 lg:-mx-12 lg:px-12">
+                <div className="relative flex min-w-max gap-5 py-8">
+                  <div className="absolute left-0 right-0 top-[3.15rem] h-px bg-gradient-to-r from-emerald-300 via-slate-300 to-blue-300" />
+                  {displayedTimeline.map((item, index) => (
+                    <article key={`${item.year}-${item.title}`} className="relative w-72 shrink-0 pt-14">
+                      <div className="absolute left-6 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border-4 border-white bg-slate-950 text-xs font-black text-emerald-300 shadow-lg shadow-slate-300/70">
+                        {String(index + 1).padStart(2, "0")}
+                      </div>
+                      <div className="h-full rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm transition hover:-translate-y-1 hover:border-slate-300 hover:bg-white hover:shadow-lg">
+                        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800">{item.year}</span>
+                        <h3 className="mt-5 text-lg font-black text-slate-950">{item.title}</h3>
+                        <p className="mt-3 text-sm leading-6 text-slate-600" dangerouslySetInnerHTML={{ __html: item.description }} />
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section id="tools" className="relative mt-10 scroll-mt-24 md:mt-12">
+          <Container>
+            <div className="rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
+              <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div>
+                  {sectionEyebrow("Interactive tools")}
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Runnable portfolio tools</h2>
+                  <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+                    Small browser-accessible tools and visualizers that make architecture concepts easier to inspect.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <ToolCard
+                  href="/tomasulo"
+                  title="Tomasulo Visualizer"
+                  description="Step-by-step interactive simulation of dynamic instruction scheduling, reservation stations, and register renaming."
+                  label="Launch visualizer"
+                  icon={<CpuIcon className="h-6 w-6" />}
+                />
+                <ToolCard
+                  href="/gpgpu-3d"
+                  title="GPGPU 3D Visualizer"
+                  description="three.js n-body demo UI for the ECE338 Simple GPGPU project, with the dummy backend running in-browser."
+                  label="Launch tool"
+                  icon={<WrenchIcon className="h-6 w-6" />}
+                />
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section id="collaborators" className="relative mt-10 scroll-mt-24 md:mt-12">
+          <Container>
+            <div className="rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
+              <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+                <div className="lg:sticky lg:top-28">
+                  {sectionEyebrow("Collaborators")}
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">People behind the projects</h2>
+                  <p className="mt-4 text-lg leading-8 text-slate-600">
+                    A denser, easier-to-scan collaborator section that still keeps LinkedIn profiles one click away.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {uniqueCollaborators.map((member) => (
+                    <a
+                      key={member.linkedin || member.name}
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white hover:shadow-lg"
+                    >
+                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-slate-950 text-lg font-black text-white ring-1 ring-slate-200">
+                        {member.avatar ? (
+                          <img src={member.avatar} alt={member.name} className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center">{member.name.charAt(0)}</div>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="truncate font-black text-slate-950">{member.name}</h3>
+                        <p className="mt-1 text-sm font-semibold text-slate-500">Project collaborator</p>
+                      </div>
+                      <LinkedinIcon className="h-5 w-5 text-slate-300 transition group-hover:text-[#0077b5]" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section id="contact" className="relative mt-10 scroll-mt-24 md:mt-12">
+          <Container>
+            <div className="overflow-hidden rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 md:p-10 lg:p-12">
+              <div className="rounded-[2rem] border border-slate-800 bg-slate-950 p-8 text-white shadow-2xl shadow-slate-950/20 md:p-10">
+                <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+                  <div>
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
+                      <SparklesIcon className="h-3.5 w-3.5" />
+                      Contact
+                    </div>
+                    <h2 className="text-3xl font-black tracking-tight md:text-5xl">Want to discuss a project?</h2>
+                    <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+                      Send a short message with the context, repository, or idea. LinkedIn is best for quick conversations; the form is better for structured requests.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
+                    <Button asChild variant="secondary" size="default" className="rounded-xl font-bold">
+                      <a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSchD7dRpaz4QXcKSyzURG8qRyZv1erO9FMpEjBjJvo0ekzfGg/viewform?usp=dialog"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Google Form <ArrowUpRightIcon />
+                      </a>
+                    </Button>
+                    <Button asChild variant="outline" size="default" className="rounded-xl border-slate-700 bg-transparent font-bold text-white hover:bg-white hover:text-slate-950">
+                      <a
+                        href="https://www.linkedin.com/in/tsiantosd/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        LinkedIn <ArrowUpRightIcon />
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+      </div>
     </>
   );
 }
