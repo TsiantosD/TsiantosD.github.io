@@ -297,7 +297,7 @@ This project involves the implementation and experimental analysis of **scheduli
     title: "Microprocessor Design",
     description: "Microarchitectural timing optimization of a CV32E40P RISC-V core on the Zedboard FPGA by selectively removing forwarding paths.",
     tags: ["RISC-V", "Microarchitecture", "FPGA", "Verilog", "Vivado", "Timing Closure", "Pipeline Hazards"],
-    image: "/microprocessor-design/soc.png",
+    image: "/microprocessor-design/cv32e40p-neon.png",
     link: "https://github.com/TsiantosD/ECE494-Microprocessor-Design",
     people: 3,
     grade: 10,
@@ -308,7 +308,7 @@ This project involves the implementation and experimental analysis of **scheduli
         slug: "cv32e40p-forwarding-optimization",
         description: "Implementation-level comparison of baseline vs no-forwarding variants with post-implementation Vivado reports and RTL benchmarks.",
         featured: true,
-        image: "/microprocessor-design/no-mul-forwarding.png",
+        image: "/microprocessor-design/cv32e40p-neon.png",
         content: `
 [View report (PDF)](/microprocessor-design/report.pdf) · [View presentation (PDF)](/microprocessor-design/presentation.pdf)
 
