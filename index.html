@@ -5,10 +5,38 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tsiantos Dimitrios</title>
-    <script type="module" crossorigin src="/assets/index-CSHVCS-E.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BV8NekSR.css">
+    <script type="module" crossorigin src="/assets/index-D74nXh0K.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-DL3Yrk6R.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-vendor-AfQzyiNK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CECGtA2d.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <style>
+        .initial-page-loader {
+          min-height: 100vh;
+          display: grid;
+          place-items: center;
+          padding: 1rem;
+          background: #020617;
+          color: #cbd5e1;
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .initial-page-loader__card {
+          border: 1px solid rgba(45, 212, 191, 0.28);
+          border-radius: 1.25rem;
+          background: rgba(15, 23, 42, 0.86);
+          box-shadow: 0 24px 60px rgba(2, 6, 23, 0.35);
+          padding: 1rem 1.25rem;
+          font-size: 0.875rem;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+        }
+      </style>
+      <main class="initial-page-loader" aria-live="polite" aria-busy="true">
+        <div class="initial-page-loader__card">Loading page…</div>
+      </main>
+    </div>
   </body>
 </html>
