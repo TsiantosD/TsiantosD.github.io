@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Code2 } from "lucide-react";
 
+const githubMonospaceFontStack =
+  'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace';
+
 export function GistEmbed({ gistId }: { gistId: string }) {
   const [isOpen, setIsOpen] = useState(false); // Collapsed by default
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -22,6 +25,19 @@ export function GistEmbed({ gistId }: { gistId: string }) {
           <style>
             body { margin: 0; padding: 0; }
             .gist .gist-file { margin-bottom: 0 !important; }
+            .gist,
+            .gist .gist-file,
+            .gist .gist-data,
+            .gist .blob-wrapper,
+            .gist .highlight,
+            .gist table,
+            .gist pre,
+            .gist code,
+            .gist .blob-num,
+            .gist .blob-code,
+            .gist .blob-code-inner {
+              font-family: ${githubMonospaceFontStack} !important;
+            }
           </style>
         </head>
         <body>

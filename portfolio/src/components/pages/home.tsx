@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee";
 import {Badge} from "@/components/ui/badge.tsx";
+import { Link } from "react-router-dom";
 
 const highlightedCourseSlugs = [
   "parallel-computer-architecture",
@@ -51,8 +52,8 @@ function CourseShowcaseCard({ course, featured = false }: { course: Course; feat
   const hiddenTagCount = course.tags.length - visibleTags.length;
 
   return (
-    <a
-      href={`/course/${course.slug}`}
+    <Link
+      to={`/course/${course.slug}`}
       className={`group relative flex h-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-2xl hover:shadow-slate-200/80 ${featured ? "lg:grid lg:grid-cols-[1.05fr_0.95fr]" : "flex-col"}`}
     >
       {course.image && (
@@ -108,14 +109,14 @@ function CourseShowcaseCard({ course, featured = false }: { course: Course; feat
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
 function FeaturedProjectCard({ project }: { project: FeaturedProject }) {
   return (
-    <a
-      href={`/course/${project.courseSlug}#${project.slug}`}
+    <Link
+      to={`/course/${project.courseSlug}#${project.slug}`}
       className="group grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl sm:grid-cols-[11rem_1fr]"
     >
       {project.image && (
@@ -138,7 +139,7 @@ function FeaturedProjectCard({ project }: { project: FeaturedProject }) {
           Read case study <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </span>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -365,9 +366,9 @@ export default function Home() {
                 </div>
                 <div className="grid gap-3 md:grid-cols-2">
                   {secondaryCourses.map((course) => (
-                    <a
+                    <Link
                       key={course.slug}
-                      href={`/course/${course.slug}`}
+                      to={`/course/${course.slug}`}
                       className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-md"
                     >
                       {course.image && (
@@ -378,7 +379,7 @@ export default function Home() {
                         <p className="mt-1 line-clamp-1 text-sm text-slate-500">{course.description}</p>
                       </div>
                       <ArrowRightIcon className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-1 group-hover:text-slate-950" />
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Navbar } from "./components/layout/navbar";
 import Home from "./components/pages/home.tsx";
 import Course from "./components/pages/course.tsx";
@@ -6,8 +6,7 @@ import Tomasulo from "./components/pages/tomasulo.tsx";
 import Gpgpu3DVisualizer from "./components/pages/gpgpu-3d.tsx";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
 
 export function ScrollToHash() {
   const { hash } = useLocation();
@@ -25,6 +24,68 @@ export function ScrollToHash() {
       return () => clearTimeout(timeout);
     }
   }, [hash]);
+
+  return null;
+}
+
+const scrollStorageKey = (locationKey: string) => `portfolio-scroll:${locationKey}`;
+
+function saveScrollPosition(locationKey: string) {
+  sessionStorage.setItem(
+    scrollStorageKey(locationKey),
+    JSON.stringify({ x: window.scrollX, y: window.scrollY })
+  );
+}
+
+function readScrollPosition(locationKey: string): { x: number; y: number } | null {
+  const raw = sessionStorage.getItem(scrollStorageKey(locationKey));
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as { x?: unknown; y?: unknown };
+    return typeof parsed.x === "number" && typeof parsed.y === "number"
+      ? { x: parsed.x, y: parsed.y }
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function ScrollRestoration() {
+  const location = useLocation();
+  const navigationType = useNavigationType();
+
+  useEffect(() => {
+    const originalScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = originalScrollRestoration;
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (location.hash) return;
+
+    if (navigationType === "POP") {
+      const savedPosition = readScrollPosition(location.key);
+      window.scrollTo(savedPosition?.x ?? 0, savedPosition?.y ?? 0);
+      return;
+    }
+
+    window.scrollTo(0, 0);
+  }, [location, navigationType]);
+
+  useEffect(() => {
+    const key = location.key;
+    const saveCurrentPosition = () => saveScrollPosition(key);
+
+    window.addEventListener("pagehide", saveCurrentPosition);
+    return () => {
+      saveCurrentPosition();
+      window.removeEventListener("pagehide", saveCurrentPosition);
+    };
+  }, [location.key]);
 
   return null;
 }
@@ -68,6 +129,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollRestoration />
       <ScrollToHash />
       <Navbar />
       <div className="w-full justify-items-center">
