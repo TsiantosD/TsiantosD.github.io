@@ -3,3 +3,31 @@
 html {
     scroll-behavior: smooth;
 }
+
+/* Firefox Android is noticeably more sensitive to continuous scroll-linked
+   React updates plus backdrop-filter/large blur repainting. Keep the desktop
+   look, but on touch Firefox remove the expensive compositor effects that can
+   make normal scrolling feel like it is sticking. */
+@supports (-moz-appearance: none) {
+    @media (hover: none), (pointer: coarse) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        .backdrop-blur,
+        .backdrop-blur-xl {
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+        }
+
+        .blur-2xl,
+        .blur-3xl {
+            filter: blur(20px) !important;
+        }
+
+        .shadow-xl,
+        .shadow-2xl {
+            box-shadow: 0 12px 24px -18px rgb(15 23 42 / 0.45) !important;
+        }
+    }
+}

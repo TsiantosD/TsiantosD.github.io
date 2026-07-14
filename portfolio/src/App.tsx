@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navbar } from "./components/layout/navbar";
 import Home from "./components/pages/home.tsx";
 import Course from "./components/pages/course.tsx";
@@ -32,11 +32,34 @@ export function ScrollToHash() {
 export default function App() {
   const [showTop, setShowTop] = useState(false);
 
+  const showTopRef = useRef(false);
+  const scrollFrameRef = useRef<number | null>(null);
+
   useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 100);
-    onScroll();
+    const updateShowTop = () => {
+      scrollFrameRef.current = null;
+      const nextShowTop = window.scrollY > 100;
+
+      if (showTopRef.current !== nextShowTop) {
+        showTopRef.current = nextShowTop;
+        setShowTop(nextShowTop);
+      }
+    };
+
+    const onScroll = () => {
+      if (scrollFrameRef.current !== null) return;
+      scrollFrameRef.current = window.requestAnimationFrame(updateShowTop);
+    };
+
+    updateShowTop();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollFrameRef.current);
+      }
+    };
   }, []);
 
   const scrollToTop = () => {

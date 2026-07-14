@@ -14,7 +14,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import {Badge} from "@/components/ui/badge.tsx";
 import YouTube from 'react-youtube';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {GistEmbed} from "@/components/gistEmbed.tsx";
 import {GradeCircle} from "@/components/grade-circle.tsx";
 import TeamSection from "../team-section";
@@ -313,13 +313,26 @@ export default function Course() {
 
   const [activeSection, setActiveSection] = useState("overview");
   const [readingProgress, setReadingProgress] = useState(0);
+  const activeSectionRef = useRef("overview");
+  const readingProgressRef = useRef(0);
+  const scrollFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const updateScrollState = () => {
+      scrollFrameRef.current = null;
+
       const scrollTop = window.scrollY;
       const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
-      setReadingProgress(Math.min(100, Math.max(0, progress)));
+      const nextReadingProgress = Math.min(100, Math.max(0, progress));
+
+      // Avoid forcing a React render on every mobile scroll tick. Updating the
+      // sticky progress bar in whole percentages is visually identical but much
+      // cheaper, especially in Firefox Android.
+      if (Math.round(readingProgressRef.current) !== Math.round(nextReadingProgress)) {
+        readingProgressRef.current = nextReadingProgress;
+        setReadingProgress(nextReadingProgress);
+      }
 
       const anchorOffset = 180;
       let currentSection = sectionLinks[0]?.id ?? "overview";
@@ -335,16 +348,29 @@ export default function Course() {
         }
       }
 
-      setActiveSection(currentSection);
+      if (activeSectionRef.current !== currentSection) {
+        activeSectionRef.current = currentSection;
+        setActiveSection(currentSection);
+      }
     };
 
+    const scheduleScrollStateUpdate = () => {
+      if (scrollFrameRef.current !== null) return;
+      scrollFrameRef.current = window.requestAnimationFrame(updateScrollState);
+    };
+
+    activeSectionRef.current = sectionLinks[0]?.id ?? "overview";
+    readingProgressRef.current = 0;
     updateScrollState();
-    window.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
+    window.addEventListener("scroll", scheduleScrollStateUpdate, { passive: true });
+    window.addEventListener("resize", scheduleScrollStateUpdate);
 
     return () => {
-      window.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
+      window.removeEventListener("scroll", scheduleScrollStateUpdate);
+      window.removeEventListener("resize", scheduleScrollStateUpdate);
+      if (scrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollFrameRef.current);
+      }
     };
   }, [sectionLinks]);
 
@@ -366,7 +392,7 @@ export default function Course() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(45,212,191,0.12),transparent_30%),radial-gradient(circle_at_86%_10%,rgba(59,130,246,0.10),transparent_28%),linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:100%_100%,100%_100%,56px_56px,56px_56px]" />
 
       {/* --- Course Action Bar --- */}
-      <nav className="sticky top-[70px] z-40 w-full border-y border-slate-800 bg-slate-950/92 text-white shadow-lg shadow-slate-950/20 backdrop-blur-xl transition-shadow duration-300">
+      <nav className="sticky top-[65px] z-40 w-full border-y border-slate-800 bg-slate-950/92 text-white shadow-lg shadow-slate-950/20 backdrop-blur-xl transition-shadow duration-300 md:top-[70px]">
         <Container>
           <div className="flex items-center justify-between py-3">
             <button
