@@ -242,7 +242,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-lg">
+          <div className="relative mx-auto w-full max-w-lg pb-24 sm:pb-28 lg:pb-20">
             <div className="absolute -inset-4 rounded-[2rem] bg-blue-500/20 blur-3xl" />
             <div className="relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/80 shadow-2xl shadow-blue-950/40 backdrop-blur">
               <img
@@ -250,17 +250,19 @@ export default function Home() {
                 alt="Dimitris Tsiantos"
                 className="h-[28rem] w-full object-cover object-center grayscale-[15%]"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/88 to-transparent p-6 pt-24">
-                <div className="rounded-2xl border border-slate-700/80 bg-slate-950/80 p-4 font-mono text-sm shadow-xl backdrop-blur">
-                  <div className="mb-3 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                    <span className="ml-2 text-slate-400">~/portfolio</span>
-                  </div>
-                  <p className="text-blue-300">$ currently</p>
-                  <p className="mt-1 text-slate-200">learning about HPC, architecture, networks, AI and building fun projects</p>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/80 to-transparent" />
+            </div>
+
+            <div className="absolute -bottom-1 left-1/2 z-10 w-[calc(100%-1rem)] -translate-x-1/2 sm:-bottom-2 sm:w-[112%] lg:-bottom-4">
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-950/88 p-4 font-mono text-sm shadow-2xl shadow-blue-950/50 backdrop-blur">
+                <div className="mb-3 flex items-center gap-2 border-b border-slate-800 pb-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  <span className="ml-2 text-slate-400">~/portfolio</span>
                 </div>
+                <p className="text-blue-300">$ currently</p>
+                <p className="mt-1 text-slate-200">learning about HPC, architecture, networks, AI and building fun projects</p>
               </div>
             </div>
           </div>
