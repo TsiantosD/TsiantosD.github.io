@@ -1,12 +1,23 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Navbar } from "./components/layout/navbar";
-import Home from "./components/pages/home.tsx";
-import Course from "./components/pages/course.tsx";
-import Tomasulo from "./components/pages/tomasulo.tsx";
-import Gpgpu3DVisualizer from "./components/pages/gpgpu-3d.tsx";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
 import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
+
+const Home = lazy(() => import("./components/pages/home.tsx"));
+const Course = lazy(() => import("./components/pages/course.tsx"));
+const Tomasulo = lazy(() => import("./components/pages/tomasulo.tsx"));
+const Gpgpu3DVisualizer = lazy(() => import("./components/pages/gpgpu-3d.tsx"));
+
+function RouteLoadingFallback() {
+  return (
+    <main className="flex min-h-[60vh] w-full items-center justify-center bg-slate-50 px-4 text-slate-600">
+      <div className="rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold shadow-sm">
+        Loading page…
+      </div>
+    </main>
+  );
+}
 
 export function ScrollToHash() {
   const { hash } = useLocation();
@@ -133,12 +144,14 @@ export default function App() {
       <ScrollToHash />
       <Navbar />
       <div className="w-full justify-items-center">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/course/:slug" element={<Course />} />
-          <Route path="/tomasulo/" element={<Tomasulo />} />
-          <Route path="/gpgpu-3d/" element={<Gpgpu3DVisualizer />} />
-        </Routes>
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/course/:slug" element={<Course />} />
+            <Route path="/tomasulo/" element={<Tomasulo />} />
+            <Route path="/gpgpu-3d/" element={<Gpgpu3DVisualizer />} />
+          </Routes>
+        </Suspense>
 
         <Footer2 />
         <button
