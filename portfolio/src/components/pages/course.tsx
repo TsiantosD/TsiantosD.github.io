@@ -265,7 +265,15 @@ interface CourseSectionLink {
   depth?: 0 | 1;
 }
 
-function CourseSectionNav({ links, activeSection }: { links: CourseSectionLink[]; activeSection: string }) {
+function CourseSectionNav({
+  links,
+  activeSection,
+  repoLink,
+}: {
+  links: CourseSectionLink[];
+  activeSection: string;
+  repoLink?: string;
+}) {
   const navLinkClass = (link: CourseSectionLink) => {
     const isActive = activeSection === link.id;
     const baseClass = link.depth === 1
@@ -291,6 +299,20 @@ function CourseSectionNav({ links, activeSection }: { links: CourseSectionLink[]
           </a>
         ))}
       </nav>
+      {repoLink && (
+        <div className="mt-4 border-t border-slate-200 pt-4">
+          <a
+            href={repoLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-950 px-3 py-2.5 text-sm font-black text-white shadow-sm transition hover:border-emerald-300 hover:bg-emerald-300 hover:text-slate-950"
+          >
+            <FontAwesomeIcon icon={faGithub} />
+            Repository
+            <FontAwesomeIcon icon={faExternalLinkAlt} className="text-[10px] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
+        </div>
+      )}
     </aside>
   );
 }
@@ -394,22 +416,34 @@ export default function Course() {
       {/* --- Course Action Bar --- */}
       <nav className="sticky top-[65px] z-40 w-full border-y border-slate-800 bg-slate-950/92 text-white shadow-lg shadow-slate-950/20 backdrop-blur-xl transition-shadow duration-300 md:top-[70px]">
         <Container>
-          <div className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-2 py-2">
             <button
-              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/70 text-slate-200 transition hover:border-emerald-300 hover:bg-emerald-300 hover:text-slate-950"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/70 text-slate-200 transition hover:border-emerald-300 hover:bg-emerald-300 hover:text-slate-950"
               onClick={handleBack}
               aria-label="Back"
+              title="Back"
             >
               <FontAwesomeIcon icon={faArrowLeft} className="h-4 w-4" />
             </button>
 
-            <div className="flex items-center gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-black leading-tight text-white">
+                {course?.title ?? "Course"}
+              </p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-200/80">
+                Course page
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-2">
               {course?.link && (
                 <a
                   href={course.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm font-bold text-slate-200 transition hover:border-emerald-300 hover:bg-emerald-300 hover:text-slate-950"
+                  aria-label="Open course repository"
+                  title="Open repository"
+                  className="group inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 text-sm font-bold text-slate-200 transition hover:border-emerald-300 hover:bg-emerald-300 hover:text-slate-950"
                 >
                   <FontAwesomeIcon icon={faGithub} />
                   <span>Repository</span>
@@ -499,7 +533,7 @@ export default function Course() {
         <main className="relative py-10">
           <Container>
             <div className="grid gap-10 lg:grid-cols-[16rem_minmax(0,1fr)]">
-              <CourseSectionNav links={sectionLinks} activeSection={activeSection} />
+              <CourseSectionNav links={sectionLinks} activeSection={activeSection} repoLink={course?.link} />
 
               <div className="min-w-0 rounded-[2.25rem] border border-slate-200/90 bg-white/95 p-6 shadow-xl shadow-slate-200/70 backdrop-blur md:p-10 lg:p-12">
                 <p className="mb-16 border-l-4 border-emerald-300 pl-6 text-xl italic leading-relaxed text-slate-700">
