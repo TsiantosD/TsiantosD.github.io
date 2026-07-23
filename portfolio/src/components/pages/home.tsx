@@ -32,6 +32,43 @@ const highlightedCourseSlugs = [
   "wireless-comunications"
 ];
 
+function parseTimelineMonth(value: string) {
+  const [year, month] = value.split("-").map(Number);
+  return year * 12 + month - 1;
+}
+
+const ganttStartMonth = Math.min(...timeline.map((item) => parseTimelineMonth(item.start)));
+const ganttNow = new Date();
+const ganttEndMonth = ganttNow.getFullYear() * 12 + ganttNow.getMonth() + 1;
+const chronologicalGanttMonths = Array.from(
+  { length: ganttEndMonth - ganttStartMonth },
+  (_, index) => {
+    const absoluteMonth = ganttStartMonth + index;
+    return {
+      index,
+      year: Math.floor(absoluteMonth / 12),
+      month: absoluteMonth % 12,
+    };
+  },
+);
+const ganttMonthGridTemplate = `repeat(${chronologicalGanttMonths.length}, 2rem)`;
+const ganttBarStyles = [
+  "border-emerald-300 bg-gradient-to-r from-emerald-500 to-emerald-400 text-slate-950 shadow-emerald-200/70",
+  "border-cyan-300 bg-gradient-to-r from-cyan-500 to-sky-400 text-slate-950 shadow-cyan-200/70",
+  "border-blue-300 bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-blue-200/70",
+];
+
+function getGanttRange(startValue: string, endValue: string | null, newestFirst: boolean) {
+  const start = Math.min(ganttEndMonth - 1, Math.max(ganttStartMonth, parseTimelineMonth(startValue)));
+  const requestedEnd = endValue ? parseTimelineMonth(endValue) : ganttEndMonth;
+  const end = Math.min(ganttEndMonth, Math.max(start + 1, requestedEnd));
+
+  return {
+    column: newestFirst ? ganttEndMonth - end + 1 : start - ganttStartMonth + 1,
+    span: end - start,
+  };
+}
+
 type FeaturedProject = Project & {
   courseSlug: string;
   courseTitle: string;
@@ -171,6 +208,16 @@ export default function Home() {
   const toggleOrder = () => setIsReversed(!isReversed);
 
   const displayedTimeline = isReversed ? [...timeline].reverse() : timeline;
+  const ganttMonths = isReversed ? [...chronologicalGanttMonths].reverse() : chronologicalGanttMonths;
+  const ganttYearGroups = ganttMonths.reduce<Array<{ year: number; span: number }>>((groups, { year }) => {
+    const currentGroup = groups.at(-1);
+    if (currentGroup?.year === year) {
+      currentGroup.span += 1;
+    } else {
+      groups.push({ year, span: 1 });
+    }
+    return groups;
+  }, []);
   const skills = [...new Set(courses.flatMap(p => p.tags))];
 
   const featuredProjects: FeaturedProject[] = courses.flatMap(course =>
@@ -434,21 +481,91 @@ export default function Home() {
                 </button>
               </div>
 
-              <div className="relative -mx-6 overflow-x-auto px-6 pb-4 md:-mx-10 md:px-10 lg:-mx-12 lg:px-12">
-                <div className="relative flex min-w-max gap-5 py-8">
-                  <div className="absolute left-0 right-0 top-[3.15rem] h-px bg-gradient-to-r from-emerald-300 via-slate-300 to-blue-300" />
-                  {displayedTimeline.map((item, index) => (
-                    <article key={`${item.year}-${item.title}`} className="relative w-72 shrink-0 pt-14">
-                      <div className="absolute left-6 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border-4 border-white bg-slate-950 text-xs font-black text-emerald-300 shadow-lg shadow-slate-300/70">
-                        {String(index + 1).padStart(2, "0")}
+              <div className="-mx-6 overflow-x-auto px-6 pb-4 md:-mx-10 md:px-10 lg:-mx-12 lg:px-12">
+                <div className="w-max min-w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm">
+                  <div className="grid grid-cols-[20rem_max-content] bg-slate-950 text-white">
+                    <div className="sticky left-0 z-30 flex items-center border-r border-slate-700 bg-slate-950 px-5 py-4 text-xs font-black uppercase tracking-[0.18em] text-slate-300">
+                      Experience & education
+                    </div>
+                    <div>
+                      <div className="grid border-b border-slate-700" style={{ gridTemplateColumns: ganttMonthGridTemplate }}>
+                        {ganttYearGroups.map(({ year, span }) => (
+                          <div
+                            key={year}
+                            className="border-l border-slate-700 px-3 py-3 text-center text-sm font-black first:border-l-0"
+                            style={{ gridColumn: `span ${span}` }}
+                          >
+                            {year}
+                          </div>
+                        ))}
                       </div>
-                      <div className="h-full rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm transition hover:-translate-y-1 hover:border-slate-300 hover:bg-white hover:shadow-lg">
-                        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800">{item.year}</span>
-                        <h3 className="mt-5 text-lg font-black text-slate-950">{item.title}</h3>
-                        <p className="mt-3 text-sm leading-6 text-slate-600" dangerouslySetInnerHTML={{ __html: item.description }} />
+                      <div className="grid" style={{ gridTemplateColumns: ganttMonthGridTemplate }}>
+                        {ganttMonths.map(({ index, year, month }, displayIndex) => (
+                          <div
+                            key={index}
+                            className={`py-2 text-center text-[9px] font-bold text-slate-400 ${displayIndex > 0 && year !== ganttMonths[displayIndex - 1].year ? "border-l border-slate-500" : "border-l border-slate-800"}`}
+                            title={new Date(year, month).toLocaleString("en", { month: "long", year: "numeric" })}
+                          >
+                            {String(month + 1).padStart(2, "0")}
+                          </div>
+                        ))}
                       </div>
-                    </article>
-                  ))}
+                    </div>
+                  </div>
+
+                  {displayedTimeline.map((item) => {
+                    const range = getGanttRange(item.start, item.end, isReversed);
+                    const originalIndex = timeline.findIndex((timelineItem) => timelineItem.title === item.title);
+
+                    return (
+                      <article
+                        key={`${item.start}-${item.title}`}
+                        className="group grid grid-cols-[20rem_max-content] border-t border-slate-200 first:border-t-0"
+                      >
+                        <div className="sticky left-0 z-20 border-r border-slate-200 bg-white px-5 py-4 transition-colors group-hover:bg-slate-50">
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="font-black text-slate-950">{item.title}</h3>
+                            <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-black text-emerald-800">
+                              {item.period}
+                            </span>
+                          </div>
+                          <p
+                            className="mt-2 text-xs leading-5 text-slate-500"
+                            dangerouslySetInnerHTML={{ __html: item.description }}
+                          />
+                        </div>
+                        <div
+                          className="relative grid min-h-24 items-center px-1"
+                          style={{ gridTemplateColumns: ganttMonthGridTemplate }}
+                        >
+                          <div
+                            aria-hidden="true"
+                            className="pointer-events-none absolute inset-0 grid"
+                            style={{ gridTemplateColumns: ganttMonthGridTemplate }}
+                          >
+                            {ganttMonths.map(({ index, year }, displayIndex) => (
+                              <div
+                                key={index}
+                                className={displayIndex > 0 && year !== ganttMonths[displayIndex - 1].year
+                                  ? "border-l border-slate-300"
+                                  : "border-l border-dashed border-slate-200"}
+                              />
+                            ))}
+                          </div>
+                          <div
+                            className={`relative z-10 mx-0.5 flex h-11 items-center justify-between gap-3 rounded-2xl border px-4 text-xs font-black shadow-lg transition-transform group-hover:-translate-y-0.5 ${ganttBarStyles[originalIndex % ganttBarStyles.length]}`}
+                            style={{ gridColumn: `${range.column} / span ${range.span}` }}
+                            title={`${item.title}: ${item.period}`}
+                          >
+                            <span className="truncate">{item.title}</span>
+                            <span className="shrink-0 rounded-full bg-white/75 px-2 py-1 text-[10px] text-slate-950">
+                              {item.period}
+                            </span>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
             </div>
