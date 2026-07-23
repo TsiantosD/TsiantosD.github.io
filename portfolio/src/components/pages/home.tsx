@@ -95,16 +95,18 @@ function CourseShowcaseCard({ course, featured = false }: { course: Course; feat
           </p>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4 text-sm text-slate-500">
-          <span className="inline-flex items-center gap-2 font-semibold">
-            <BookOpenIcon className="h-4 w-4" />
-            {course.projects.length} {course.projects.length === 1 ? "project" : "projects"}
-          </span>
-          <span className="inline-flex items-center gap-2 font-semibold">
-            <UsersIcon className="h-4 w-4" />
-            {course.people === 1 ? "Solo" : `${course.people} people`}
-          </span>
-          <span className="ml-auto inline-flex items-center gap-1 font-bold text-slate-950">
+        <div className="mt-auto pt-6 text-sm">
+          <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 text-slate-500">
+            <span className="inline-flex items-center gap-2 font-semibold">
+              <BookOpenIcon className="h-4 w-4 shrink-0" />
+              {course.projects.length} {course.projects.length === 1 ? "project" : "projects"}
+            </span>
+            <span className="inline-flex items-center gap-2 font-semibold">
+              <UsersIcon className="h-4 w-4 shrink-0" />
+              {course.people === 1 ? "Solo" : `${course.people} people`}
+            </span>
+          </div>
+          <span className="mt-4 flex items-center justify-end gap-1 font-bold text-slate-950">
             Open <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </span>
         </div>
@@ -136,7 +138,7 @@ function FeaturedProjectCard({ project }: { project: FeaturedProject }) {
           <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{project.description}</p>
         </div>
         <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-slate-950">
-          Read case study <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          Read more <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </span>
       </div>
     </Link>
