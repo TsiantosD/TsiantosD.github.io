@@ -13,7 +13,7 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
 
-          if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('/react-router-dom/')) {
+          if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('/react-router/')) {
             return 'react-vendor';
           }
 

@@ -1,11 +1,11 @@
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {Container} from "@/components/layout/container";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAward, faUser} from "@fortawesome/free-solid-svg-icons";
 import {courses, type Course as CourseType, type Project} from "@/data/courses.ts";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import ReactMarkdown, {type Components} from "react-markdown";
 import remarkUnwrapImages from "remark-unwrap-images";
 import remarkGfm from "remark-gfm";

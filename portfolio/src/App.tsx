@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "re
 import { Navbar } from "./components/layout/navbar";
 import { ChevronUpIcon } from "lucide-react";
 import {Footer2} from "./components/footer2.tsx";
-import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router";
 
 const Home = lazy(() => import("./components/pages/home.tsx"));
 const Course = lazy(() => import("./components/pages/course.tsx"));

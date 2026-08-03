@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee";
 import {Badge} from "@/components/ui/badge.tsx";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const highlightedCourseSlugs = [
   "parallel-computer-architecture",
