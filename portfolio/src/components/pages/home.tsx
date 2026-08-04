@@ -230,7 +230,11 @@ export default function Home() {
       }))
   );
 
-  const allCollaborators = courses.flatMap(course => course.members || []);
+  const allCollaborators = courses.flatMap((course) => [
+    ...(course.members || []),
+    ...course.projects.flatMap((project) => project.collaborators || []),
+    ...(course.homeworks || []).flatMap((homework) => homework.collaborators || []),
+  ]);
   const uniqueCollaborators = Array.from(
     new Map(allCollaborators.map(m => [m.linkedin || m.name, m])).values()
   ).filter(m => !m.name.toLowerCase().includes("tsiantos"));
@@ -611,35 +615,52 @@ export default function Home() {
               <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
                 <div className="lg:sticky lg:top-28">
                   {sectionEyebrow("Collaborators")}
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">People behind the projects</h2>
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">People behind the coursework</h2>
                   <p className="mt-4 text-lg leading-8 text-slate-600">
-                    The talented people I had the pleasure working with. Check out their LinkedIn profiles.
+                    The talented people I had the pleasure of working with across projects and theory assignments.
                   </p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {uniqueCollaborators.map((member) => (
-                    <a
-                      key={member.linkedin || member.name}
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white hover:shadow-lg"
-                    >
-                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-slate-950 text-lg font-black text-white ring-1 ring-slate-200">
-                        {member.avatar ? (
-                          <img src={member.avatar} alt={member.name} className="h-full w-full object-cover" />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center">{member.name.charAt(0)}</div>
+                  {uniqueCollaborators.map((member) => {
+                    const cardContent = (
+                      <>
+                        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-slate-950 text-lg font-black text-white ring-1 ring-slate-200">
+                          {member.avatar ? (
+                            <img src={member.avatar} alt={member.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center">{member.name.charAt(0)}</div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="truncate font-black text-slate-950">{member.name}</h3>
+                          <p className="mt-1 text-sm font-semibold text-slate-500">Course collaborator</p>
+                        </div>
+                        {member.linkedin && (
+                          <LinkedinIcon className="h-5 w-5 text-slate-300 transition group-hover:text-[#0077b5]" />
                         )}
+                      </>
+                    );
+
+                    return member.linkedin ? (
+                      <a
+                        key={member.linkedin || member.name}
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white hover:shadow-lg"
+                      >
+                        {cardContent}
+                      </a>
+                    ) : (
+                      <div
+                        key={member.name}
+                        className="flex items-center gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm"
+                      >
+                        {cardContent}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="truncate font-black text-slate-950">{member.name}</h3>
-                        <p className="mt-1 text-sm font-semibold text-slate-500">Project collaborator</p>
-                      </div>
-                      <LinkedinIcon className="h-5 w-5 text-slate-300 transition group-hover:text-[#0077b5]" />
-                    </a>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>

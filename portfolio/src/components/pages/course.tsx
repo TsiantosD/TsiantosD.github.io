@@ -2,8 +2,8 @@ import {useParams} from "react-router";
 import {Container} from "@/components/layout/container";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAward, faUser} from "@fortawesome/free-solid-svg-icons";
-import {courses, type Course as CourseType, type Project} from "@/data/courses.ts";
-import {faGithub} from "@fortawesome/free-brands-svg-icons";
+import {courses, type Course as CourseType, type Homework, type Project, type TeamMember} from "@/data/courses.ts";
+import {faGithub, faLinkedin} from "@fortawesome/free-brands-svg-icons";
 import {faExternalLinkAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import ReactMarkdown, {type Components} from "react-markdown";
@@ -317,6 +317,98 @@ function CourseSectionNav({
   );
 }
 
+function WorkCollaborators({ members, label }: { members?: TeamMember[]; label: string }) {
+  if (!members?.length) return null;
+
+  return (
+    <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <p className="mb-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {members.map((member) => {
+          const content = (
+            <>
+              <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl bg-slate-950 text-xs font-black text-white">
+                {member.avatar ? (
+                  <img src={member.avatar} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  member.name.charAt(0)
+                )}
+              </span>
+              <span className="font-bold text-slate-800">{member.name}</span>
+              {member.linkedin && <FontAwesomeIcon icon={faLinkedin} className="text-[#0077b5]" />}
+            </>
+          );
+
+          return member.linkedin ? (
+            <a
+              key={member.name}
+              href={member.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white py-2 pl-2 pr-3 text-sm shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
+            >
+              {content}
+            </a>
+          ) : (
+            <div key={member.name} className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white py-2 pl-2 pr-3 text-sm shadow-sm">
+              {content}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function HomeworkSection({ homework }: { homework: Homework }) {
+  return (
+    <section id={homework.slug} className="mb-20 scroll-mt-40 last:mb-0">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <h3 className="text-3xl font-black tracking-tight text-slate-950">{homework.title}</h3>
+        <Badge className="w-fit rounded-full border border-emerald-200 bg-emerald-100 font-bold text-emerald-900">
+          <FontAwesomeIcon className="mr-2 text-xs" icon={faAward} />
+          {homework.grade}% score
+        </Badge>
+      </div>
+
+      <p className="leading-relaxed text-slate-700">{homework.summary}</p>
+
+      <div className="mt-5 flex flex-wrap gap-2">
+        {homework.topics.map((topic) => (
+          <Badge key={topic} variant="outline" className="rounded-full border-slate-200 bg-slate-50 px-3 py-1 font-bold text-slate-700">
+            {topic}
+          </Badge>
+        ))}
+      </div>
+
+      {homework.relatedProject && (
+        <div className="mt-6 border-l-4 border-emerald-300 pl-5">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Related project</p>
+          <a href={homework.relatedProject.href} className="group mt-1 inline-flex items-center gap-2 font-black text-slate-950 underline decoration-emerald-300 underline-offset-4 hover:text-emerald-700">
+            {homework.relatedProject.label}
+            <FontAwesomeIcon icon={faExternalLinkAlt} className="text-[10px] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
+          <p className="mt-1 text-sm leading-relaxed text-slate-600">{homework.relatedProject.description}</p>
+        </div>
+      )}
+
+      <a
+        href={homework.pdf}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 inline-flex items-center gap-2 font-black text-emerald-700 underline decoration-emerald-300 underline-offset-4 transition hover:text-emerald-900"
+      >
+        View homework PDF
+        <FontAwesomeIcon icon={faExternalLinkAlt} className="text-[10px]" />
+      </a>
+
+      <WorkCollaborators members={homework.collaborators} label={homework.collaborators?.length === 1 ? "Homework collaborator" : "Homework collaborators"} />
+    </section>
+  );
+}
+
 export default function Course() {
   const { slug } = useParams<{ slug: string }>();
 
@@ -329,6 +421,8 @@ export default function Course() {
       { id: "overview", label: "Overview" },
       ...(course.projects.length > 0 ? [{ id: "projects", label: "Projects" } as CourseSectionLink] : []),
       ...course.projects.map((project) => ({ id: project.slug, label: project.title, depth: 1 as const })),
+      ...((course.homeworks?.length ?? 0) > 0 ? [{ id: "theory", label: "Theory & Homeworks" } as CourseSectionLink] : []),
+      ...(course.homeworks ?? []).map((homework) => ({ id: homework.slug, label: homework.title, depth: 1 as const })),
       ...((course.members?.length ?? 0) > 0 ? [{ id: "team", label: "Team" } as CourseSectionLink] : []),
     ];
   }, [course]);
@@ -552,7 +646,7 @@ export default function Course() {
                 )}
 
                 {course?.projects.map((project: Project) => (
-                  <section key={project.slug} className="mb-24 last:mb-0">
+                  <section key={project.slug} className="mb-24">
                     <div className="mb-8 flex scroll-mt-40 flex-col gap-4 md:flex-row md:items-center" id={project.slug}>
                       <h3 className="text-3xl font-black tracking-tight text-slate-950">
                         {project.title}
@@ -564,9 +658,21 @@ export default function Course() {
                           {project.topOfClass}
                         </Badge>
                       )}
+
+                      {project.grade !== undefined && (
+                        <Badge className="rounded-full border border-emerald-200 bg-emerald-100 font-bold text-emerald-900">
+                          <FontAwesomeIcon className="mr-2 text-xs" icon={faAward} />
+                          {project.grade}% score
+                        </Badge>
+                      )}
                     </div>
 
-                    <div className="prose prose-slate lg:prose-lg max-w-none">
+                    <WorkCollaborators
+                      members={project.collaborators}
+                      label={project.collaborators?.length === 1 ? "Project collaborator" : "Project collaborators"}
+                    />
+
+                    <div className="prose prose-slate mt-8 lg:prose-lg max-w-none">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm, remarkMath, remarkTableCaptions, remarkUnwrapImages]}
                         rehypePlugins={[rehypeKatex]}
@@ -577,6 +683,28 @@ export default function Course() {
                     </div>
                   </section>
                 ))}
+
+                {(course?.homeworks?.length ?? 0) > 0 && (
+                  <section id="theory" className="mb-20 scroll-mt-36">
+                    <div className="mb-8">
+                      <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-600">
+                        Foundations
+                      </p>
+                      <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950">
+                        Theory & Homeworks
+                      </h2>
+                      <p className="mt-3 max-w-3xl leading-relaxed text-slate-600">
+                        The assignments that built the architectural background behind the course projects.
+                      </p>
+                    </div>
+                    <div>
+                      {course?.homeworks?.map((homework) => (
+                        <HomeworkSection key={homework.slug} homework={homework} />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
               </div>
             </div>
           </Container>

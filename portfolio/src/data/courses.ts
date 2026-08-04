@@ -9,6 +9,7 @@ export interface Course {
   projects: Project[];
   grade?: number;
   members?: TeamMember[];
+  homeworks?: Homework[];
   inProgress?: boolean|null;
 }
 
@@ -20,6 +21,23 @@ export interface Project {
   image?: string|null;
   content: string;
   topOfClass?: string|null;
+  grade?: number;
+  collaborators?: TeamMember[];
+}
+
+export interface Homework {
+  slug: string;
+  title: string;
+  grade: number;
+  summary: string;
+  topics: string[];
+  pdf: string;
+  collaborators?: TeamMember[];
+  relatedProject?: {
+    label: string;
+    href: string;
+    description: string;
+  };
 }
 
 export interface TeamMember {
@@ -57,23 +75,25 @@ const malakoudis: TeamMember = {
   linkedin: "https://www.linkedin.com/in/harris-malakoudis-a22462309/",
   avatar: "/team-members/malakoudis.jpeg"
 }
-// const kalousis: TeamMember = {
-//   name: "Kalousis Anastasios",
-//   linkedin: "",
-//   avatar: ""
-// }
-// const tsimponidis: TeamMember = {
-//   name: "Tsimponidis Alexandros",
-//   linkedin: "https://www.linkedin.com/in/alexandros-tsimponidis-9ab830248/",
-//   avatar: ""
-// }
+const kalousis: TeamMember = {
+  name: "Kalousis Anastasios"
+};
+const tsimponidis: TeamMember = {
+  name: "Tsimponidis Alexandros",
+  linkedin: "https://www.linkedin.com/in/alexandros-tsimponidis-9ab830248/"
+};
 const balamotis: TeamMember = {
   name: "Balamotis Panagiotis",
   linkedin: "https://www.linkedin.com/in/panagiotisbalamotis/",
   avatar: "/team-members/balamotis.jpeg"
 }
+const oikonomopoulos: TeamMember = {
+  name: "Oikonomopoulos Konstantinos",
+  linkedin: "https://www.linkedin.com/in/konstantinos-oikonomopoulos-a123472b2/",
+  avatar: "/team-members/oikonomopoulos.jpeg"
+};
 
-export const courses = [
+export const courses: Course[] = [
   {
     slug: "high-performance-computing",
     title: "High Performance Computing",
@@ -179,7 +199,40 @@ TsiantosD/44952094ffe543bf2c3225b7f2b51820
     link: "https://github.com/PANAGIVTHS/ECE338-Parallel-Computer-Architecture",
     people: 3,
     grade: 9,
-    members: [ me, nikas, tsogkas ],
+    homeworks: [
+      {
+        slug: "homework-1",
+        title: "Homework 1 - Instruction-Level Parallelism",
+        grade: 93,
+        pdf: "/ece338-parallel-computer-architecture/homeworks/homework-1.pdf",
+        summary: "Analyzed instruction scheduling and throughput with Tomasulo’s algorithm across single and dual-issue processors, including reservation-station pressure, functional-unit pipelining, CDB contention, and dependency stalls. The work also covered local and global branch prediction, CPI impact, and loop transformations such as renaming, fission, and unrolling to expose parallelism.",
+        topics: ["Tomasulo scheduling", "Instruction-level parallelism", "Branch prediction", "Loop dependence analysis"],
+        collaborators: [oikonomopoulos],
+        relatedProject: {
+          label: "Tomasulo Visualizer",
+          href: "/tomasulo/",
+          description: "Built for this homework to make cycle-by-cycle issue, execution, stalls, and CDB write-back behavior easier to inspect."
+        }
+      },
+      {
+        slug: "homework-2",
+        title: "Homework 2 - Memory Systems & Throughput",
+        grade: 96,
+        pdf: "/ece338-parallel-computer-architecture/homeworks/homework-2.pdf",
+        summary: "Connected compiler and architecture techniques through hyperblocks, predicated execution, and EPIC scheduling, then analyzed cache associativity, replacement and write policies, TLB behavior, and DRAM page and request scheduling. Performance exercises compared vector and GPU-style systems through arithmetic intensity, transfer overlap, divergence, issue efficiency, and peak throughput.",
+        topics: ["Predication and EPIC", "Cache and TLB behavior", "DRAM scheduling", "Vector/GPU performance modeling"],
+        collaborators: [oikonomopoulos]
+      },
+      {
+        slug: "homework-3",
+        title: "Homework 3 - Coherence & Consistency",
+        grade: 80,
+        pdf: "/ece338-parallel-computer-architecture/homeworks/homework-3.pdf",
+        summary: "Studied shared-memory correctness through invalidate- and update-based cache coherence, directory protocol state machines, transient states, message reordering, and stale sharer trade-offs. The assignment also compared Sequential, Total Store, and Release Consistency, including memory barriers, synchronization ordering, and the performance cost of locks and coherence traffic.",
+        topics: ["Cache coherence", "Directory protocols", "Memory consistency models", "Synchronization and ordering"],
+        collaborators: [oikonomopoulos]
+      }
+    ],
     projects: [
       {
         title: "Simple GPGPU",
@@ -187,6 +240,8 @@ TsiantosD/44952094ffe543bf2c3225b7f2b51820
         description: "A programmable 32-lane SIMD accelerator with a small RISC-V software stack and FPGA bring-up flow.",
         featured: true,
         image: "/ece338-parallel-computer-architecture/nbody-screenshot.png",
+        grade: 100,
+        collaborators: [nikas, tsogkas],
         content: `
 [View report (PDF)](/ece338-parallel-computer-architecture/report-EN.pdf) · [View presentation (PDF)](/ece338-parallel-computer-architecture/presentation.pdf)
 
@@ -435,6 +490,7 @@ pdf=/wireless-communications/presentation.pdf
         description: "A custom gate-level netlist parser and simulator for Single Event Transients and Soft Error Rate estimation.",
         featured: false,
         image: "/radhard-circuit-design/s27-circuit.png",
+        collaborators: [kalousis, tsimponidis],
         content: `
 ![Flow diagram of the simulation algorithm.](/radhard-circuit-design/flow-diagram.png)
 
