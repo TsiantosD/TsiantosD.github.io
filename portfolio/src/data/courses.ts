@@ -519,6 +519,28 @@ $$
 where $V$ is the set of simulated input vectors, $G_{hit}$ is the set of eligible gates where an SET can be injected, and $E(v,g)$ is 1 when the injected transient propagates to a flip-flop input and 0 otherwise.`
       },
       {
+        title: "SET Circuit Sensitivity Analysis & Optimization",
+        slug: "set-sensitivity-optimization",
+        description: "A sensitivity-guided study of gate-level SET mitigation using targeted ECO techniques and area-aware trade-off analysis.",
+        featured: false,
+        content: `
+[View report (PDF)](/radhard-circuit-design/project-2-report.pdf) · [View presentation (PDF)](/radhard-circuit-design/project-2-presentation.pdf)
+
+For the second **Radhard Circuit Design** project, I analyzed the **Single Event Transient (SET) sensitivity** of the ISCAS85 **c1908** circuit using **UPSET**. Per-node and per-gate-pin **Accumulated SET (ASET)** and **Accumulated Pulse Width (APW)** metrics revealed that sensitivity was highly concentrated: eight gate pins contributed about **92% of total ASET**, while five contributed about **72% of total APW**.
+
+I used this ranking to guide a series of automated **Engineering Change Order (ECO)** experiments based on gate upsizing, driver-cone optimization, and charge-sharing insertion. Each modified circuit was compared with the baseline across ASET, APW, and silicon-area overhead, showing that local hardening does not always improve global resilience: indiscriminate charge sharing could broaden propagated pulses and significantly worsen APW.
+
+The best low-overhead upsizing strategy targeted the U246 driver cone, reducing ASET by **9.67%** and APW by **12.13%** for **2.34% area overhead**. The strongest overall Pareto point used selective charge sharing at U224/X, reducing ASET by **23.32%** and APW by **23.80%** with **12.89% area overhead**. The study demonstrates why radiation-hardening changes should be sensitivity-guided and evaluated as multi-objective trade-offs rather than applied uniformly.
+
+\`\`\`slidedeck
+title=SET Circuit Sensitivity Analysis Presentation
+base=/radhard-circuit-design/project-2-presentation
+count=31
+pdf=/radhard-circuit-design/project-2-presentation.pdf
+\`\`\`
+`
+      },
+      {
         title: "CUDA Implementation Prototype",
         slug: "cuda-ser-simulator",
         description: "A CUDA backend prototype that maps independent SER simulation cases to GPU threads.",
