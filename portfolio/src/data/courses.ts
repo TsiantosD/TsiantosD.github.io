@@ -407,7 +407,7 @@ pdf=/microprocessor-design/presentation.pdf
     title: "Computer Organization & Design",
     description: "A progressive MIPS processor implementation in Verilog, followed by profile-guided optimization on x86.",
     tags: ["MIPS", "Assembly", "Intel V-Tune", "Verilog", "C", "Python"],
-    image: "/cpus.jpg",
+    image: "/organization/mips/five-stage-pipeline.png",
     link: "https://github.com/TsiantosD/ECE219-Organization",
     people: 2,
     grade: 8.0,
@@ -417,7 +417,7 @@ pdf=/microprocessor-design/presentation.pdf
         slug: "mips-processor-verilog",
         description: "A MIPS processor developed from basic datapath components into a correct five-stage pipelined implementation with hazard handling.",
         featured: false,
-        image: "/organization/mips/five-stage-pipeline.webp",
+        image: "/organization/mips/five-stage-pipeline.png",
         collaborators: [romanidis],
         content: `
 [View Labs 4-7 source](https://github.com/TsiantosD/ECE219-Organization/tree/master)
@@ -426,7 +426,7 @@ Across **Labs 4-7**, we progressively designed and tested a MIPS processor in **
 
 The next stage produced a **single-cycle MIPS CPU** integrating instruction memory, a program counter, register decoding, immediate extension, ALU control, data memory, and write-back selection. The supported instruction subset grew from R-format arithmetic and logic operations to loads, stores, immediate arithmetic, and conditional branches.
 
-![Five-stage MIPS pipeline with forwarding, hazard detection, stalls, and flush paths.](/organization/mips/five-stage-pipeline.webp)
+![Five-stage MIPS pipeline with forwarding, hazard detection, stalls, and flush paths.](/organization/mips/five-stage-pipeline.png)
 
 We then transformed the single-cycle design into a **five-stage pipeline** covering IF, ID, EX, MEM, and WB. The pipelined datapath includes EX/MEM and MEM/WB forwarding, priority for the newest available result, load-use hazard detection, PC and IF/ID stalls, bubble insertion, and forwarding for dependent load/store sequences. The instruction path was also extended with immediate and shift operations.
 
